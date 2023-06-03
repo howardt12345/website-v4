@@ -14,7 +14,6 @@ main {
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 1600px;
   min-height: 100vh;
 }
 </style>
