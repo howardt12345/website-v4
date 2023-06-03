@@ -7,5 +7,8 @@ import MainView from '@/views/main-view.vue';
 </template>
 
 <style scoped>
-
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+}
 </style>
