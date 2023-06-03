@@ -1,5 +1,5 @@
 import './assets/sass/style.scss'
-
+import PoppinsRegular from './assets/fonts/Poppins-Regular.ttf'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
