@@ -39,7 +39,7 @@
   }
 
   .line {
-    background-color: #fff;
+    background: black;
     height: 4px;
     margin: 1.25rem 0;
   }

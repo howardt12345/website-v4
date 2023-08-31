@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import TitleContainer from '@/modules/home-title.vue'
 </script>
 
 <template>
   <main>
-    <TitleContainer />
+    <HomeTitle />
   </main>
 </template>
 
