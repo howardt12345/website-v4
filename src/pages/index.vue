@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { useTheme } from 'vuetify'
+const theme = useTheme()
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 </script>
 
 <template>
   <main>
     <HomeTitle />
-    <v-btn>button</v-btn>
+    <v-btn @click="toggleTheme"> toggle theme </v-btn>
   </main>
 </template>
 

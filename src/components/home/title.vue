@@ -39,7 +39,7 @@
   }
 
   .line {
-    background: black;
+    background: rgb(var(--v-border-color));
     height: 4px;
     margin: 1.25rem 0;
   }
