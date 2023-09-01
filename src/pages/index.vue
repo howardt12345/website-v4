@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { useTheme } from 'vuetify';
-const theme = useTheme();
-const isDark = computed(() => theme.global.current.value.dark);
-const toggleTheme = () => {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
-};
+import { storeToRefs } from 'pinia';
+import { useThemeStore } from '@/store/theme.store';
+
+const { isDark } = storeToRefs(useThemeStore());
+const { toggleTheme } = useThemeStore();
 </script>
 
 <template>
