@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
-const theme = useTheme()
+import { useTheme } from 'vuetify';
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 const toggleTheme = () => {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-}
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
+};
 </script>
 
 <template>
   <main>
     <HomeTitle />
-    <v-btn @click="toggleTheme"> toggle theme </v-btn>
+    <v-btn
+      :icon="isDark ? 'fas fa-sun' : 'fas fa-moon'"
+      @click="toggleTheme"
+    ></v-btn>
   </main>
 </template>
 
