@@ -1,16 +1,15 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="home-title">
     <div class="title-container">
-      <h2 class="overline">Hi, I'm</h2>
-      <h1 class="title">HOWARD</h1>
+      <h2 class="overline">{{ $t("Hi, I'm") }}</h2>
+      <h1 class="title">{{ $t('HOWARD') }}</h1>
     </div>
     <hr class="line" />
     <div class="subtitle-container">
-      <h2 class="subtitle">Freelance Photographer</h2>
-      <h2 class="subtitle">Full-Stack Developer</h2>
+      <h2 class="subtitle">{{ $t('Freelance Photographer') }}</h2>
+      <h2 class="subtitle">{{ $t('Full-Stack Developer') }}</h2>
     </div>
   </div>
 </template>
