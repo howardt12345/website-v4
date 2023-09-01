@@ -57,9 +57,11 @@ export default defineNuxtConfig({
     }
   },
   modules: ['nuxt-3-vuetify'],
+  // @ts-ignore
   vuetify: {
     vuetifyOptions: {
       theme: {
+        defaultTheme: 'dark',
         options: {
           customProperties: true
         },
