@@ -1,28 +1,29 @@
+<script setup lang="ts">
+import { SUPPORTED_LANGUAGES } from '@/plugins/i18n';
+import { usei18n } from '@/store/i18n.store';
+
+const languages = SUPPORTED_LANGUAGES;
+const languageKeys = Object.keys(SUPPORTED_LANGUAGES);
+
+const { currentLanguage } = storeToRefs(usei18n());
+const { changeLanguage } = usei18n();
+</script>
+
 <template>
-  <div class="hello">
+  <div>
     <hr />
     <div>
       <div v-if="languages">
-        <span v-for="(lng, index) in Object.keys(languages)" :key="lng">
-          <a
-            v-if="$i18next.resolvedLanguage !== lng"
-            v-on:click="$i18next.changeLanguage(lng)"
-          >
-            {{ languages[lng].nativeName }}
-          </a>
-          <strong v-if="$i18next.resolvedLanguage === lng">
+        <span v-for="(lng, index) in languageKeys" :key="lng">
+          <strong v-if="currentLanguage === lng">
             {{ languages[lng].nativeName }}
           </strong>
-          <span v-if="index < Object.keys(languages).length - 1"
-            >&nbsp;|&nbsp;</span
-          >
+          <a v-else @click="changeLanguage(lng)">
+            {{ languages[lng].nativeName }}
+          </a>
+          <span v-if="index < languageKeys.length - 1">&nbsp;|&nbsp;</span>
         </span>
       </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { SUPPORTED_LANGUAGES } from '@/plugins/i18n';
-const languages = SUPPORTED_LANGUAGES;
-</script>

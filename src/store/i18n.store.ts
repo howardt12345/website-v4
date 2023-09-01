@@ -1,16 +1,17 @@
-
-import i18next from 'i18next';
+import { useTranslation } from 'i18next-vue';
 
 export const usei18n = defineStore('i18n', () => {
-  const i18n = i18next;
-  const languages = computed(() => i18n.languages);
+  const { i18next } = useTranslation();
+  const languages = computed(() => i18next.languages);
+  const currentLanguage = computed(() => i18next.resolvedLanguage);
 
   const changeLanguage = (language: string) => {
-    i18n.changeLanguage(language);
+    i18next.changeLanguage(language);
   };
 
   return {
     changeLanguage,
-    languages
+    currentLanguage,
+    languages,
   };
 });

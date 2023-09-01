@@ -4,14 +4,14 @@ import detector from 'i18next-browser-languagedetector';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
-export const SUPPORTED_LANGUAGES = {
+export const SUPPORTED_LANGUAGES: Record<string, { nativeName: string }> = {
   en: {
     nativeName: 'English',
   },
   zh: {
     nativeName: '國語 (臺灣）',
-  }
-}
+  },
+};
 
 export const i18nextPromise = i18next
   .use(detector)
