@@ -2,6 +2,7 @@ import { defineNuxtConfig } from 'nuxt/config';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   build: { transpile: ['vuetify'] },
   devtools: { enabled: true },
   rootDir: 'src/',
@@ -25,5 +26,6 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs'],
       },
     ],
+    ['@nuxt/content', {}],
   ],
 });
