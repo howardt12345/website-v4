@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: true,
   devtools: { enabled: true },
   rootDir: 'src/',
   css: ['@/assets/scss/global.scss'],
@@ -11,5 +12,6 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+  modules: ['nuxt-3-vuetify']
 })
