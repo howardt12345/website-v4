@@ -38,7 +38,7 @@
   }
 
   .line {
-    background: $background-color;
+    background: $border-color;
     height: 4px;
     margin: 1.25rem 0;
   }

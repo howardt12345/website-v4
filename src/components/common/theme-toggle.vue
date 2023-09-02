@@ -7,7 +7,7 @@ const { toggleTheme } = useTheme();
 <template>
   <v-btn
     :icon="isDark ? 'fas fa-sun' : 'fas fa-moon'"
-    variant="text"
+    variant="plain"
     @click="toggleTheme"
   ></v-btn>
 </template>
