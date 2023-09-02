@@ -5,3 +5,10 @@
   margin: 0;
   font-weight: normal;
 }
+
+.v-btn {
+  :hover,
+  :focus & {
+    color: $accent;
+  }
+}

@@ -38,7 +38,7 @@
   }
 
   .line {
-    background: rgb(var(--v-border-color));
+    background: $background-color;
     height: 4px;
     margin: 1.25rem 0;
   }

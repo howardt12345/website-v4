@@ -27,6 +27,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         dark: theme_dark,
       },
     },
+    defaults: {
+      VBtn: { variant: 'outlined' },
+    },
   });
   nuxtApp.vueApp.use(vuetify);
 });
