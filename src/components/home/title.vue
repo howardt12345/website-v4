@@ -22,6 +22,7 @@
     width: 80vw;
   }
   font-family: Poppins;
+  margin: 1rem 0;
 
   .overline {
     text-align: left;

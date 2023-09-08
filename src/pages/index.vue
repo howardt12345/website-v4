@@ -7,6 +7,7 @@ const isMounted = useMounted();
 <template>
   <main v-if="isMounted">
     <HomeTitle />
+    <NavLinks />
     <CommonThemeToggle />
   </main>
 </template>

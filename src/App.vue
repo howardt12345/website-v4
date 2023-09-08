@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { i18nextPromise } from '@/plugins/i18n';
+import { usei18n } from './store/i18n.store';
 useHead({
   link: [{ rel: 'icon', type: 'image/png', href: 'favicon.ico' }],
 });
 
 await i18nextPromise;
+
+usei18n();
 </script>
 
 <template>
