@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { i18nextPromise } from '@/plugins/i18n';
+import { i18nextPromise } from '@/plugins/03.i18n';
 import { usei18n } from './store/i18n.store';
+import { useTheme } from './store/theme.store';
 useHead({
   link: [{ rel: 'icon', type: 'image/png', href: 'favicon.ico' }],
 });
@@ -16,29 +17,51 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 });
 
+const { isDark } = useTheme();
+
 await i18nextPromise;
 
 usei18n();
 </script>
 
 <template>
-  <Suspense>
-    <v-app>
+  <v-app>
+    <Suspense>
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
-    </v-app>
-    <template #fallback>
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    </template>
-  </Suspense>
+      <template #fallback>
+        <div
+          :class="{
+            'loading-container': true,
+            'loading-container--dark': isDark,
+          }"
+        >
+          <h1>Loading...</h1>
+        </div>
+      </template>
+    </Suspense>
+  </v-app>
 </template>
 
-<style scoped>
+<style lang="scss">
 @font-face {
   font-family: 'Poppins';
   src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  color: black;
+
+  &--dark {
+    background-color: black;
+    color: white;
+  }
 }
 </style>
