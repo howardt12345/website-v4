@@ -5,15 +5,21 @@ const isMounted = useMounted();
 definePageMeta({
   layout: false,
 });
+
+import { useMediaQuery } from '@vueuse/core';
+
+const isMobile = useMediaQuery('(max-width: 600px)');
+const isTablet = useMediaQuery('(max-width: 900px)');
 </script>
 
 <template>
   <NuxtLayout name="index">
     <main v-if="isMounted">
-      <HomeTitle />
-      <NavLinks :animate="true" :delay="1000" />
+      <HomeTitle :is-mobile="isMobile" :is-tablet="isTablet" />
+      <NavLinks :animate="true" :delay="1000" :is-mobile="isMobile" />
       <div
         v-motion
+        class="theme-toggle"
         :initial="{ opacity: 0, y: -10 }"
         :enter="{
           opacity: 1,
@@ -40,5 +46,9 @@ main {
   align-items: center;
   width: 100%;
   min-height: 100vh;
+}
+
+.theme-toggle {
+  padding-top: rem(16);
 }
 </style>

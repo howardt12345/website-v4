@@ -1,15 +1,54 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface Props {
+  isMobile?: boolean;
+  isTablet?: boolean;
+}
+
+const props = defineProps<Props>();
+</script>
 
 <template>
   <div class="home-title">
     <div class="title-container">
-      <h2 class="overline">{{ $t("Hi, I'm") }}</h2>
-      <h1 class="title">{{ $t('HOWARD') }}</h1>
+      <h2
+        :class="{
+          overline: true,
+          'overline--tablet': isTablet,
+          'overline--mobile': isMobile,
+        }"
+      >
+        {{ $t("Hi, I'm") }}
+      </h2>
+      <h1
+        :class="{
+          title: true,
+          'title--tablet': isTablet,
+          'title--mobile': isMobile,
+        }"
+      >
+        {{ $t('HOWARD') }}
+      </h1>
     </div>
     <hr class="line" />
     <div class="subtitle-container">
-      <h2 class="subtitle">{{ $t('Freelance Photographer') }}</h2>
-      <h2 class="subtitle">{{ $t('Full-Stack Developer') }}</h2>
+      <h2
+        :class="{
+          subtitle: true,
+          'subtitle--tablet': isTablet,
+          'subtitle--mobile': isMobile,
+        }"
+      >
+        {{ $t('Freelance Photographer') }}
+      </h2>
+      <h2
+        :class="{
+          subtitle: true,
+          'subtitle--tablet': isTablet,
+          'subtitle--mobile': isMobile,
+        }"
+      >
+        {{ $t('Full-Stack Developer') }}
+      </h2>
     </div>
   </div>
 </template>
@@ -26,16 +65,34 @@
 
   .overline {
     text-align: left;
-    font-size: 1.75rem;
+    font-size: rem(28);
     font-weight: 400;
+
+    &--tablet {
+      font-size: rem(24);
+    }
+
+    &--mobile {
+      font-size: rem(20);
+      text-align: center;
+    }
   }
 
   .title {
     text-align: left;
-    font-size: 7.5rem;
+    font-size: rem(120);
     font-weight: 400;
     line-height: 0.75;
-    margin-left: -0.5rem;
+    margin-left: rem(-8);
+
+    &--tablet {
+      font-size: rem(96);
+    }
+
+    &--mobile {
+      font-size: rem(68);
+      text-align: center;
+    }
   }
 
   .line {
@@ -46,9 +103,18 @@
 
   .subtitle {
     text-align: right;
-    font-size: 1.75rem;
+    font-size: rem(28);
     font-weight: 400;
     line-height: 1;
+
+    &--tablet {
+      font-size: rem(24);
+    }
+
+    &--mobile {
+      font-size: rem(20);
+      text-align: center;
+    }
   }
 }
 

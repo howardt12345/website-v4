@@ -4,6 +4,7 @@ import { useNavLinks } from '@/composables/nav';
 interface Props {
   animate?: boolean;
   delay?: number;
+  isMobile?: boolean;
 }
 const props = defineProps<Props>();
 
@@ -15,6 +16,7 @@ const links = useNavLinks();
     <div
       v-motion
       v-for="(link, index) in links"
+      :key="link.name"
       :initial="{ opacity: 0, y: 10 }"
       :enter="{
         opacity: 1,
@@ -27,9 +29,10 @@ const links = useNavLinks();
       }"
       :delay="index * 150 + (delay ?? 0)"
     >
-      <v-btn :key="link.name" variant="plain" :to="link.path" nuxt
+      <v-btn v-if="!isMobile" variant="plain" :to="link.path" nuxt
         >{{ $t(link.name) }}
       </v-btn>
+      <v-btn v-else variant="plain" :to="link.path" :icon="`fas fa-${link.icon}`" nuxt />
     </div>
   </div>
 </template>
