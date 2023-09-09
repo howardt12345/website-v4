@@ -8,8 +8,8 @@ const links = useNavLinks();
     <v-btn
       v-for="link in links"
       :key="link.name"
-      :to="link.path"
       variant="plain"
+      :to="link.path"
       nuxt
       >{{ $t(link.name) }}
     </v-btn>

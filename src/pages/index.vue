@@ -2,14 +2,19 @@
 import { useMounted } from '@vueuse/core';
 
 const isMounted = useMounted();
+definePageMeta({
+  layout: false,
+});
 </script>
 
 <template>
-  <main v-if="isMounted">
-    <HomeTitle />
-    <NavLinks />
-    <CommonThemeToggle />
-  </main>
+  <NuxtLayout name="index">
+    <main v-if="isMounted">
+      <HomeTitle />
+      <NavLinks />
+      <CommonThemeToggle />
+    </main>
+  </NuxtLayout>
 </template>
 
 <style scoped lang="scss">

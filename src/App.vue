@@ -13,7 +13,9 @@ usei18n();
 <template>
   <Suspense>
     <v-app>
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </v-app>
     <template #fallback>
       <div>
