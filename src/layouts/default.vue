@@ -8,7 +8,7 @@
       <CommonThemeToggle />
     </v-footer>
     <slot />
-    <LayoutFooter />
+    <NavFooter />
   </div>
 </template>
 
