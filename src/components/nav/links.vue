@@ -15,7 +15,7 @@ const links = useNavLinks();
     <div
       v-motion
       v-for="(link, index) in links"
-      :initial="{ opacity: 0, y: -10 }"
+      :initial="{ opacity: 0, y: 10 }"
       :enter="{
         opacity: 1,
         y: 0,
@@ -25,7 +25,6 @@ const links = useNavLinks();
           ease: 'easeOut',
         },
       }"
-      :leave="{ opacity: 0, y: -10 }"
       :delay="index * 150 + (delay ?? 0)"
     >
       <v-btn :key="link.name" variant="plain" :to="link.path" nuxt

@@ -11,8 +11,23 @@ definePageMeta({
   <NuxtLayout name="index">
     <main v-if="isMounted">
       <HomeTitle />
-      <NavLinks :animate="true" :delay="1000"/>
-      <CommonThemeToggle />
+      <NavLinks :animate="true" :delay="1000" />
+      <div
+        v-motion
+        :initial="{ opacity: 0, y: -10 }"
+        :enter="{
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 500,
+            type: 'keyframes',
+            ease: 'easeOut',
+          },
+        }"
+        :delay="1700"
+      >
+        <CommonThemeToggle />
+      </div>
     </main>
   </NuxtLayout>
 </template>
