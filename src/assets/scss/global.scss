@@ -7,6 +7,9 @@
 }
 
 .v-btn {
+  &--variant-plain {
+    opacity: 1 !important;
+  }
   :hover,
   :focus & {
     color: $accent;
