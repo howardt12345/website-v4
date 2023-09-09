@@ -28,5 +28,6 @@ export default defineNuxtConfig({
       },
     ],
     ['@nuxt/content', {}],
+    '@vueuse/motion/nuxt',
   ],
 });

@@ -9,11 +9,11 @@ definePageMeta({
 
 <template>
   <NuxtLayout name="index">
-  <main v-if="isMounted">
-    <HomeTitle />
-    <NavLinks />
-    <CommonThemeToggle />
-  </main>
+    <main v-if="isMounted">
+      <HomeTitle />
+      <NavLinks :animate="true" :delay="1000"/>
+      <CommonThemeToggle />
+    </main>
   </NuxtLayout>
 </template>
 
