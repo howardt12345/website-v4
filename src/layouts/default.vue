@@ -1,10 +1,16 @@
+<script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core';
+
+const isMobile = useMediaQuery('(max-width: 600px)');
+</script>
+
 <template>
   <div>
     <v-footer class="app-bar" elevation="0" color="background">
       <v-app-bar-title>
         <v-btn variant="plain" size="x-large" to="/" nuxt>Howard Tseng</v-btn>
       </v-app-bar-title>
-      <NavLinks />
+      <NavLinks :is-mobile="isMobile" />
       <CommonThemeToggle />
     </v-footer>
     <slot />
