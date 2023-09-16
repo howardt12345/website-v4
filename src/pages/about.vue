@@ -7,7 +7,7 @@ console.log(data);
 
 <template>
   <h1 class="section-title">About</h1>
-  <ContentRenderer :value="data" />
+  <ContentRenderer v-if="data" :value="data" />
 </template>
 
 <style scoped lang="scss"></style>
