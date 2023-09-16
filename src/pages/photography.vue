@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <h1>Photography</h1>
+  <h1 class="section-title">Photography</h1>
 </template>
 
 <style scoped lang="scss">

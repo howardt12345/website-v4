@@ -45,7 +45,9 @@ const links = useNavLinks();
       <NavLinks v-if="!isMobile" />
       <CommonThemeToggle />
     </v-footer>
-    <slot />
+    <div class="content-container">
+      <slot />
+    </div>
     <NavFooter />
   </div>
 </template>
@@ -53,5 +55,11 @@ const links = useNavLinks();
 <style scoped lang="scss">
 .app-bar {
   padding: rem(12);
+}
+
+.content-container {
+  max-width: rem(1200);
+  width: 80vw;
+  margin: 0 auto;
 }
 </style>

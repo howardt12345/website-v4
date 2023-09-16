@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   rootDir: 'src/',
   css: [
-    '@/assets/scss/global.scss',
     'vuetify/lib/styles/main.sass',
+    '@/assets/scss/global.scss',
     '@fortawesome/fontawesome-svg-core/styles.css',
   ],
   vite: {

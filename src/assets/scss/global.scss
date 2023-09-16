@@ -1,9 +1,15 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   font-weight: normal;
+  font-family: 'Poppins', sans-serif;
 }
 .v-btn {
   &--variant-plain {
@@ -12,5 +18,13 @@
   :hover,
   :focus & {
     color: $accent;
+  }
+}
+
+.section-title {
+  font-size: rem(72);
+
+  @media (max-width: 600px) {
+    font-size: rem(48);
   }
 }

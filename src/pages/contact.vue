@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <h1>Contact</h1>
+  <h1 class="section-title">Contact</h1>
 </template>
 
 <style scoped lang="scss">
