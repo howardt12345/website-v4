@@ -14,6 +14,12 @@ const links = useNavLinks();
 
 <template>
   <div>
+    <v-alert
+      text="This is the latest development site for howardt12345.com. It is currently under construction."
+      color="warning"
+      icon="$info"
+      :closable="true"
+    ></v-alert>
     <v-navigation-drawer v-model="drawerOpen" temporary>
       <v-btn nuxt to="/" size="x-large" variant="plain" :ripple="false"
         >Howard Tseng</v-btn
