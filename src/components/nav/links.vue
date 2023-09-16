@@ -14,8 +14,8 @@ const links = useNavLinks();
 <template>
   <div class="nav-links">
     <div
-      v-motion
       v-for="(link, index) in links"
+      v-motion
       :key="link.name"
       :initial="{ opacity: 0, y: 10 }"
       :enter="{
@@ -29,10 +29,20 @@ const links = useNavLinks();
       }"
       :delay="index * 150 + (delay ?? 0)"
     >
-      <v-btn v-if="!isMobile" variant="plain" :to="link.path" nuxt
+      <v-btn
+        v-if="!isMobile"
+        nuxt
+        :to="link.path"
+        variant="plain"
         >{{ $t(link.name) }}
       </v-btn>
-      <v-btn v-else variant="plain" :to="link.path" :icon="`fas fa-${link.icon}`" nuxt />
+      <v-btn
+        v-else
+        nuxt
+        :to="link.path"
+        variant="plain"
+        :icon="`fas fa-${link.icon}`"
+      />
     </div>
   </div>
 </template>

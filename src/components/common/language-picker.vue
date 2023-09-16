@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SUPPORTED_LANGUAGES } from '@/plugins/i18n';
+import { SUPPORTED_LANGUAGES } from '@/plugins/03.i18n';
 import { usei18n } from '@/store/i18n.store';
 
 const languages = SUPPORTED_LANGUAGES;
