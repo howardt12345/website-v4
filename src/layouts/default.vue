@@ -15,18 +15,25 @@ const links = useNavLinks();
 <template>
   <div>
     <v-navigation-drawer v-model="drawerOpen" temporary>
-      <v-btn nuxt to="/" size="x-large" variant="plain" :ripple="false"
+      <v-btn
+        nuxt
+        to="/"
+        class="title-button"
+        size="x-large"
+        variant="plain"
+        :ripple="false"
         >Howard Tseng</v-btn
       >
       <v-divider></v-divider>
-      <v-list>
+      <v-list class="nav-drawer-content">
         <v-list-item
           v-for="link in links"
           :key="link.name"
+          class="nav-drawer-content__item"
           nuxt
           :to="link.path"
-          :prepend-icon="`fas fa-${link.icon}`"
           :title="$t(link.name)"
+          :ripple="false"
         >
         </v-list-item>
       </v-list>
@@ -38,7 +45,13 @@ const links = useNavLinks();
         @click="toggleDrawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-title>
-        <v-btn nuxt to="/" size="x-large" variant="plain" :ripple="false"
+        <v-btn
+          nuxt
+          to="/"
+          class="title-button"
+          size="x-large"
+          variant="plain"
+          :ripple="false"
           >Howard Tseng</v-btn
         >
       </v-app-bar-title>
@@ -57,9 +70,27 @@ const links = useNavLinks();
   padding: rem(12);
 }
 
+.nav-drawer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-top: rem(-36);
+
+  &__item {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .content-container {
   max-width: rem(1200);
   width: 80vw;
   margin: 0 auto;
+}
+
+.title-button {
+  z-index: 1;
 }
 </style>
