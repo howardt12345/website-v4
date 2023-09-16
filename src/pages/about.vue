@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data } = await useAsyncData('content', () =>
-  queryContent('/about').findOne(),
+  queryContent('/about/').findOne(),
 );
 console.log(data);
 </script>
