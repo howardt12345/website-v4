@@ -1,5 +1,4 @@
 ---
-title: 'About'
 avatar: '/me.jpg'
 technologies:
   - Vue
