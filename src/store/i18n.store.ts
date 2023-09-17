@@ -1,7 +1,7 @@
 import { useTranslation } from 'i18next-vue';
 
 export const usei18n = defineStore('i18n', () => {
-  const { i18next } = useTranslation();
+  const { i18next, t } = useTranslation();
   const languages = computed(() => i18next.languages);
   const currentLanguage = computed(() => i18next.resolvedLanguage);
 
@@ -13,5 +13,6 @@ export const usei18n = defineStore('i18n', () => {
     changeLanguage,
     currentLanguage,
     languages,
+    t
   };
 });

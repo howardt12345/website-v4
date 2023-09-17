@@ -11,9 +11,9 @@ technologies:
   - Python
   - MongoDB
 languages:
-  - English (fluent)
-  - Taiwanese Mandarin (elementary)
-  - Japanese (basic)
+  - { name: English, value: 5 }
+  - { name: Taiwanese Mandarin, value: 2 }
+  - { name: Japanese, value: 1 }
 hobbies:
   - Photography
   - Electronics Design
