@@ -34,4 +34,7 @@ export default defineNuxtConfig({
     ['@nuxt/content', {}],
     '@vueuse/motion/nuxt',
   ],
+  routeRules: {
+    '/about': { prerender: true },
+  },
 });
