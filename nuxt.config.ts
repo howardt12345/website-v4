@@ -34,9 +34,4 @@ export default defineNuxtConfig({
     ['@nuxt/content', {}],
     '@vueuse/motion/nuxt',
   ],
-  router: {
-    options: {
-      strict: true,
-    },
-  },
 });
