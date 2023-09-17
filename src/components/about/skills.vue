@@ -93,6 +93,8 @@ const languageLevel = (value: number) => {
   margin-bottom: rem(8);
 
   &__text {
+    height: fit-content;
+    align-self: center;
     font-size: rem(16);
   }
 }
