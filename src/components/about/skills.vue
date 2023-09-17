@@ -29,11 +29,11 @@ const languageLevel = (value: number) => {
 
 <template>
   <div class="skills">
-    <div class="skills-section">
+    <div>
       <h2 class="skills-title">{{ $t('Recent Technologies') }}</h2>
       <AboutListItems :items="technologies" grid />
     </div>
-    <div class="skills-section skills-row">
+    <div class="skills-row">
       <div>
         <h2 class="skills-title">{{ $t('Hobbies') }}</h2>
         <AboutListItems :items="hobbies" />
@@ -65,10 +65,6 @@ const languageLevel = (value: number) => {
 .skills {
   text-align: left;
   width: 100%;
-
-  &-section {
-    margin-bottom: rem(16);
-  }
 
   &-title {
     font-size: rem(28);
