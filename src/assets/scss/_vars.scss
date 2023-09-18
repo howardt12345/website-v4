@@ -3,3 +3,6 @@ $accent: rgb(var(--v-theme-primary));
 $translucent-accent: rgba(var(--v-theme-translucent-accent));
 $text: rgb(var(--v-theme-text-primary));
 $background: rgb(var(--v-theme-background));
+$shadow-bg: rgba(var(--v-theme-shadow-bg));
+
+$transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);

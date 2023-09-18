@@ -24,7 +24,9 @@ const props = defineProps<Props>();
         :languages="data.languages"
       />
     </div>
-    <div class="about__image">image</div>
+    <div class="about__image">
+      <v-img src="images/me.jpg"></v-img>
+    </div>
   </div>
 </template>
 
@@ -36,24 +38,60 @@ const props = defineProps<Props>();
   width: 100%;
   margin-bottom: rem(32);
 
+  @media (max-width: 600px) {
+    flex-direction: column;
+    margin-bottom: rem(16);
+  }
+
   &__content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 65%;
   }
+
   &__image {
-    width: 100%;
-    max-width: 400px;
+    position: relative;
+    width: 35%;
+    max-width: rem(300);
     margin-bottom: rem(16);
-    border: 1px solid $border-color;
-  }
+    border-radius: rem(4);
+    margin-left: rem(60);
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    margin-bottom: rem(16);
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: rem(4);
+      transition: $transition;
 
-    &__image {
-      max-width: 100%;
+      border: 2px solid $accent;
+      top: 20px;
+      left: 20px;
+    }
+
+    :deep(.v-img) {
+      z-index: 2 !important;
+    }
+
+    :deep(img) {
+      filter: grayscale(100%) contrast(1) !important;
+      mix-blend-mode: multiply;
+      transition: $transition;
+    }
+
+    &:hover,
+    &:focus {
+      :deep(img) {
+        filter: none !important;
+        mix-blend-mode: normal;
+      }
+      &:after {
+        top: 15px;
+        left: 15px;
+      }
     }
   }
 }
