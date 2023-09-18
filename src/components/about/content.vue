@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { instagramLink } from '@/composables/links';
+import { ParsedContent } from '@nuxt/content/dist/runtime/types';
+
 interface Props {
   data: ParsedContent;
 }
@@ -25,7 +28,9 @@ const props = defineProps<Props>();
       />
     </div>
     <div class="about__image">
-      <v-img src="images/me.jpg"></v-img>
+      <a :href="instagramLink" target="_blank">
+        <v-img src="images/me.jpg"></v-img>
+      </a>
     </div>
   </div>
 </template>
@@ -73,6 +78,7 @@ const props = defineProps<Props>();
     }
 
     :deep(.v-img) {
+      border-radius: rem(4);
       z-index: 2 !important;
     }
 

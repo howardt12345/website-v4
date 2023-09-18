@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useNavLinks } from '@/composables/nav';
+import { useNavLinks } from '@/composables/links';
 
 interface Props {
   animate?: boolean;
