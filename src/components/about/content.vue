@@ -16,6 +16,7 @@ const props = defineProps<Props>();
       <v-btn
         href="/resume.pdf"
         target="_blank"
+        rel="nofollow noopener noreferrer"
         class="resume-button"
         size="large"
         color="primary"
@@ -28,7 +29,11 @@ const props = defineProps<Props>();
       />
     </div>
     <div class="about__image">
-      <a :href="instagramLink" target="_blank">
+      <a
+        :href="instagramLink"
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+      >
         <v-img src="images/me.jpg"></v-img>
       </a>
     </div>

@@ -14,30 +14,25 @@ export const useNavLinks = (): NavLink[] => [
 ];
 
 export const useSocialLinks = (): NavLink[] => [
-  { name: 'GitHub', path: 'https://github.com/howardt12345', icon: 'github' },
+  { name: 'GitHub', path: 'https://github.com/howardt12345', icon: 'fab fa-github' },
   {
     name: 'LinkedIn',
     path: 'https://www.linkedin.com/in/howardt12345/',
-    icon: 'linkedin',
+    icon: 'fab fa-linkedin',
   },
   {
     name: 'Instagram',
     path: 'https://www.instagram.com/howardt12345/',
-    icon: 'instagram',
-  },
-  {
-    name: 'Twitter',
-    path: 'https://twitter.com/howardt12345',
-    icon: 'twitter',
+    icon: 'fab fa-instagram',
   },
   {
     name: 'Dribbble',
     path: 'https://dribbble.com/howardt12345',
-    icon: 'dribbble',
+    icon: 'fab fa-dribbble',
   },
   {
     name: 'Redbubble',
     path: 'https://www.redbubble.com/people/howardt12345/shop',
-    icon: 'redbubble',
+    icon: 'custom:redbubble',
   },
 ];

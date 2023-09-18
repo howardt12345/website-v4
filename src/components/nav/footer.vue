@@ -1,7 +1,21 @@
 <template>
   <v-footer color="background">
-    <v-col class="text-center mt-4" cols="12">
+    <NavSocialLinks />
+    <span class="copyright">
       © {{ new Date().getFullYear() }} Howard Tseng
-    </v-col>
+    </span>
   </v-footer>
 </template>
+
+<style scoped lang="scss">
+.v-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.copyright {
+  margin: rem(16);
+  font-size: rem(14);
+  color: $text-secondary;
+}
+</style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   items: string[];
-  grid: boolean
+  grid?: boolean
 }
 const props = defineProps<Props>();
 </script>
@@ -12,7 +12,7 @@ const props = defineProps<Props>();
     'list-items--grid': grid
   }">
     <li v-for="item in items" :key="item" class="list-items__item">
-      <v-icon class="list-items__icon">mdi-check</v-icon>
+      <v-icon class="list-items__icon"></v-icon>
       <span class="list-items__text">{{ item }}</span>
     </li>
   </ul>
