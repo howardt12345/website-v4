@@ -81,6 +81,7 @@ const links = useNavLinks();
   &__item {
     width: 100%;
     justify-content: center;
+    color: $text-secondary;
   }
 }
 

@@ -58,6 +58,10 @@ const props = defineProps<Props>();
     flex-direction: column;
     align-items: center;
     width: 65%;
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
   }
 
   &__image {
@@ -67,6 +71,11 @@ const props = defineProps<Props>();
     margin-bottom: rem(16);
     border-radius: rem(4);
     margin-left: rem(60);
+
+    @media (max-width: 600px) {
+      width: 100%;
+      margin-left: 0;
+    }
 
     &:after {
       content: '';
