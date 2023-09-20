@@ -38,7 +38,7 @@ const formatDate = (date: Date) =>
             v-if="experience.location && !isMobile"
             class="timeline-card__location"
           >
-            <v-icon small>fas fa-map-marker-alt</v-icon>
+            <v-icon size="small">fas fa-map-marker-alt</v-icon>
             {{ experience.location }}
           </div>
           <v-btn
@@ -67,7 +67,7 @@ const formatDate = (date: Date) =>
         v-if="experience.location && isMobile"
         class="timeline-card__location"
       >
-        <v-icon small>fas fa-map-marker-alt</v-icon>
+        <v-icon size="x-small">fas fa-map-marker-alt</v-icon>
         {{ experience.location }}
       </div>
     </v-card-subtitle>
@@ -77,7 +77,7 @@ const formatDate = (date: Date) =>
     </v-card-text>
 
     <v-card-actions v-if="experience.skills">
-      <v-chip-group>
+      <v-chip-group class="timeline-card__chip-group">
         <v-chip v-for="skill in experience.skills" class="timeline-card__chip">
           {{ skill }}
         </v-chip>
@@ -99,6 +99,7 @@ const formatDate = (date: Date) =>
 
       :deep(.v-toolbar-title__placeholder) {
         white-space: normal;
+        padding-right: rem(8);
       }
     }
 
@@ -121,6 +122,11 @@ const formatDate = (date: Date) =>
   &__chip {
     margin-right: rem(8);
     margin-bottom: rem(8);
+
+    &-group {
+      padding: rem(4);
+      padding-top: 0;
+    }
   }
 }
 </style>
