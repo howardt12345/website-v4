@@ -49,6 +49,7 @@ const dateText = (date: Date) =>
         <AboutTimelineContent
           :experience="experience"
           :current-language="currentLanguage"
+          :is-mobile="isMobile"
         />
       </template>
     </v-timeline-item>

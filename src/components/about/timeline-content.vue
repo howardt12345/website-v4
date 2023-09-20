@@ -4,6 +4,7 @@ import { TimelineItem } from '@/types/about';
 interface Props {
   experience: TimelineItem;
   currentLanguage: string;
+  isMobile: boolean;
 }
 
 const props = defineProps<Props>();
@@ -28,7 +29,10 @@ const dateText = (date: Date) =>
         </v-toolbar-title>
 
         <template v-slot:append>
-          <div v-if="experience.location" class="timeline-card__location">
+          <div
+            v-if="experience.location && !isMobile"
+            class="timeline-card__location"
+          >
             <v-icon small>fas fa-map-marker-alt</v-icon>
             {{ experience.location }}
           </div>
@@ -44,10 +48,21 @@ const dateText = (date: Date) =>
     </v-card-title>
 
     <v-card-subtitle>
-      {{ dateText(new Date(experience.start_date)) }}
-      {{
-        experience.end_date ? '-' + dateText(new Date(experience.end_date)) : ''
-      }}
+      <div>
+        {{ dateText(new Date(experience.start_date)) }}
+        {{
+          experience.end_date
+            ? '-' + dateText(new Date(experience.end_date))
+            : ''
+        }}
+      </div>
+      <div
+        v-if="experience.location && isMobile"
+        class="timeline-card__location"
+      >
+        <v-icon small>fas fa-map-marker-alt</v-icon>
+        {{ experience.location }}
+      </div>
     </v-card-subtitle>
 
     <v-card-text>
@@ -79,6 +94,10 @@ const dateText = (date: Date) =>
     color: $text-secondary;
     font-size: rem(16);
     margin-right: rem(8);
+
+    @media (max-width: 480px) {
+      margin-top: rem(8);
+    }
   }
 
   &__chip {
