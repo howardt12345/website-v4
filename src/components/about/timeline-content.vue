@@ -23,8 +23,9 @@ const formatDate = (date: Date) =>
       <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
         <v-toolbar-title class="timeline-card__title_toolbar">
           <template #text>
-            <span
-              class="timeline-card__title_text">{{ experience.title }}</span>
+            <span class="timeline-card__title_text">{{
+              experience.title
+            }}</span>
             <span
               v-if="experience.organization"
               class="timeline-card__title_subtitle"
@@ -77,7 +78,7 @@ const formatDate = (date: Date) =>
       <ContentRenderer class="content-renderer" :value="experience" />
     </v-card-text>
 
-    <v-card-actions v-if="experience.skills">
+    <v-card-actions v-if="experience.skills" class="timeline-card__actions">
       <v-chip-group class="timeline-card__chip-group">
         <v-chip v-for="skill in experience.skills" class="timeline-card__chip">
           {{ skill }}
@@ -90,7 +91,7 @@ const formatDate = (date: Date) =>
 <style scoped lang="scss">
 .timeline-card {
   width: 100%;
-  background-color: $background;
+  background-color: rgba(0, 0, 0, 0);
 
   &__title {
     padding-right: 0;
@@ -123,6 +124,10 @@ const formatDate = (date: Date) =>
     @media (max-width: 480px) {
       margin-top: rem(8);
     }
+  }
+
+  &__actions {
+    padding-top: 0;
   }
 
   &__chip {

@@ -2,6 +2,7 @@
   <v-footer color="background">
     <CommonLanguagePicker />
     <NavSocialLinks />
+    <CommonThemeToggle />
     <span class="copyright">
       © {{ new Date().getFullYear() }} Howard Tseng
     </span>
@@ -13,9 +14,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: rem(8);
+  margin-bottom: rem(16);
 }
 .copyright {
-  margin: rem(16);
   font-size: rem(14);
   color: $text-secondary;
 }
