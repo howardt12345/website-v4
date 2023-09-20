@@ -18,8 +18,10 @@ const languageLevel = (value: number) => {
   } else if (value < 2) {
     return t('Elementary');
   } else if (value < 3) {
-    return t('Intermediate');
+    return t('Conversational');
   } else if (value < 4) {
+    return t('Intermediate');
+  } else if (value < 5) {
     return t('Advanced');
   } else {
     return t('Fluent');
