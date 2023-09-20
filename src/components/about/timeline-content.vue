@@ -20,12 +20,12 @@ const dateText = (date: Date) =>
 <template>
   <v-card class="timeline-card">
     <v-card-title>
-      <v-toolbar color="rgba(0, 0, 0, 0)">
+      <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
         <v-toolbar-title class="timeline-card__title">
-          <h3 class="timeline-card__title">{{ experience.title }}</h3>
-          <h4 v-if="experience.organization" class="timeline-card__subtitle">
+          <span class="timeline-card__title">{{ experience.title }}</span>
+          <span v-if="experience.organization" class="timeline-card__subtitle">
             @ {{ experience.organization }}
-          </h4>
+          </span>
         </v-toolbar-title>
 
         <template v-slot:append>
@@ -71,9 +71,11 @@ const dateText = (date: Date) =>
     </v-card-text>
 
     <v-card-actions v-if="experience.skills">
-      <v-chip v-for="skill in experience.skills" class="timeline-card__chip">
-        {{ skill }}
-      </v-chip>
+      <v-chip-group>
+        <v-chip v-for="skill in experience.skills" class="timeline-card__chip">
+          {{ skill }}
+        </v-chip>
+      </v-chip-group>
     </v-card-actions>
   </v-card>
 </template>
@@ -81,10 +83,10 @@ const dateText = (date: Date) =>
 <style scoped lang="scss">
 .timeline-card {
   width: 100%;
-
   &__title {
     margin: 0;
     color: $text;
+    white-space: normal;
   }
 
   &__subtitle {
