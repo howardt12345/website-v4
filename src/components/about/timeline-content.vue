@@ -18,12 +18,13 @@ const formatDate = (date: Date) =>
 </script>
 
 <template>
-  <v-card class="timeline-card" color="rgba(0, 0, 0, 0)" elevation="0">
+  <v-card class="timeline-card" elevation="0">
     <v-card-title class="timeline-card__title">
       <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
         <v-toolbar-title class="timeline-card__title_toolbar">
           <template #text>
-            <span>{{ experience.title }}</span>
+            <span
+              class="timeline-card__title_text">{{ experience.title }}</span>
             <span
               v-if="experience.organization"
               class="timeline-card__title_subtitle"
@@ -89,11 +90,11 @@ const formatDate = (date: Date) =>
 <style scoped lang="scss">
 .timeline-card {
   width: 100%;
+  background-color: $background;
 
   &__title {
     padding-right: 0;
     padding-top: 0;
-    color: $text;
 
     &_toolbar {
       margin: 0;
@@ -102,6 +103,10 @@ const formatDate = (date: Date) =>
         white-space: normal;
         padding-right: rem(8);
       }
+    }
+
+    &_text {
+      color: $text;
     }
 
     &_subtitle {
