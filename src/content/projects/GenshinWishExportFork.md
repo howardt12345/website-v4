@@ -1,7 +1,7 @@
 ---
 date: '2021-07-09'
 title: 'Genshin Impact Wish History Exporter'
-github: 'https://github.com/howardt12345/genshin-wish-export'
+githubLink: 'https://github.com/howardt12345/genshin-wish-export'
 tech:
   - Vue
   - Electron

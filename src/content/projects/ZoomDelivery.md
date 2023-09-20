@@ -1,8 +1,7 @@
 ---
 date: '2020-02-07'
 title: 'Zoom Delivery'
-github: 'https://github.com/howardt12345/zoom-uottahack3'
-external: ''
+githubLink: 'https://github.com/howardt12345/zoom-uottahack3'
 tech:
   - Flutter
   - Firebase

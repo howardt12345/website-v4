@@ -1,8 +1,7 @@
 ---
 date: '2018-01-07'
 title: 'Neural Network'
-github: 'https://github.com/howardt12345/NeuralNetwork'
-external: ''
+githubLink: 'https://github.com/howardt12345/NeuralNetwork'
 tech:
   - Java
   - Machine Learning

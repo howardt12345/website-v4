@@ -1,8 +1,7 @@
 ---
 date: '2020-10-12'
 title: '360 Audio Spectrum Videos'
-github: 'https://github.com/howardt12345/360-Audio-Spectrum'
-external: ''
+githubLink: 'https://github.com/howardt12345/360-Audio-Spectrum'
 tech:
   - Unity3d
   - C#

@@ -1,8 +1,8 @@
 ---
 date: '2021-01-09'
 title: 'Shopify UX Challenge Summer 2021'
-github: 'https://github.com/howardt12345/shopify-ux-challenge-21'
-external: 'https://shopux21.ht12345.xyz/'
+githubLink: 'https://github.com/howardt12345/shopify-ux-challenge-21'
+externalLink: 'https://shopux21.ht12345.xyz/'
 tech:
   - React
   - Styled Components

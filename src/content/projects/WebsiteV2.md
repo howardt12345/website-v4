@@ -1,8 +1,8 @@
 ---
 date: '2020-06-01'
 title: 'Website v2'
-github: 'https://github.com/howardt12345/website-v2/'
-external: 'https://v2.howardt12345.com'
+githubLink: 'https://github.com/howardt12345/website-v2/'
+externalLink: 'https://v2.howardt12345.com'
 tech:
   - React
   - Gatsby

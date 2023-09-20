@@ -1,8 +1,7 @@
 ---
 date: '2017-03-04'
 title: 'Java 3D Engine'
-github: 'https://github.com/howardt12345/Java-3D-Engine'
-external: ''
+githubLink: 'https://github.com/howardt12345/Java-3D-Engine'
 tech:
   - Java
   - Swing

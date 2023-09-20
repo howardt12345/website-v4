@@ -1,8 +1,8 @@
 ---
 date: '2022-01-30'
 title: 'keyboard0 by ht12345'
-github: 'https://github.com/howardt12345/keyboard0'
-external: 'https://kb.ht12345.xyz/0'
+githubLink: 'https://github.com/howardt12345/keyboard0'
+externalLink: 'https://kb.ht12345.xyz/0'
 tech:
   - KiCad
   - Fusion 360

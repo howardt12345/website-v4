@@ -1,8 +1,7 @@
 ---
 date: '2020-12-26'
 title: 'Service Novigrad App'
-github: 'https://github.com/howardt12345/service-novigrad'
-external: ''
+githubLink: 'https://github.com/howardt12345/service-novigrad'
 tech:
   - Android
   - Android Studio

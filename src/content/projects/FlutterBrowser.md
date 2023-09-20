@@ -1,8 +1,7 @@
 ---
 date: '2018-04-10'
 title: 'Flutter Browser'
-github: 'https://github.com/howardt12345/flutter_browser'
-external: ''
+githubLink: 'https://github.com/howardt12345/flutter_browser'
 tech:
   - Flutter
   - Webview

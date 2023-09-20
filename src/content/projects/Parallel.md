@@ -1,8 +1,7 @@
 ---
 date: '2017-03-06'
 title: 'Parallel'
-github: 'https://github.com/howardt12345/Parallel'
-external: ''
+githubLink: 'https://github.com/howardt12345/Parallel'
 company: 'Illusios Studios'
 tech:
   - Unity

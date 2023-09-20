@@ -1,8 +1,7 @@
 ---
 date: '2018-05-17'
 title: 'Assembly x86 Calculator'
-github: 'https://github.com/howardt12345/Assembly-x86-Calculator'
-external: ''
+githubLink: 'https://github.com/howardt12345/Assembly-x86-Calculator'
 tech:
   - Assembly x86
   - Irvine32

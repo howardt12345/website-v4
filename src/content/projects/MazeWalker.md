@@ -1,8 +1,7 @@
 ---
 date: '2017-01-26'
 title: 'MazeWalker'
-github: 'https://github.com/howardt12345/MazeWalker'
-external: ''
+githubLink: 'https://github.com/howardt12345/MazeWalker'
 tech:
   - Java
   - JavaFX

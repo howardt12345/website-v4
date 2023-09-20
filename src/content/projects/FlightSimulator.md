@@ -1,8 +1,7 @@
 ---
 date: '2017-05-02'
 title: 'Flight Simulator'
-github: 'https://github.com/howardt12345/FlightSimulator'
-external: ''
+githubLink: 'https://github.com/howardt12345/FlightSimulator'
 tech:
   - Java
   - Swing

@@ -1,8 +1,7 @@
 ---
 date: '2019-10-28'
 title: 'Website v1'
-github: 'https://github.com/howardt12345/website-v1/'
-external: ''
+githubLink: 'https://github.com/howardt12345/website-v1/'
 tech:
   - Flutter
   - Firebase

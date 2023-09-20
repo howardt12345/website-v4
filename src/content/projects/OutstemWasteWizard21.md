@@ -1,8 +1,8 @@
 ---
 date: '2021-01-24'
 title: 'OutStem Front-end Challenge Summer 2021'
-github: 'https://github.com/howardt12345/outstem-waste-wizard'
-external: 'https://outstem-2021.howardt12345.com/'
+githubLink: 'https://github.com/howardt12345/outstem-waste-wizard'
+externalLink: 'https://outstem-2021.howardt12345.com/'
 tech:
   - React
   - Material UI

@@ -1,8 +1,7 @@
 ---
 date: '2018-10-29'
 title: 'Bible App'
-github: 'https://github.com/howardt12345/bibleapp'
-external: ''
+githubLink: 'https://github.com/howardt12345/bibleapp'
 tech:
   - Firebase
   - Flutter

@@ -1,7 +1,7 @@
 ---
 date: '2020-12-31'
 title: 'Website Manager v2'
-github: 'https://github.com/howardt12345/website-manager-v2'
+githubLink: 'https://github.com/howardt12345/website-manager-v2'
 tech:
   - React
   - Electron
