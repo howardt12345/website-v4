@@ -1,0 +1,11 @@
+interface ProjectItem {
+  date: string;
+  title: string;
+  description: string;
+  imagePath?: string;
+  showInProjects?: boolean;
+  featured?: boolean;
+  githubLink?: string;
+  externalLink?: string;
+  tech?: string[];
+}
