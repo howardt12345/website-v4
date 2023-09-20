@@ -30,11 +30,11 @@
 }
 
 .content-renderer {
-  :deep(p) {
+  p {
     margin-bottom: rem(8);
-  }
-  :last-child {
-    margin-bottom: 0;
+    :last-child {
+      margin-bottom: 0;
+    }
   }
   ul > li {
     margin-left: rem(16);
