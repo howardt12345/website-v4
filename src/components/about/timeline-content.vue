@@ -20,7 +20,7 @@ const dateText = (date: Date) =>
 <template>
   <v-card class="timeline-card">
     <v-card-title>
-      <v-toolbar color="rgba(0, 0, 0, 0)" theme="dark">
+      <v-toolbar color="rgba(0, 0, 0, 0)">
         <v-toolbar-title class="timeline-card__title">
           <h3 class="timeline-card__title">{{ experience.title }}</h3>
           <h4 v-if="experience.organization" class="timeline-card__subtitle">
@@ -39,6 +39,7 @@ const dateText = (date: Date) =>
           <v-btn
             v-if="experience.link"
             icon="fas fa-arrow-up-right-from-square"
+            color="primary"
             :href="experience.link.url"
             target="_blank"
             rel="nofollow noopener noreferrer"
@@ -83,6 +84,7 @@ const dateText = (date: Date) =>
 
   &__title {
     margin: 0;
+    color: $text;
   }
 
   &__subtitle {
