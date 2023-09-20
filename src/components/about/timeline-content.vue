@@ -18,7 +18,7 @@ const formatDate = (date: Date) =>
 </script>
 
 <template>
-  <v-card class="timeline-card" color="rgba(0, 0, 0, 0)">
+  <v-card class="timeline-card" color="rgba(0, 0, 0, 0)" elevation="0">
     <v-card-title class="timeline-card__title">
       <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
         <v-toolbar-title class="timeline-card__title_toolbar">
