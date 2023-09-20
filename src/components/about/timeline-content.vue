@@ -9,7 +9,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const dateText = (date: Date) =>
+const formatDate = (date: Date) =>
   date.toLocaleDateString(props.currentLanguage, {
     year: 'numeric',
     month: 'long',
@@ -19,13 +19,18 @@ const dateText = (date: Date) =>
 
 <template>
   <v-card class="timeline-card">
-    <v-card-title>
+    <v-card-title class="timeline-card__title">
       <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
-        <v-toolbar-title class="timeline-card__title">
-          <span class="timeline-card__title">{{ experience.title }}</span>
-          <span v-if="experience.organization" class="timeline-card__subtitle">
-            @ {{ experience.organization }}
-          </span>
+        <v-toolbar-title class="timeline-card__title_toolbar">
+          <template #text>
+            <span>{{ experience.title }}</span>
+            <span
+              v-if="experience.organization"
+              class="timeline-card__title_subtitle"
+            >
+              @ {{ experience.organization }}
+            </span>
+          </template>
         </v-toolbar-title>
 
         <template v-slot:append>
@@ -40,6 +45,7 @@ const dateText = (date: Date) =>
             v-if="experience.link"
             icon="fas fa-arrow-up-right-from-square"
             color="primary"
+            class="timeline-card__link"
             :href="experience.link.url"
             target="_blank"
             rel="nofollow noopener noreferrer"
@@ -50,10 +56,10 @@ const dateText = (date: Date) =>
 
     <v-card-subtitle>
       <div>
-        {{ dateText(new Date(experience.start_date)) }}
+        {{ formatDate(new Date(experience.start_date)) }}
         {{
           experience.end_date
-            ? '-' + dateText(new Date(experience.end_date))
+            ? '-' + formatDate(new Date(experience.end_date))
             : ''
         }}
       </div>
@@ -83,15 +89,23 @@ const dateText = (date: Date) =>
 <style scoped lang="scss">
 .timeline-card {
   width: 100%;
-  &__title {
-    margin: 0;
-    color: $text;
-    white-space: normal;
-  }
 
-  &__subtitle {
-    margin: 0;
-    color: $accent;
+  &__title {
+    padding-right: 0;
+    color: $text;
+
+    &_toolbar {
+      margin: 0;
+
+      :deep(.v-toolbar-title__placeholder) {
+        white-space: normal;
+      }
+    }
+
+    &_subtitle {
+      margin: 0;
+      color: $accent;
+    }
   }
 
   &__location {
