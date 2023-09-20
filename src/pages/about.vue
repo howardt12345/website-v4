@@ -10,8 +10,6 @@ const { data: experiences } = await useAsyncData('experiences', () =>
     .sort({ start_date: -1 })
     .find(),
 );
-
-console.log(experiences);
 </script>
 
 <template>

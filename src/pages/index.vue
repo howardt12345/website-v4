@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { useMounted } from '@vueuse/core';
+import { useMediaQueries } from '@/composables/media-queries';
 
 const isMounted = useMounted();
 definePageMeta({
   layout: false,
 });
 
-import { useMediaQuery } from '@vueuse/core';
-
-const isMobile = useMediaQuery('(max-width: 600px)');
-const isTablet = useMediaQuery('(max-width: 900px)');
+const { isMobile, isTablet } = useMediaQueries();
 </script>
 
 <template>

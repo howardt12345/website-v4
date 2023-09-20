@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core';
+import { useMediaQueries } from '@/composables/media-queries';
 
-const isMobile = useMediaQuery('(max-width: 600px)');
+const { isMobile } = useMediaQueries();
 
 const drawerOpen = ref(false);
 
