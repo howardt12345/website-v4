@@ -30,5 +30,6 @@ const { changeLanguage } = usei18n();
 <style scoped lang="scss">
 .language-link {
   cursor: pointer;
+  color: $text-secondary;
 }
 </style>
