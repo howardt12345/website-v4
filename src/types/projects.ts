@@ -1,4 +1,4 @@
-interface ProjectItem {
+export interface ProjectItem {
   date: string;
   title: string;
   description: string;
