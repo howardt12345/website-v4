@@ -1,5 +1,6 @@
 <template>
   <v-footer color="background">
+    <CommonLanguagePicker />
     <NavSocialLinks />
     <span class="copyright">
       © {{ new Date().getFullYear() }} Howard Tseng

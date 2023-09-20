@@ -11,14 +11,13 @@ const { changeLanguage } = usei18n();
 
 <template>
   <div>
-    <hr />
     <div>
       <div v-if="languages">
         <span v-for="(lng, index) in languageKeys" :key="lng">
           <strong v-if="currentLanguage === lng">
             {{ languages[lng].nativeName }}
           </strong>
-          <a v-else @click="changeLanguage(lng)">
+          <a v-else @click="changeLanguage(lng)" class="language-link">
             {{ languages[lng].nativeName }}
           </a>
           <span v-if="index < languageKeys.length - 1">&nbsp;|&nbsp;</span>
@@ -27,3 +26,9 @@ const { changeLanguage } = usei18n();
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.language-link {
+  cursor: pointer;
+}
+</style>

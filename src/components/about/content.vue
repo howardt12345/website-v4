@@ -116,15 +116,6 @@ const props = defineProps<Props>();
   }
 }
 
-.content-renderer {
-  :deep(p) {
-    margin-bottom: rem(8);
-  }
-  :last-child {
-    margin-bottom: 0;
-  }
-}
-
 .resume-button {
   margin: rem(24);
 }

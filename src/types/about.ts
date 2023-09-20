@@ -1,8 +1,14 @@
-interface TimelineItem {
+import { ParsedContent } from "@nuxt/content/dist/runtime/types";
+
+export interface TimelineItem extends ParsedContent {
   title: string;
-  descriptionPoints?: string[];
-  skills: string[];
+  start_date: Date;
+  organization?: string;
+  skills?: string[];
   location?: string;
-  startDate: string;
-  endDate?: string;
+  end_date?: Date;
+  link?: {
+    url: string;
+    external: boolean;
+  };
 }
