@@ -74,7 +74,7 @@ const { isDark } = storeToRefs(useTheme());
   z-index: 1;
 
   &--outlined {
-    border: rem(1) solid $text !important;
+    border: 1px solid $text !important;
   }
 
   :deep(.v-card__image) {
