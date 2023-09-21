@@ -34,7 +34,7 @@ const selected = computed<number[]>(() => {
       </v-chip-group>
     </td>
 
-    <td>
+    <td class="links">
       <v-btn
         v-if="project.githubLink"
         icon="fab fa-github"
@@ -58,5 +58,9 @@ const selected = computed<number[]>(() => {
 <style scoped lang="scss">
 .content-renderer {
   margin: rem(8) 0;
+}
+
+.links {
+  vertical-align: top;
 }
 </style>
