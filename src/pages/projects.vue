@@ -26,9 +26,8 @@ const featuredProjects = useArrayFilter(
   (project: ProjectItem) => project.featured ?? false,
 );
 
-const otherProjects = useArrayFilter(
-  projects,
-  (project: ProjectItem) => !project.featured ?? true,
+const otherProjects = computed<ProjectItem[]>(() =>
+  projects.value.filter((project) => !project.featured).splice(0, 9),
 );
 
 const uniqueTags = computed<Set<string>>(
@@ -57,8 +56,8 @@ const toggleFilters = () => {
   <v-btn
     class="projects__filter-button"
     @click="toggleFilters"
-    :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-filter'"
-    :text="$t('Filter')"
+    :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
+    :text="showFilters ? $t('Show Featured Projects') : $t('View All Projects')"
     size="large"
   />
 

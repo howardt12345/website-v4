@@ -8,7 +8,6 @@
   "Projects": "Projects",
   "Contact": "Contact",
   "Resume": "Resume",
-  "Skills": "Skills",
   "Languages": "Languages",
   "Intermediate": "Intermediate",
   "Elementary": "Elementary",
@@ -19,11 +18,12 @@
   "Beginner": "Beginner",
   "Conversational": "Conversational",
   "Featured Projects": "Featured Projects",
-  "Other Projects": "Other Projects",
   "Title": "Title",
   "Description": "Description",
   "Tech": "Tech",
   "Date": "Date",
   "Links": "Links",
-  "Filter": "Filter"
+  "View All Projects": "View All Projects",
+  "Show Featured Projects": "Show Featured Projects",
+  "Other Recent Projects": "Other Recent Projects"
 }

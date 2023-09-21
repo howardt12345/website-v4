@@ -7,7 +7,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "i18n-unused": "i18n-unused display-missed",
+    "i18n-unused:missed": "i18n-unused display-missed",
+    "i18n-unused:unused": "i18n-unused display-unused",
     "deploy": "node src/.output/server/index.mjs"
   },
   "devDependencies": {

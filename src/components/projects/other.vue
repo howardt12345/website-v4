@@ -8,7 +8,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <h2 class="section-subtitle">{{ $t('Other Projects') }}</h2>
+  <h2 class="section-subtitle">{{ $t('Other Recent Projects') }}</h2>
   <v-container>
     <v-row>
       <v-col
