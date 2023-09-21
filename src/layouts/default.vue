@@ -14,7 +14,7 @@ const links = useNavLinks();
 
 <template>
   <div>
-    <v-navigation-drawer v-model="drawerOpen" temporary>
+    <v-navigation-drawer v-if="isMobile" v-model="drawerOpen" temporary>
       <v-btn
         nuxt
         to="/"
@@ -75,8 +75,9 @@ const links = useNavLinks();
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  margin-top: rem(-36);
+  height: 99%;
+  margin-top: -52px;
+  padding: 0;
 
   &__item {
     width: 100%;
