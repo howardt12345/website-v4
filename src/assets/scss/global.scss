@@ -29,6 +29,14 @@
   }
 }
 
+.section-subtitle {
+  font-size: rem(48);
+
+  @media (max-width: 600px) {
+    font-size: rem(32);
+  }
+}
+
 .content-renderer {
   p {
     margin-bottom: rem(8);

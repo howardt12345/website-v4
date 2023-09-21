@@ -13,6 +13,7 @@ const { isMobile } = useMediaQueries();
 </script>
 
 <template>
+  <h2 class="section-subtitle">{{ $t('Featured Projects') }}</h2>
   <v-timeline :side="isMobile ? 'end' : ''" :line-thickness="isMobile ? 2 : 0">
     <v-timeline-item
       v-for="(project, index) in projects"
