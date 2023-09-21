@@ -106,6 +106,7 @@ const clearFilters = () => {
   &__buttons {
     margin: rem(16) 0;
     display: flex;
+    flex-wrap: wrap;
     gap: rem(16);
   }
 
