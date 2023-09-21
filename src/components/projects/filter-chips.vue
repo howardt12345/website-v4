@@ -13,6 +13,12 @@ const emits = defineEmits<{
 const selectedTags = useVModel(props, 'selectedTags', emits);
 const selectedIndexes = ref<number[]>([]);
 
+onMounted(() => {
+  selectedIndexes.value = props.selectedTags.map((tag) =>
+    props.tags.indexOf(tag),
+  );
+});
+
 watch(selectedIndexes, (newValue) => {
   selectedTags.value = newValue.map((index) => props.tags[index]);
 });
