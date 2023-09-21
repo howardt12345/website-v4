@@ -138,7 +138,7 @@ const { isTablet } = useMediaQueries();
   z-index: 1;
 
   :deep(.v-card__image) {
-    filter: blur(10px);
+    filter: blur(1px) opacity(20%);
   }
 
   &__title {
