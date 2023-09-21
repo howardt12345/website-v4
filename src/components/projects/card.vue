@@ -59,7 +59,10 @@ const { isDark } = storeToRefs(useTheme());
 <style scoped lang="scss">
 .projects-card {
   width: 100%;
+  height: 100%;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
 
   &--outlined {
     border: 1px solid $text !important;
@@ -97,6 +100,12 @@ const { isDark } = storeToRefs(useTheme());
     &-links {
       direction: ltr !important;
     }
+  }
+}
+
+.content-renderer {
+  :deep(p) {
+    margin: 0;
   }
 }
 </style>
