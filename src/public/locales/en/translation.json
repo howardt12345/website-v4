@@ -19,5 +19,11 @@
   "Beginner": "Beginner",
   "Conversational": "Conversational",
   "Featured Projects": "Featured Projects",
-  "Other Projects": "Other Projects"
+  "Other Projects": "Other Projects",
+  "Title": "Title",
+  "Description": "Description",
+  "Tech": "Tech",
+  "Date": "Date",
+  "Links": "Links",
+  "Filter": "Filter"
 }

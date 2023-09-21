@@ -14,7 +14,8 @@ const { data: projects } = await useAsyncData(
 );
 const { data: tags } = await useAsyncData(
   'projects-tags',
-  () => queryContent<TechOnly>('/projects').only('tech').find(),
+  () =>
+    queryContent<TechOnly>('/projects').only('tech').sort({ tech: 1 }).find(),
   {
     default: () => [] as TechOnly[],
   },
@@ -35,14 +36,62 @@ const uniqueTags = computed<Set<string>>(
 );
 
 const selectedTags = ref<string[]>([]);
+
+const filteredProjects = useArrayFilter(
+  projects,
+  (project: ProjectItem) =>
+    !selectedTags.value.length ||
+    selectedTags.value.some((tag) => project.tech?.includes(tag)),
+);
+
+const showFilters = ref(false);
+
+const toggleFilters = () => {
+  showFilters.value = !showFilters.value;
+};
 </script>
 
 <template>
   <h1 class="section-title">{{ $t('Projects') }}</h1>
-  <!-- <ProjectsFiltered :tags="Array.from(uniqueTags)" v-model:selected-tags="selectedTags" />
-  <div>{{ selectedTags }}</div> -->
-  <ProjectsFeatured :projects="featuredProjects" />
-  <ProjectsOther :projects="otherProjects" />
+
+  <v-btn
+    class="projects__filter-button"
+    @click="toggleFilters"
+    :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-filter'"
+    :text="$t('Filter')"
+    size="large"
+  />
+
+  <Transition name="slide-fade" appear>
+    <div v-if="showFilters">
+      <ProjectsFilterChips
+        :tags="Array.from(uniqueTags)"
+        v-model:selected-tags="selectedTags"
+      />
+      <ProjectsTable
+        :projects="filteredProjects"
+        :selected-tags="selectedTags"
+      />
+    </div>
+  </Transition>
+  <div v-if="!showFilters">
+    <ProjectsFeatured
+      v-if="featuredProjects.length > 0"
+      :projects="featuredProjects"
+    />
+    <ProjectsOther :projects="otherProjects" />
+  </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+</style>

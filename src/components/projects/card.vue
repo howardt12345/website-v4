@@ -18,7 +18,7 @@ const { isDark } = storeToRefs(useTheme());
       'projects-card--outlined': !isDark,
     }"
     variant="flat"
-    :image="showImage && project.imagePath"
+    :image="showImage ? project.imagePath : ''"
   >
     <v-card-title class="projects-card__title">
       <component

@@ -15,16 +15,13 @@ const selectedIndexes = ref<number[]>([]);
 
 watch(selectedIndexes, (newValue) => {
   selectedTags.value = newValue.map((index) => props.tags[index]);
-})
+});
 </script>
 
 <template>
-  <v-chip-group
-    v-model="selectedIndexes"
-    filter
-    multiple
-    color="primary"
-  >
+  <v-chip-group v-model="selectedIndexes" filter multiple color="primary">
     <v-chip v-for="tag in tags" filter>{{ tag }}</v-chip>
   </v-chip-group>
 </template>
+
+<style scoped lang="scss"></style>
