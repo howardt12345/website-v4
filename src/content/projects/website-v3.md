@@ -10,7 +10,8 @@ tech:
   - Firebase
   - Typescript
 showInProjects: true
-featured: true;
+featured: true
+imagePath: '/images/projects/website-v3.jpg'
 ---
 
 The third iteration of <a href="https://howardt12345.com/" target="_blank">howardt12345.com</a> rebuilt with Next.js and hosted on Netlify. This website builds on my knowledge of front end development to create a more maintainable codebase.

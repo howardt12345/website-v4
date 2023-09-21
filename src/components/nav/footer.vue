@@ -3,9 +3,14 @@
     <CommonLanguagePicker />
     <NavSocialLinks />
     <CommonThemeToggle />
-    <span class="copyright">
+    <a
+      class="copyright"
+      href="https://github.com/howardt12345/website-v4"
+      target="_blank"
+      rel="nofollow noopener noreferrer"
+    >
       © {{ new Date().getFullYear() }} Howard Tseng
-    </span>
+    </a>
   </v-footer>
 </template>
 
@@ -20,5 +25,6 @@
 .copyright {
   font-size: rem(14);
   color: $text-secondary;
+  text-decoration: none;
 }
 </style>

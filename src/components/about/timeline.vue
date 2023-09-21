@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import { TimelineItem } from '@/types/about';
-import { usei18n } from '@/store/i18n.store';
 import { useMediaQueries } from '@/composables/media-queries';
+import { formatDate } from '@/composables/date';
 
 interface Props {
   experiences: TimelineItem[];
 }
 
 const props = defineProps<Props>();
-const { currentLanguage } = storeToRefs(usei18n());
 const { isMobile } = useMediaQueries();
-
-const dateText = (date: Date) =>
-  date.toLocaleDateString(currentLanguage.value, {
-    year: 'numeric',
-    month: 'short',
-  });
 </script>
 
 <template>
@@ -35,12 +28,12 @@ const dateText = (date: Date) =>
     >
       <template #opposite>
         <v-chip color="primary" text-color="white">
-          {{ dateText(new Date(experience.start_date)) }}
+          {{ formatDate(new Date(experience.start_date)) }}
           {{
             experience.end_date &&
             new Date(experience.start_date).getMonth() !==
               new Date(experience.end_date).getMonth()
-              ? '-' + dateText(new Date(experience.end_date))
+              ? '-' + formatDate(new Date(experience.end_date))
               : ''
           }}
         </v-chip>
@@ -48,7 +41,6 @@ const dateText = (date: Date) =>
       <template #default>
         <AboutTimelineContent
           :experience="experience"
-          :current-language="currentLanguage"
           :is-mobile="isMobile"
         />
       </template>
@@ -56,5 +48,4 @@ const dateText = (date: Date) =>
   </v-timeline>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import { TimelineItem } from '@/types/about';
+import { formatDate } from '@/composables/date';
+const { isMobile } = useMediaQueries();
 
 interface Props {
   experience: TimelineItem;
-  currentLanguage: string;
   isMobile: boolean;
 }
 
 const props = defineProps<Props>();
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString(props.currentLanguage, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 </script>
 
 <template>
-  <v-card class="timeline-card" elevation="0">
+  <v-card class="timeline-card" elevation="0" :side="isMobile ? 'end' : ''">
     <v-card-title class="timeline-card__title">
       <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
         <v-toolbar-title class="timeline-card__title_toolbar">
