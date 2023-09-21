@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ProjectItem } from '@/types/projects';
-import { useArrayFilter, useArrayMap } from '@vueuse/core';
 
 interface Props {
   selectedTags?: string[];
@@ -53,3 +52,9 @@ const selected = computed<number[]>(() => {
     </td>
   </tr>
 </template>
+
+<style scoped lang="scss">
+.content-renderer {
+  margin: rem(8) 0;
+}
+</style>
