@@ -17,6 +17,7 @@ const otherProjects = computed<ProjectItem[]>(
 <template>
   <h1 class="section-title">{{ $t('Projects') }}</h1>
   <ProjectsFeatured :projects="featuredProjects" />
+  <ProjectsOther :projects="otherProjects" />
 </template>
 
 <style scoped lang="scss"></style>
