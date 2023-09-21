@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ProjectItem } from '@/types/projects';
+import { useTheme } from '@/store/theme.store';
 
 interface Props {
   project: ProjectItem;
@@ -7,11 +8,15 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { isDark } = storeToRefs(useTheme());
 </script>
 
 <template>
   <v-card
-    class="projects-card"
+    :class="{
+      'projects-card': true,
+      'projects-card--outlined': !isDark,
+    }"
     variant="flat"
     :image="showImage && project.imagePath"
   >
@@ -67,6 +72,10 @@ const props = defineProps<Props>();
 .projects-card {
   width: 100%;
   z-index: 1;
+
+  &--outlined {
+    border: rem(1) solid $text !important;
+  }
 
   :deep(.v-card__image) {
     filter: blur(1px) opacity(20%);
