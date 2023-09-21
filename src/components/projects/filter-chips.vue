@@ -3,25 +3,14 @@ import { useVModel } from '@vueuse/core';
 
 interface Props {
   tags: string[];
-  selectedTags: string[];
+  selectedIndexes: number[];
 }
 const props = defineProps<Props>();
 const emits = defineEmits<{
-  (event: 'update:selectedTags', value: string[]): void;
+  (event: 'update:selectedIndexes', value: string[]): void;
 }>();
 
-const selectedTags = useVModel(props, 'selectedTags', emits);
-const selectedIndexes = ref<number[]>([]);
-
-onMounted(() => {
-  selectedIndexes.value = props.selectedTags.map((tag) =>
-    props.tags.indexOf(tag),
-  );
-});
-
-watch(selectedIndexes, (newValue) => {
-  selectedTags.value = newValue.map((index) => props.tags[index]);
-});
+const selectedIndexes = useVModel(props, 'selectedIndexes', emits);
 </script>
 
 <template>

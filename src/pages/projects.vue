@@ -24,16 +24,19 @@ const featuredProjects = useArrayFilter(
   projects,
   (project: ProjectItem) => project.featured ?? false,
 );
-
 const otherProjects = computed<ProjectItem[]>(() =>
   projects.value.filter((project) => !project.featured).splice(0, 9),
 );
-
-const uniqueTags = computed<Set<string>>(
-  () => new Set(tags.value.map((tag) => tag.tech).flat()),
+const uniqueTags = computed<string[]>(() =>
+  Array.from(new Set(tags.value.map((tag) => tag.tech).flat())),
 );
 
+const selectedIndexes = ref<number[]>([]);
 const selectedTags = ref<string[]>([]);
+
+watch(selectedIndexes, (newValue) => {
+  selectedTags.value = newValue.map((index) => uniqueTags.value[index]);
+});
 
 const filteredProjects = useArrayFilter(
   projects,
@@ -43,29 +46,43 @@ const filteredProjects = useArrayFilter(
 );
 
 const showFilters = ref(false);
-
 const toggleFilters = () => {
   showFilters.value = !showFilters.value;
+};
+const clearFilters = () => {
+  selectedIndexes.value = [];
 };
 </script>
 
 <template>
   <h1 class="section-title">{{ $t('Projects') }}</h1>
 
-  <v-btn
-    class="filter-button"
-    @click="toggleFilters"
-    :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
-    :text="showFilters ? $t('Show Featured Projects') : $t('View All Projects')"
-    size="large"
-  />
+  <div class="filter__buttons">
+    <v-btn
+      @click="toggleFilters"
+      :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
+      :text="
+        showFilters ? $t('Show Featured Projects') : $t('View All Projects')
+      "
+      size="large"
+    />
+    <v-btn
+      v-if="showFilters"
+      class="clear-button"
+      @click="clearFilters"
+      prepend-icon="fas fa-broom"
+      :text="$t('Clear Filters')"
+      size="large"
+    >
+    </v-btn>
+  </div>
 
   <Transition name="a-project-filter">
     <div v-if="showFilters">
       <ProjectsFilterChips
-        class="filter-chips"
-        :tags="Array.from(uniqueTags)"
-        v-model:selected-tags="selectedTags"
+        class="filter__chips"
+        :tags="uniqueTags"
+        v-model:selected-indexes="selectedIndexes"
       />
       <ProjectsTable
         :projects="filteredProjects"
@@ -85,12 +102,16 @@ const toggleFilters = () => {
 </template>
 
 <style scoped lang="scss">
-.filter-button {
-  margin: rem(16) 0;
-}
+.filter {
+  &__buttons {
+    margin: rem(16) 0;
+    display: flex;
+    gap: rem(16);
+  }
 
-.filter-chips {
-  margin-bottom: rem(16);
+  &__chips {
+    margin-bottom: rem(16);
+  }
 }
 
 .a-project-filter-enter-active,
