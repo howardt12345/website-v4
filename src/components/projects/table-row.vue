@@ -35,22 +35,7 @@ const selected = computed<number[]>(() => {
     </td>
 
     <td class="links">
-      <v-btn
-        v-if="project.githubLink"
-        icon="fab fa-github"
-        :href="project.githubLink"
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        variant="plain"
-      ></v-btn>
-      <v-btn
-        v-if="project.externalLink"
-        icon="fas fa-arrow-up-right-from-square"
-        :href="project.externalLink"
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        variant="plain"
-      ></v-btn>
+      <ProjectsLinks :project="project" />
     </td>
   </tr>
 </template>

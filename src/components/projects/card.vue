@@ -50,20 +50,7 @@ const { isDark } = storeToRefs(useTheme());
         </v-chip>
       </v-chip-group>
       <div class="projects-card__actions-links">
-        <v-btn
-          v-if="project.githubLink"
-          icon="fab fa-github"
-          :href="project.githubLink"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-        ></v-btn>
-        <v-btn
-          v-if="project.externalLink"
-          icon="fas fa-arrow-up-right-from-square"
-          :href="project.externalLink"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-        ></v-btn>
+        <ProjectsLinks :project="project" />
       </div>
     </v-card-actions>
   </v-card>
