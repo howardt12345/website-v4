@@ -9,25 +9,25 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const { isMobile } = useMediaQueries();
+const { isTablet } = useMediaQueries();
 </script>
 
 <template>
   <h2 class="section-subtitle">{{ $t('Featured Projects') }}</h2>
-  <v-timeline :side="isMobile ? 'end' : ''" :line-thickness="isMobile ? 2 : 0">
+  <v-timeline :side="isTablet ? 'end' : ''" :line-thickness="isTablet ? 2 : 0">
     <v-timeline-item
       v-for="(project, index) in projects"
-      :hide-dot="!isMobile"
+      :hide-dot="!isTablet"
       dot-color="primary"
       :class="{
-        'timeline-item-right': !isMobile && index % 2 === 0,
+        'timeline-item-right': !isTablet && index % 2 === 0,
       }"
       :key="project.title"
     >
       <template #opposite>
         <div class="project-image__container">
           <v-card
-            v-if="!isMobile"
+            v-if="!isTablet"
             :class="{
               'project-image': true,
               'project-image-right': index % 2 === 0,
@@ -43,7 +43,11 @@ const { isMobile } = useMediaQueries();
         </div>
       </template>
       <template #default>
-        <v-card class="project-card" variant="flat">
+        <v-card
+          class="project-card"
+          variant="flat"
+          :image="isTablet && project.imagePath"
+        >
           <v-card-title class="project-card__title">
             <component
               :is="project.externalLink ? 'a' : 'span'"
@@ -132,6 +136,10 @@ const { isMobile } = useMediaQueries();
 .project-card {
   width: 100%;
   z-index: 1;
+
+  :deep(.v-card__image) {
+    filter: blur(10px);
+  }
 
   &__title {
     white-space: normal;
