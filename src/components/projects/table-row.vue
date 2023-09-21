@@ -22,7 +22,7 @@ const selected = computed<number[]>(() => {
 <template>
   <tr>
     <td>{{ formatDate(new Date(project.date)) }}</td>
-    <td>{{ project.title }}</td>
+    <td class="title">{{ project.title }}</td>
     <td v-if="!hideDescription">
       <ContentRenderer class="content-renderer" :value="project" />
     </td>
@@ -43,6 +43,10 @@ const selected = computed<number[]>(() => {
 <style scoped lang="scss">
 .content-renderer {
   margin: rem(8) 0;
+}
+
+.title {
+  font-weight: bold;
 }
 
 .links {
