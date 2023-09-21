@@ -116,6 +116,10 @@ const formatDate = (date: Date) =>
     }
   }
 
+  &__link {
+    height: auto;
+  }
+
   &__location {
     color: $text-secondary;
     font-size: rem(16);
