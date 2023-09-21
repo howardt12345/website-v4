@@ -3,6 +3,8 @@ import { ProjectItem } from '@/types/projects';
 
 interface Props {
   selectedTags?: string[];
+  hideDescription?: boolean;
+  hideTech?: boolean;
   project: ProjectItem;
 }
 
@@ -19,18 +21,18 @@ const selected = computed<number[]>(() => {
 
 <template>
   <tr>
+    <td>{{ formatDate(new Date(project.date)) }}</td>
     <td>{{ project.title }}</td>
-    <td>
+    <td v-if="!hideDescription">
       <ContentRenderer class="content-renderer" :value="project" />
     </td>
-    <td>
+    <td v-if="!hideTech">
       <v-chip-group v-model="selected" color="primary">
         <v-chip v-for="tech in project.tech">
           {{ tech }}
         </v-chip>
       </v-chip-group>
     </td>
-    <td>{{ formatDate(new Date(project.date)) }}</td>
 
     <td>
       <v-btn

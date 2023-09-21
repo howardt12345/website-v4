@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ProjectItem } from '@/types/projects';
+import { useMediaQueries } from '@/composables/media-queries';
 
 interface Props {
   selectedTags?: string[];
@@ -7,16 +8,18 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const { isMobile, isTablet } = useMediaQueries();
 </script>
 
 <template>
   <v-table>
     <thead>
       <tr>
-        <th>{{ $t('Title') }}</th>
-        <th>{{ $t('Description') }}</th>
-        <th>{{ $t('Tech') }}</th>
         <th>{{ $t('Date') }}</th>
+        <th>{{ $t('Title') }}</th>
+        <th v-if="!isTablet">{{ $t('Description') }}</th>
+        <th v-if="!isMobile">{{ $t('Tech') }}</th>
         <th>{{ $t('Links') }}</th>
       </tr>
     </thead>
@@ -26,6 +29,8 @@ const props = defineProps<Props>();
         :key="project.title"
         :project="project"
         :selected-tags="selectedTags"
+        :hide-description="isTablet"
+        :hide-tech="isMobile"
       />
     </TransitionGroup>
   </v-table>

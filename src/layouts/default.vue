@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useMediaQueries } from '@/composables/media-queries';
 
-const { isMobile } = useMediaQueries();
+const { isTablet } = useMediaQueries();
 
 const drawerOpen = ref(false);
 
@@ -14,7 +14,7 @@ const links = useNavLinks();
 
 <template>
   <div>
-    <v-navigation-drawer v-if="isMobile" v-model="drawerOpen" temporary>
+    <v-navigation-drawer v-if="isTablet" v-model="drawerOpen" temporary>
       <v-btn
         nuxt
         to="/"
@@ -40,7 +40,7 @@ const links = useNavLinks();
     </v-navigation-drawer>
     <v-footer class="app-bar" elevation="0" color="background">
       <v-app-bar-nav-icon
-        v-if="isMobile"
+        v-if="isTablet"
         v-model="drawerOpen"
         @click="toggleDrawer"
       ></v-app-bar-nav-icon>
@@ -55,7 +55,7 @@ const links = useNavLinks();
           >Howard Tseng</v-btn
         >
       </v-app-bar-title>
-      <NavLinks v-if="!isMobile" />
+      <NavLinks v-if="!isTablet" />
       <CommonThemeToggle />
     </v-footer>
     <div class="content-container">

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useArrayFilter } from '@vueuse/core';
 import { ProjectItem } from '@/types/projects';
-import { compile } from 'nuxt/dist/app/compat/capi';
 
 interface TechOnly {
   tech: string[];

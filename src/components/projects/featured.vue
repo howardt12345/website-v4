@@ -1,7 +1,6 @@
 import projectsVue from '~/pages/projects.vue';
 <script setup lang="ts">
 import { ProjectItem } from '@/types/projects';
-import { formatDate } from '@/composables/date';
 import { useMediaQueries } from '@/composables/media-queries';
 
 interface Props {
