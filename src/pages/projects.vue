@@ -53,16 +53,17 @@ const toggleFilters = () => {
   <h1 class="section-title">{{ $t('Projects') }}</h1>
 
   <v-btn
-    class="projects__filter-button"
+    class="filter-button"
     @click="toggleFilters"
     :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
     :text="showFilters ? $t('Show Featured Projects') : $t('View All Projects')"
     size="large"
   />
 
-  <Transition name="slide-fade" appear>
+  <Transition name="a-project-filter">
     <div v-if="showFilters">
       <ProjectsFilterChips
+        class="filter-chips"
         :tags="Array.from(uniqueTags)"
         v-model:selected-tags="selectedTags"
       />
@@ -72,24 +73,45 @@ const toggleFilters = () => {
       />
     </div>
   </Transition>
-  <div v-if="!showFilters">
-    <ProjectsFeatured
-      v-if="featuredProjects.length > 0"
-      :projects="featuredProjects"
-    />
-    <ProjectsOther :projects="otherProjects" />
-  </div>
+  <Transition name="a-project-featured" appear>
+    <div v-if="!showFilters">
+      <ProjectsFeatured
+        v-if="featuredProjects.length > 0"
+        :projects="featuredProjects"
+      />
+      <ProjectsOther :projects="otherProjects" />
+    </div>
+  </Transition>
 </template>
 
 <style scoped lang="scss">
-.slide-fade-enter-active,
-.slide-fade-leave-active {
+.filter-button {
+  margin: rem(16) 0;
+}
+
+.filter-chips {
+  margin-bottom: rem(16);
+}
+
+.a-project-filter-enter-active,
+.a-project-filter-leave-active {
   transition: all 0.3s ease-out;
 }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
+.a-project-filter-enter-from,
+.a-project-filter-leave-to {
   transform: translateY(-20px);
+  opacity: 0;
+}
+
+.a-project-featured-enter-active,
+.a-project-featured-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.a-project-featured-enter-from,
+.a-project-featured-leave-to {
+  transform: translateY(20px);
   opacity: 0;
 }
 </style>
