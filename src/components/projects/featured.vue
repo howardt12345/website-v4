@@ -64,24 +64,14 @@ const { isTablet } = useMediaQueries();
             <div>
               {{ formatDate(new Date(project.date)) }}
             </div>
-            <div v-if="project.link">
-              <v-btn
-                icon
-                :href="project.link.url"
-                target="_blank"
-                rel="nofollow noopener noreferrer"
-              >
-                <v-icon>fas fa-arrow-up-right-from-square</v-icon>
-              </v-btn>
-            </div>
           </v-card-subtitle>
 
           <v-card-text>
-            <ContentRenderer :value="project" />
+            <ContentRenderer class="content-renderer" :value="project" />
           </v-card-text>
 
           <v-card-actions v-if="project.tech" class="project-card__actions">
-            <v-chip-group>
+            <v-chip-group class="project-card__actions-chips">
               <v-chip v-for="tech in project.tech">
                 {{ tech }}
               </v-chip>
@@ -160,6 +150,11 @@ const { isTablet } = useMediaQueries();
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    &-chips {
+      padding: rem(4);
+      padding-top: 0;
+    }
 
     &-links {
       direction: ltr !important;

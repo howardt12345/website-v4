@@ -47,4 +47,9 @@
   ul > li {
     margin-left: rem(16);
   }
+
+  a {
+    text-decoration: none;
+    color: $accent;
+  }
 }
