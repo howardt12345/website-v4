@@ -4,7 +4,7 @@ organization: Stewart Park Festival
 start_date: 2023-07-15
 end_date: 2023-07-17
 location: Perth, ON, CA
-skills: [Photography, Creativity, Attention to Detail]
+skills: [Photography, Event, Music Festival, Creativity, Attention to Detail]
 link: {
   url: /photography,
   external: false,
