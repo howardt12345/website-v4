@@ -61,3 +61,7 @@ yarn preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+# Attribution
+
+From [website-v2](https://github.com/howardt12345/website-v2) onwards, various design elements from the About and Projects page were heavily inspired by [Brittany Chiang](https://brittanychiang.com/)'s [v4 website](https://github.com/bchiang7/v4).
