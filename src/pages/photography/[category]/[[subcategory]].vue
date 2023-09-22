@@ -8,17 +8,17 @@ const breadcrumbItems = computed(() => {
   const items = [
     {
       title: 'Photos',
-      href: '/photography',
+      to: '/photography',
     },
     {
       title: category.value,
-      href: `/photography/${category.value}`,
+      to: `/photography/${category.value}`,
     },
   ];
   if (subcategory.value) {
     items.push({
       title: subcategory.value,
-      href: `/photography/${category.value}/${subcategory.value}`,
+      to: `/photography/${category.value}/${subcategory.value}`,
     });
   }
   return items;
@@ -27,5 +27,8 @@ const breadcrumbItems = computed(() => {
 
 <template>
   <h1 class="section-title">Photos - Category</h1>
-  <v-breadcrumbs :items="breadcrumbItems" icon="fas fa-images"></v-breadcrumbs>
+  <v-breadcrumbs
+    :items="breadcrumbItems"
+    icon="fas fa-images"
+  ></v-breadcrumbs>
 </template>
