@@ -33,6 +33,9 @@ export default defineNuxtConfig({
     ],
     ['@nuxt/content', {}],
     '@vueuse/motion/nuxt',
+    ['@nuxtjs/supabase', {
+      redirect: false
+    }],
   ],
   routeRules: {
     '/about': { prerender: true },
