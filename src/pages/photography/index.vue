@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouteLocationNormalizedLoaded } from '#vue-router';
 import { usePhotosStore } from '@/store/photos.store';
 
 const { photos } = storeToRefs(usePhotosStore());
