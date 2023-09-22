@@ -4,4 +4,6 @@ export interface PhotoItem {
   blurb: string;
   date: string;
   url: string;
+  width: number;
+  height: number;
 }
