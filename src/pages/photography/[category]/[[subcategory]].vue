@@ -27,5 +27,5 @@ const breadcrumbItems = computed(() => {
 
 <template>
   <h1 class="section-title">Photos - Category</h1>
-  <v-breadcrumbs :items="breadcrumbItems"></v-breadcrumbs>
+  <v-breadcrumbs :items="breadcrumbItems" icon="fas fa-images"></v-breadcrumbs>
 </template>
