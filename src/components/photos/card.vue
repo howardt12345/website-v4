@@ -9,7 +9,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <v-card>
+  <v-card variant="flat">
     <v-img :src="photo.url" cover :aspect-ratio="photo.width / photo.height" />
   </v-card>
 </template>
