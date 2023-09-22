@@ -29,12 +29,6 @@ usePhotosStore().getPhotos();
 
 <template>
   <v-app>
-    <v-alert
-      text="This is the latest development site for howardt12345.com. It is currently under construction."
-      color="warning"
-      icon="$info"
-      :closable="true"
-    ></v-alert>
     <Suspense>
       <NuxtLayout>
         <NuxtPage />
