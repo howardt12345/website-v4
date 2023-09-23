@@ -19,14 +19,18 @@ const availableTags = computed(() => {
   return Array.from(tags);
 });
 
-const tags = ref<string[]>([]);
+const selectedTags = ref<string[]>([]);
 
 onMounted(() => {
-  tags.value = Array.isArray(route.query.tags)
+  selectedTags.value = Array.isArray(route.query.tags)
     ? (route.query.tags as string[])
     : route.query.tags
     ? [route.query.tags]
     : [];
+});
+
+watch(() => category.value, () => {
+  selectedTags.value = [];
 });
 
 const visiblePhotos = computed(() =>
@@ -38,8 +42,8 @@ const visiblePhotos = computed(() =>
     )
     .filter(
       (photo) =>
-        !tags.value.length ||
-        tags.value.some((tag: string) => photo.tags.includes(tag)),
+        !selectedTags.value.length ||
+        selectedTags.value.every((tag: string) => photo.tags.includes(tag)),
     ),
 );
 
@@ -65,7 +69,7 @@ const showTagsFilter = ref<boolean>(false);
 const toggleTagsFilter = () => {
   showTagsFilter.value = !showTagsFilter.value;
   if (!showTagsFilter.value) {
-    tags.value = [];
+    selectedTags.value = [];
   }
 };
 </script>
@@ -99,7 +103,7 @@ const toggleTagsFilter = () => {
     ></v-btn>
     <v-chip-group
       v-if="showTagsFilter"
-      v-model="tags"
+      v-model="selectedTags"
       multiple
       filter
       color="primary"
@@ -114,13 +118,13 @@ const toggleTagsFilter = () => {
     <v-col
       v-for="(photo, index) in visiblePhotos"
       v-masonry-tile
-      :key="`photo-${index}`"
+      :key="`${index}-photo-${photo.name}`"
       cols="12"
       sm="12"
       md="6"
       lg="4"
     >
-      <PhotosCard :photo="photo" />
+      <PhotosCard :photo="photo" :selected-tags="selectedTags" />
     </v-col>
   </v-row>
   <v-row v-else>
@@ -129,7 +133,11 @@ const toggleTagsFilter = () => {
       :key="`category-${category.category}`"
       cols="12"
     >
-      <v-card variant="plain" nuxt :to="`/photography/${category.category}`">
+      <v-card
+        nuxt
+        :to="`/photography/${category.category}`"
+        class="category-item"
+      >
         <v-img
           :src="category.url"
           :aspect-ratio="2 / 1"
@@ -152,6 +160,16 @@ const toggleTagsFilter = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.category-item {
+  cursor: pointer;
+  opacity: 0.8;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
 }
 
 .tags-container {
