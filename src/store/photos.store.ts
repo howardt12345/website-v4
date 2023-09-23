@@ -1,15 +1,17 @@
-import { PhotoItem } from '@/types/photos';
+import { PhotoCategory, PhotoItem } from '@/types/photos';
 
 export const usePhotosStore = defineStore('photos', () => {
   const photos = ref<PhotoItem[]>([]);
-  const categories = ref<string[]>([]);
+  const categories = ref<PhotoCategory[]>([]);
   const getPhotos = async () => {
-    const { data } = await useSupabaseClient().from('photos').select();
-    const { data: categoriesData } = await useSupabaseClient()
-      .from('distinct_categories')
+    const { data: photosData } = await useSupabaseClient()
+      .from('photos')
       .select();
-    photos.value = <PhotoItem[]>data;
-    categories.value = categoriesData?.map((item: any) => item.category) ?? [];
+    const { data: categoriesData } = await useSupabaseClient()
+      .from('categories')
+      .select();
+    photos.value = <PhotoItem[]>photosData;
+    categories.value = <PhotoCategory[]>categoriesData;
   };
 
   return {

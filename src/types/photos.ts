@@ -9,3 +9,9 @@ export interface PhotoItem {
   category: string;
   tags: string[];
 }
+
+export interface PhotoCategory {
+  category: string;
+  url: string;
+  count: number;
+}
