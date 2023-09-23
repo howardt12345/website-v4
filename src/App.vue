@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { i18nextPromise } from '@/plugins/03.i18n';
-import { usei18n } from './store/i18n.store';
-import { useTheme } from './store/theme.store';
+import { usei18n } from '@/store/i18n.store';
+import { usePhotosStore } from '@/store/photos.store';
+import { useTheme } from '@/store/theme.store';
+
 useHead({
   link: [{ rel: 'icon', type: 'image/png', href: 'favicon.ico' }],
 });
@@ -22,16 +24,11 @@ const { isDark } = useTheme();
 await i18nextPromise;
 
 usei18n();
+usePhotosStore().getPhotos();
 </script>
 
 <template>
   <v-app>
-    <v-alert
-      text="This is the latest development site for howardt12345.com. It is currently under construction."
-      color="warning"
-      icon="$info"
-      :closable="true"
-    ></v-alert>
     <Suspense>
       <NuxtLayout>
         <NuxtPage />

@@ -20,7 +20,7 @@ const props = defineProps<Props>();
         lg="4"
       >
         <ProjectsCard :project="project" />
-    </v-col>
+      </v-col>
     </v-row>
   </v-container>
 </template>

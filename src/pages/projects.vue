@@ -31,12 +31,7 @@ const uniqueTags = computed<string[]>(() =>
   Array.from(new Set(tags.value.map((tag) => tag.tech).flat())),
 );
 
-const selectedIndexes = ref<number[]>([]);
 const selectedTags = ref<string[]>([]);
-
-watch(selectedIndexes, (newValue) => {
-  selectedTags.value = newValue.map((index) => uniqueTags.value[index]);
-});
 
 const filteredProjects = useArrayFilter(
   projects,
@@ -50,7 +45,7 @@ const toggleFilters = () => {
   showFilters.value = !showFilters.value;
 };
 const clearFilters = () => {
-  selectedIndexes.value = [];
+  selectedTags.value = [];
 };
 </script>
 
@@ -82,7 +77,7 @@ const clearFilters = () => {
       <ProjectsFilterChips
         class="filter__chips"
         :tags="uniqueTags"
-        v-model:selected-indexes="selectedIndexes"
+        v-model:selected-tags="selectedTags"
       />
       <ProjectsTable
         :projects="filteredProjects"
