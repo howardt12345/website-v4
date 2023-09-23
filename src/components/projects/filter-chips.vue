@@ -3,19 +3,21 @@ import { useVModel } from '@vueuse/core';
 
 interface Props {
   tags: string[];
-  selectedIndexes: number[];
+  selectedTags: string[];
 }
 const props = defineProps<Props>();
 const emits = defineEmits<{
-  (event: 'update:selectedIndexes', value: string[]): void;
+  (event: 'update:selectedTags', value: string[]): void;
 }>();
 
-const selectedIndexes = useVModel(props, 'selectedIndexes', emits);
+const selectedTags = useVModel(props, 'selectedTags', emits);
 </script>
 
 <template>
-  <v-chip-group v-model="selectedIndexes" filter multiple color="primary">
-    <v-chip v-for="tag in tags" filter>{{ tag }}</v-chip>
+  <v-chip-group v-model="selectedTags" filter multiple color="primary">
+    <v-chip v-for="tag in tags" :key="tag" :value="tag" filter>{{
+      tag
+    }}</v-chip>
   </v-chip-group>
 </template>
 
