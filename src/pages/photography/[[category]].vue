@@ -60,6 +60,14 @@ const breadcrumbItems = computed(() => {
 const showCategoriesView = ref<boolean>(false);
 const toggleCategoriesView = () =>
   (showCategoriesView.value = !showCategoriesView.value);
+
+const showTagsFilter = ref<boolean>(false);
+const toggleTagsFilter = () => {
+  showTagsFilter.value = !showTagsFilter.value;
+  if (!showTagsFilter.value) {
+    tags.value = [];
+  }
+};
 </script>
 
 <template>
@@ -79,17 +87,28 @@ const toggleCategoriesView = () =>
     :items="breadcrumbItems"
     icon="far fa-images"
   ></v-breadcrumbs>
-  <v-chip-group
+  <div
     v-if="availableTags.length && !showCategoriesView"
-    v-model="tags"
-    multiple
-    filter
-    color="primary"
+    class="tags-container"
   >
-    <v-chip v-for="tag in availableTags" :key="tag" :value="tag">{{
-      tag
-    }}</v-chip>
-  </v-chip-group>
+    <v-btn
+      @click="toggleTagsFilter"
+      :text="!showTagsFilter ? $t('Filter by Tags') : $t('Close Filters')"
+      :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times-circle'"
+      size="small"
+    ></v-btn>
+    <v-chip-group
+      v-if="showTagsFilter"
+      v-model="tags"
+      multiple
+      filter
+      color="primary"
+    >
+      <v-chip v-for="tag in availableTags" :key="tag" :value="tag">{{
+        tag
+      }}</v-chip>
+    </v-chip-group>
+  </div>
 
   <v-row v-if="!showCategoriesView" v-masonry dense>
     <v-col
@@ -133,6 +152,10 @@ const toggleCategoriesView = () =>
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.tags-container {
+  margin-bottom: rem(16);
 }
 
 .breadcrumbs {
