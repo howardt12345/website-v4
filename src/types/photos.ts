@@ -6,4 +6,6 @@ export interface PhotoItem {
   url: string;
   width: number;
   height: number;
+  category: string;
+  tags: string[];
 }

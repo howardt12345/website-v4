@@ -2,7 +2,7 @@
 const route = useRoute();
 
 const category = computed(() => route.params.category);
-const subcategory = computed(() => route.params.subcategory);
+const tags = computed(() => route.query.tags ?? []);
 
 const breadcrumbItems = computed(() => {
   const items = [
@@ -15,12 +15,6 @@ const breadcrumbItems = computed(() => {
       to: `/photography/${category.value}`,
     },
   ];
-  if (subcategory.value) {
-    items.push({
-      title: subcategory.value,
-      to: `/photography/${category.value}/${subcategory.value}`,
-    });
-  }
   return items;
 });
 </script>
