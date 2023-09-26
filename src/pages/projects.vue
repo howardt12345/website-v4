@@ -74,7 +74,7 @@ const clearFilters = () => {
 
   <Transition name="a-project-filter">
     <div v-if="showFilters">
-      <ProjectsFilterChips
+      <CommonFilterChips
         class="filter__chips"
         :tags="uniqueTags"
         v-model:selected-tags="selectedTags"

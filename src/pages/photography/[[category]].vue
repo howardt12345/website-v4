@@ -68,13 +68,7 @@ const showCategoriesView = ref<boolean>(false);
 const toggleCategoriesView = () =>
   (showCategoriesView.value = !showCategoriesView.value);
 
-const showTagsFilter = ref<boolean>(false);
-const toggleTagsFilter = () => {
-  showTagsFilter.value = !showTagsFilter.value;
-  if (!showTagsFilter.value) {
-    selectedTags.value = [];
-  }
-};
+const clearTags = () => (selectedTags.value = []);
 </script>
 
 <template>
@@ -95,28 +89,12 @@ const toggleTagsFilter = () => {
     :items="breadcrumbItems"
     icon="far fa-images"
   ></v-breadcrumbs>
-  <div
+  <PhotosFilters
     v-if="availableTags.length && !showCategoriesView"
+    v-model:selected-tags="selectedTags"
+    :available-tags="availableTags"
     class="tags-container"
-  >
-    <v-btn
-      @click="toggleTagsFilter"
-      :text="!showTagsFilter ? $t('Filter by Tags') : $t('Close Filters')"
-      :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times-circle'"
-      size="small"
-    ></v-btn>
-    <v-chip-group
-      v-if="showTagsFilter"
-      v-model="selectedTags"
-      multiple
-      filter
-      color="primary"
-    >
-      <v-chip v-for="tag in availableTags" :key="tag" :value="tag">{{
-        tag
-      }}</v-chip>
-    </v-chip-group>
-  </div>
+  />
   <PhotosGallery
     v-if="!showCategoriesView"
     :photos="visiblePhotos"

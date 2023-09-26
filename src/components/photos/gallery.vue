@@ -10,8 +10,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-
-<v-row v-masonry dense>
+  <v-row v-masonry dense>
     <v-col
       v-for="(photo, index) in photos"
       v-masonry-tile
@@ -26,6 +25,4 @@ const props = defineProps<Props>();
   </v-row>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

@@ -5,10 +5,11 @@ interface Props {
   tags: string[];
   selectedTags: string[];
 }
-const props = defineProps<Props>();
-const emits = defineEmits<{
+interface Emits {
   (event: 'update:selectedTags', value: string[]): void;
-}>();
+}
+const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
 
 const selectedTags = useVModel(props, 'selectedTags', emits);
 </script>
