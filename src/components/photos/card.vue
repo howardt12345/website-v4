@@ -9,10 +9,13 @@ interface Props {
 const props = defineProps<Props>();
 
 const selected = computed<string[]>(() => props.selectedTags ?? []);
+const dialogOpen = ref(false);
+const openDialog = () => (dialogOpen.value = true);
+const closeDialog = () => (dialogOpen.value = false);
 </script>
 
 <template>
-  <v-card variant="flat">
+  <v-card variant="flat" @click="openDialog">
     <v-img
       :src="photo.url"
       cover
@@ -35,6 +38,24 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
       </v-card-actions>
     </v-img>
   </v-card>
+  <v-dialog
+    v-model="dialogOpen"
+    :max-width="(photo.width / photo.height) * 1000"
+  >
+    <v-card>
+      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height">
+      </v-img>
+      <v-card-actions>
+        <v-btn
+          color="primary"
+          variant="outlined"
+          class="close-button"
+          @click="closeDialog"
+          >{{ $t('Close') }}</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -43,5 +64,9 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
 }
 .chip {
   text-transform: capitalize;
+}
+.close-button {
+  margin-right: 0;
+  margin-left: auto;
 }
 </style>
