@@ -98,12 +98,13 @@ const { isDark } = storeToRefs(useTheme());
     }
 
     &-links {
-      direction: ltr !important;
+      direction: ltr;
     }
   }
 }
 
 .content-renderer {
+  direction: ltr;
   :deep(p) {
     margin: 0;
   }
