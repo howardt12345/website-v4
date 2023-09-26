@@ -8,7 +8,9 @@ const route = useRoute();
 const category = computed<string>(() => route.params.category.toString() ?? '');
 const categoryPhotos = computed(() =>
   photos.value.filter(
-    (photo) => !category.value || photo.category === category.value,
+    (photo) =>
+      !category.value ||
+      photo.category.toLowerCase() === category.value.toLowerCase(),
   ),
 );
 const availableTags = computed(() => {
@@ -37,17 +39,11 @@ watch(
 );
 
 const visiblePhotos = computed(() =>
-  photos.value
-    .filter(
-      (photo) =>
-        !category.value ||
-        photo.category.toLowerCase() === category.value.toLowerCase(),
-    )
-    .filter(
-      (photo) =>
-        !selectedTags.value.length ||
-        selectedTags.value.every((tag: string) => photo.tags.includes(tag)),
-    ),
+  categoryPhotos.value.filter(
+    (photo) =>
+      !selectedTags.value.length ||
+      selectedTags.value.every((tag: string) => photo.tags.includes(tag)),
+  ),
 );
 
 const breadcrumbItems = computed(() => {
@@ -67,8 +63,6 @@ const breadcrumbItems = computed(() => {
 const showCategoriesView = ref<boolean>(false);
 const toggleCategoriesView = () =>
   (showCategoriesView.value = !showCategoriesView.value);
-
-const clearTags = () => (selectedTags.value = []);
 </script>
 
 <template>
@@ -113,11 +107,10 @@ const clearTags = () => (selectedTags.value = []);
 .categories-button {
   margin-bottom: rem(16);
 }
-.tags-container {
-  margin-bottom: rem(16);
-}
-
 .breadcrumbs {
   text-transform: capitalize;
+}
+.tags-container {
+  margin-bottom: rem(16);
 }
 </style>
