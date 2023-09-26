@@ -66,7 +66,7 @@ const closeDialog = () => (dialogOpen.value = false);
   text-transform: capitalize;
 }
 .close-button {
-  margin-right: 0;
+  margin: rem(8);
   margin-left: auto;
 }
 </style>
