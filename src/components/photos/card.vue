@@ -27,6 +27,7 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
             :value="tag"
             label
             :theme="selected.includes(tag) ? 'primary' : 'dark'"
+            class="chip"
           >
             {{ tag }}
           </v-chip>
@@ -39,5 +40,8 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
 <style scoped lang="scss">
 .chip-group {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+}
+.chip {
+  text-transform: capitalize;
 }
 </style>

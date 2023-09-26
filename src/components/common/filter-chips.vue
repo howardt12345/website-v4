@@ -16,10 +16,19 @@ const selectedTags = useVModel(props, 'selectedTags', emits);
 
 <template>
   <v-chip-group v-model="selectedTags" filter multiple color="primary">
-    <v-chip v-for="tag in tags" :key="tag" :value="tag" filter>{{
-      tag
-    }}</v-chip>
+    <v-chip
+      v-for="tag in tags"
+      :key="tag"
+      :value="tag"
+      filter
+      class="filter-chip"
+      >{{ tag }}</v-chip
+    >
   </v-chip-group>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.filter-chip {
+  text-transform: capitalize;
+}
+</style>
