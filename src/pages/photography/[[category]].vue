@@ -29,9 +29,12 @@ onMounted(() => {
     : [];
 });
 
-watch(() => category.value, () => {
-  selectedTags.value = [];
-});
+watch(
+  () => category.value,
+  () => {
+    selectedTags.value = [];
+  },
+);
 
 const visiblePhotos = computed(() =>
   photos.value
@@ -83,6 +86,7 @@ const toggleTagsFilter = () => {
       :prepend-icon="
         !showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'
       "
+      class="categories-button"
     ></v-btn>
   </div>
   <v-breadcrumbs
@@ -113,65 +117,24 @@ const toggleTagsFilter = () => {
       }}</v-chip>
     </v-chip-group>
   </div>
-
-  <v-row v-if="!showCategoriesView" v-masonry dense>
-    <v-col
-      v-for="(photo, index) in visiblePhotos"
-      v-masonry-tile
-      :key="`${index}-photo-${photo.name}`"
-      cols="12"
-      sm="12"
-      md="6"
-      lg="4"
-    >
-      <PhotosCard :photo="photo" :selected-tags="selectedTags" />
-    </v-col>
-  </v-row>
-  <v-row v-else>
-    <v-col
-      v-for="category in categories"
-      :key="`category-${category.category}`"
-      cols="12"
-    >
-      <v-card
-        nuxt
-        :to="`/photography/${category.category}`"
-        class="category-item"
-      >
-        <v-img
-          :src="category.url"
-          :aspect-ratio="2 / 1"
-          cover
-          class="align-end"
-          gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.3)"
-        >
-          <v-card-title
-            class="text-white"
-            v-text="category.category"
-          ></v-card-title
-        ></v-img>
-      </v-card>
-    </v-col>
-  </v-row>
+  <PhotosGallery
+    v-if="!showCategoriesView"
+    :photos="visiblePhotos"
+    :selected-tags="selectedTags"
+  />
+  <PhotosCategories v-else :categories="categories" />
 </template>
 
 <style scoped lang="scss">
 .title-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 }
-
-.category-item {
-  cursor: pointer;
-  opacity: 0.8;
-
-  &:hover,
-  &:focus {
-    opacity: 1;
-  }
+.categories-button {
+  margin-bottom: rem(16);
 }
-
 .tags-container {
   margin-bottom: rem(16);
 }
