@@ -6,7 +6,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const { isMobile } = useMediaQueries();
+const { isMobile, isTablet } = useMediaQueries();
 </script>
 
 <template>
@@ -23,7 +23,7 @@ const { isMobile } = useMediaQueries();
       >
         <v-img
           :src="category.url"
-          :aspect-ratio="isMobile ? 1 : 2"
+          :aspect-ratio="!isTablet ? 3 : !isMobile ? 2 : 1"
           cover
           class="align-end"
           gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.3)"
