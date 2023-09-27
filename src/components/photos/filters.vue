@@ -27,7 +27,7 @@ const toggleTagsFilter = () => {
     <v-btn
       @click="toggleTagsFilter"
       :text="!showTagsFilter ? $t('Filter by Tags') : $t('Close Filters')"
-      :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times-circle'"
+      :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times'"
       size="small"
     ></v-btn>
     <CommonFilterChips
