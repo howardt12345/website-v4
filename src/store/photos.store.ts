@@ -6,10 +6,16 @@ export const usePhotosStore = defineStore('photos', () => {
   const getPhotos = async () => {
     const { data: photosData } = await useSupabaseClient()
       .from('photos')
-      .select();
+      .select()
+      .order('date', {
+        ascending: false,
+      });
     const { data: categoriesData } = await useSupabaseClient()
       .from('categories')
-      .select();
+      .select()
+      .order('category', {
+        ascending: true,
+      });
     photos.value = <PhotoItem[]>photosData;
     categories.value = <PhotoCategory[]>categoriesData;
 
