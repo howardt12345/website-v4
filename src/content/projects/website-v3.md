@@ -2,7 +2,7 @@
 date: '2022-05-08'
 title: 'Website v3'
 githubLink: 'https://github.com/howardt12345/website-v3/'
-externalLink: 'https://v3.ht12345.xyz'
+externalLink: 'https://v3.howardt12345.com'
 tech:
   - React
   - Next.js
@@ -10,7 +10,7 @@ tech:
   - Firebase
   - Typescript
 showInProjects: true
-featured: true
+featured: false
 imagePath: '/images/projects/website-v3.jpg'
 ---
 
