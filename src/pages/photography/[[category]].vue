@@ -13,13 +13,6 @@ const categoryPhotos = computed(() =>
       photo.category.toLowerCase() === category.value.toLowerCase(),
   ),
 );
-const availableTags = computed(() => {
-  const tags = new Set<string>();
-  categoryPhotos.value.forEach((photo) => {
-    photo.tags.forEach((tag) => tags.add(tag));
-  });
-  return Array.from(tags).sort();
-});
 
 const selectedTags = ref<string[]>([]);
 
@@ -45,6 +38,13 @@ const visiblePhotos = computed(() =>
       selectedTags.value.every((tag: string) => photo.tags.includes(tag)),
   ),
 );
+const availableTags = computed(() => {
+  const tags = new Set<string>();
+  visiblePhotos.value.forEach((photo) => {
+    photo.tags.forEach((tag) => tags.add(tag));
+  });
+  return Array.from(tags).sort();
+});
 
 const breadcrumbItems = computed(() => {
   const items = [
