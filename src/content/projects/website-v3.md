@@ -2,7 +2,7 @@
 date: '2022-05-08'
 title: 'Website v3'
 githubLink: 'https://github.com/howardt12345/website-v3/'
-externalLink: 'https://v3.howardt12345.com'
+externalLink: 'https://v3.ht12345.xyz'
 tech:
   - React
   - Next.js
