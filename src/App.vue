@@ -25,6 +25,22 @@ await i18nextPromise;
 
 usei18n();
 usePhotosStore().getPhotos();
+
+const preventRightClick = (e: MouseEvent) => {
+  var element = e.target as HTMLElement;
+  if (element.tagName === 'IMG') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('contextmenu', preventRightClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('contextmenu', preventRightClick);
+});
 </script>
 
 <template>
