@@ -13,7 +13,7 @@ tech:
   - SCSS
 showInProjects: true
 featured: true
-imagePath: '/images/projects/website-v3.jpg'
+imagePath: '/images/projects/website-v4.jpg'
 ---
 
 Redone from the ground up, the fourth iteration of <a href="https://howardt12345.com/" target="_blank">howardt12345.com</a> is built with Vue on Nuxt and hosted on Vercel. Adds new Timeline and Featured Projects sections, utilizes Vuetify for a more consistent design, a new Supabase backend, and i18n support. This website is designed to serve as a template for future projects.
