@@ -18,7 +18,7 @@ const availableTags = computed(() => {
   categoryPhotos.value.forEach((photo) => {
     photo.tags.forEach((tag) => tags.add(tag));
   });
-  return Array.from(tags);
+  return Array.from(tags).sort();
 });
 
 const selectedTags = ref<string[]>([]);
