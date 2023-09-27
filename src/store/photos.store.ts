@@ -12,6 +12,10 @@ export const usePhotosStore = defineStore('photos', () => {
       .select();
     photos.value = <PhotoItem[]>photosData;
     categories.value = <PhotoCategory[]>categoriesData;
+
+    photos.value.forEach((photo) => {
+      photo.tags = photo.tags.map((tag) => tag.toLowerCase());
+    });
   };
 
   return {
