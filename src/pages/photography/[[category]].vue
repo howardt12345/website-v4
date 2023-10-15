@@ -67,7 +67,7 @@ const toggleCategoriesView = () =>
 
 <template>
   <div class="title-container">
-    <h1 class="section-title">{{ $t('Photos') }}</h1>
+    <h1 class="section-title">{{ !!category ? category : $t('All Photos') }}</h1>
     <v-btn
       @click="toggleCategoriesView"
       :text="!showCategoriesView ? $t('Show Categories') : $t('Show Photos')"
