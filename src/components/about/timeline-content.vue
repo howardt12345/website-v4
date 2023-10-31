@@ -6,9 +6,11 @@ const { isMobile } = useMediaQueries();
 interface Props {
   experience: TimelineItem;
   isMobile: boolean;
+  selectedSkills: string[];
 }
 
 const props = defineProps<Props>();
+const selected = computed<string[]>(() => props.selectedSkills ?? []);
 </script>
 
 <template>
@@ -73,8 +75,16 @@ const props = defineProps<Props>();
     </v-card-text>
 
     <v-card-actions v-if="experience.skills" class="timeline-card__actions">
-      <v-chip-group class="timeline-card__chip-group">
-        <v-chip v-for="skill in experience.skills" class="timeline-card__chip">
+      <v-chip-group
+        v-model="selected"
+        class="timeline-card__chip-group"
+        color="primary"
+      >
+        <v-chip
+          v-for="skill in experience.skills"
+          class="timeline-card__chip"
+          :value="skill"
+        >
           {{ skill }}
         </v-chip>
       </v-chip-group>

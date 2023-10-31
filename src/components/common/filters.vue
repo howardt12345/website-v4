@@ -4,6 +4,7 @@ import { useVModel } from '@vueuse/core';
 interface Props {
   availableTags: string[];
   selectedTags: string[];
+  buttonText?: string;
 }
 interface Emits {
   (event: 'update:selectedTags', value: string[]): void;
@@ -26,7 +27,11 @@ const toggleTagsFilter = () => {
   <div>
     <v-btn
       @click="toggleTagsFilter"
-      :text="!showTagsFilter ? $t('Filter by Tags') : $t('Close Filters')"
+      :text="
+        !showTagsFilter
+          ? buttonText ?? $t('Filter by Tags')
+          : $t('Close Filters')
+      "
       :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times'"
       size="small"
     ></v-btn>

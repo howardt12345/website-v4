@@ -9,10 +9,35 @@ interface Props {
 
 const props = defineProps<Props>();
 const { isMobile } = useMediaQueries();
+
+const availableSkills = computed<string[]>(() => {
+  const tags = new Set<string>();
+  props.experiences?.forEach((experience) => {
+    experience.skills?.forEach((tag: string) => tags.add(tag));
+  });
+  return Array.from(tags).sort();
+});
+const selectedSkills = ref<string[]>([]);
+
+const filteredExperiences = computed<TimelineItem[]>(() =>
+  !selectedSkills.value.length
+    ? props.experiences
+    : props.experiences.filter((experience) =>
+        selectedSkills.value.every(
+          (tag: string) => experience.skills?.includes(tag),
+        ),
+      ),
+);
 </script>
 
 <template>
   <h1 class="section-title">{{ $t('Timeline') }}</h1>
+
+  <CommonFilters
+    :available-tags="availableSkills"
+    v-model:selected-tags="selectedSkills"
+    :buttonText="$t('Filter by Skills')"
+  />
 
   <v-timeline
     align="start"
@@ -20,7 +45,7 @@ const { isMobile } = useMediaQueries();
     :density="isMobile ? 'compact' : 'default'"
   >
     <v-timeline-item
-      v-for="experience in props.experiences"
+      v-for="experience in filteredExperiences"
       :key="experience.title"
       dot-color="primary"
       size="small"
@@ -32,7 +57,9 @@ const { isMobile } = useMediaQueries();
           {{
             experience.end_date &&
             new Date(experience.start_date).getMonth() !==
-              new Date(experience.end_date).getMonth()
+              new Date(experience.end_date).getMonth() &&
+            new Date(experience.start_date).getFullYear() !==
+              new Date(experience.end_date).getFullYear()
               ? '-' + formatDate(new Date(experience.end_date))
               : ''
           }}
@@ -42,6 +69,7 @@ const { isMobile } = useMediaQueries();
         <AboutTimelineContent
           :experience="experience"
           :is-mobile="isMobile"
+          :selected-skills="selectedSkills"
         />
       </template>
     </v-timeline-item>

@@ -4,7 +4,7 @@ organization: Recollective, Inc.
 start_date: 2023-05-02
 end_date: 2023-08-26
 location: Ottawa, ON, CA
-skills: [Vue.js, SCSS, Java Spring, MySQL, Python, Generative AI]
+skills: [Frontend, Backend, AI, Vue.js, SCSS, Java Spring, MySQL, Python, Generative AI]
 link: {
   url: https://recollective.com/,
   external: true,

@@ -83,7 +83,7 @@ const toggleCategoriesView = () =>
     :items="breadcrumbItems"
     icon="far fa-images"
   ></v-breadcrumbs>
-  <PhotosFilters
+  <CommonFilters
     v-if="availableTags.length && !showCategoriesView"
     v-model:selected-tags="selectedTags"
     :available-tags="availableTags"
