@@ -3,6 +3,7 @@ import { usePhotosStore } from '@/store/photos.store';
 
 const { photos, categories } = storeToRefs(usePhotosStore());
 
+const router = useRouter();
 const route = useRoute();
 
 const category = computed<string>(() => route.params.category.toString() ?? '');
@@ -30,6 +31,18 @@ watch(
     selectedTags.value = [];
   },
 );
+
+watch(
+  () => selectedTags.value,
+  () => {
+    const query = {
+      tags: selectedTags.value,
+    };
+    router.push({
+      query,
+    });
+  },
+)
 
 const visiblePhotos = computed(() =>
   categoryPhotos.value.filter(
