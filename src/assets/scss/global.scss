@@ -53,3 +53,9 @@
     color: $accent;
   }
 }
+
+.content-container {
+  max-width: rem(1200);
+  width: 80vw;
+  margin: 0 auto;
+}

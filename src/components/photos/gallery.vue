@@ -19,6 +19,8 @@ const props = defineProps<Props>();
       sm="12"
       md="6"
       lg="4"
+      xl="3"
+      xxl="2"
     >
       <PhotosCard :photo="photo" :selected-tags="selectedTags" />
     </v-col>

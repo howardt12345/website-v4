@@ -6,7 +6,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const { isMobile, isTablet } = useMediaQueries();
+const { isMobile } = useMediaQueries();
 </script>
 
 <template>
@@ -15,6 +15,8 @@ const { isMobile, isTablet } = useMediaQueries();
       v-for="category in categories"
       :key="`category-${category.category}`"
       cols="12"
+      lg="6"
+      xl="4"
     >
       <v-card
         nuxt
@@ -23,7 +25,7 @@ const { isMobile, isTablet } = useMediaQueries();
       >
         <v-img
           :src="category.url"
-          :aspect-ratio="!isTablet ? 3 : !isMobile ? 2 : 1"
+          :aspect-ratio="!isMobile ? 2 : 1.5"
           cover
           class="align-end"
           gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.3)"

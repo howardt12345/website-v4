@@ -42,7 +42,7 @@ watch(
       query,
     });
   },
-)
+);
 
 const visiblePhotos = computed(() =>
   categoryPhotos.value.filter(
@@ -79,35 +79,41 @@ const toggleCategoriesView = () =>
 </script>
 
 <template>
-  <div class="title-container">
-    <h1 class="section-title">{{ !!category ? category : $t('All Photos') }}</h1>
-    <v-btn
-      @click="toggleCategoriesView"
-      :text="!showCategoriesView ? $t('Show Categories') : $t('Show Photos')"
-      :prepend-icon="
-        !showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'
-      "
-      class="categories-button"
-    ></v-btn>
+  <div class="content-container">
+    <div class="title-container">
+      <h1 class="section-title">
+        {{ !!category ? category : $t('All Photos') }}
+      </h1>
+      <v-btn
+        @click="toggleCategoriesView"
+        :text="!showCategoriesView ? $t('Show Categories') : $t('Show Photos')"
+        :prepend-icon="
+          !showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'
+        "
+        class="categories-button"
+      ></v-btn>
+    </div>
+    <v-breadcrumbs
+      v-if="category"
+      class="breadcrumbs"
+      :items="breadcrumbItems"
+      icon="far fa-images"
+    ></v-breadcrumbs>
+    <CommonFilters
+      v-if="availableTags.length && !showCategoriesView"
+      v-model:selected-tags="selectedTags"
+      :available-tags="availableTags"
+      class="tags-container"
+    />
   </div>
-  <v-breadcrumbs
-    v-if="category"
-    class="breadcrumbs"
-    :items="breadcrumbItems"
-    icon="far fa-images"
-  ></v-breadcrumbs>
-  <CommonFilters
-    v-if="availableTags.length && !showCategoriesView"
-    v-model:selected-tags="selectedTags"
-    :available-tags="availableTags"
-    class="tags-container"
-  />
-  <PhotosGallery
-    v-if="!showCategoriesView"
-    :photos="visiblePhotos"
-    :selected-tags="selectedTags"
-  />
-  <PhotosCategories v-else :categories="categories" />
+  <div class="photos-container">
+    <PhotosGallery
+      v-if="!showCategoriesView"
+      :photos="visiblePhotos"
+      :selected-tags="selectedTags"
+    />
+    <PhotosCategories v-else :categories="categories" />
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -125,5 +131,10 @@ const toggleCategoriesView = () =>
 }
 .tags-container {
   margin-bottom: rem(16);
+}
+
+.photos-container {
+  width: 80vw;
+  margin: 0 auto;
 }
 </style>

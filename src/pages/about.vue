@@ -12,8 +12,10 @@ const { data: experiences } = await useAsyncData('experiences', () =>
 </script>
 
 <template>
-  <AboutContent v-if="aboutContent" :data="aboutContent" />
-  <AboutTimeline v-if="experiences" :experiences="experiences" />
+  <div class="content-container">
+    <AboutContent v-if="aboutContent" :data="aboutContent" />
+    <AboutTimeline v-if="experiences" :experiences="experiences" />
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

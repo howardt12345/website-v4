@@ -50,50 +50,52 @@ const clearFilters = () => {
 </script>
 
 <template>
-  <h1 class="section-title">{{ $t('Projects') }}</h1>
+  <div class="content-container">
+    <h1 class="section-title">{{ $t('Projects') }}</h1>
 
-  <div class="filter__buttons">
-    <v-btn
-      @click="toggleFilters"
-      :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
-      :text="
-        showFilters ? $t('Show Featured Projects') : $t('View All Projects')
-      "
-      size="large"
-    />
-    <v-btn
-      v-if="showFilters"
-      class="clear-button"
-      @click="clearFilters"
-      prepend-icon="fas fa-broom"
-      :text="$t('Clear Filters')"
-      size="large"
-    >
-    </v-btn>
+    <div class="filter__buttons">
+      <v-btn
+        @click="toggleFilters"
+        :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
+        :text="
+          showFilters ? $t('Show Featured Projects') : $t('View All Projects')
+        "
+        size="large"
+      />
+      <v-btn
+        v-if="showFilters"
+        class="clear-button"
+        @click="clearFilters"
+        prepend-icon="fas fa-broom"
+        :text="$t('Clear Filters')"
+        size="large"
+      >
+      </v-btn>
+    </div>
+
+    <Transition name="a-project-filter">
+      <div v-if="showFilters">
+        <CommonFilterChips
+          class="filter__chips"
+          :tags="uniqueTags"
+          v-model:selected-tags="selectedTags"
+        />
+        <ProjectsTable
+          :projects="filteredProjects"
+          :selected-tags="selectedTags"
+        />
+      </div>
+    </Transition>
+    <Transition name="a-project-featured" appear>
+      <div v-if="!showFilters">
+        <ProjectsFeatured
+          v-if="featuredProjects.length > 0"
+          :projects="featuredProjects"
+        />
+        <ProjectsOther :projects="otherProjects" />
+      </div>
+    </Transition>
   </div>
-
-  <Transition name="a-project-filter">
-    <div v-if="showFilters">
-      <CommonFilterChips
-        class="filter__chips"
-        :tags="uniqueTags"
-        v-model:selected-tags="selectedTags"
-      />
-      <ProjectsTable
-        :projects="filteredProjects"
-        :selected-tags="selectedTags"
-      />
-    </div>
-  </Transition>
-  <Transition name="a-project-featured" appear>
-    <div v-if="!showFilters">
-      <ProjectsFeatured
-        v-if="featuredProjects.length > 0"
-        :projects="featuredProjects"
-      />
-      <ProjectsOther :projects="otherProjects" />
-    </div>
-  </Transition>
 </template>
 
 <style scoped lang="scss">

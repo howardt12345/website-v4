@@ -58,9 +58,7 @@ const links = useNavLinks();
       <NavLinks v-if="!isTablet" />
       <CommonThemeToggle />
     </v-footer>
-    <div class="content-container">
-      <slot />
-    </div>
+    <slot />
     <NavFooter />
   </div>
 </template>
@@ -84,12 +82,6 @@ const links = useNavLinks();
     justify-content: center;
     color: $text-secondary;
   }
-}
-
-.content-container {
-  max-width: rem(1200);
-  width: 80vw;
-  margin: 0 auto;
 }
 
 .title-button {
