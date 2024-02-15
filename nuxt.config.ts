@@ -33,9 +33,13 @@ export default defineNuxtConfig({
     ],
     ['@nuxt/content', {}],
     '@vueuse/motion/nuxt',
-    ['@nuxtjs/supabase', {
-      redirect: false
-    }],
+    [
+      '@nuxtjs/supabase',
+      {
+        redirect: false,
+      },
+    ],
+    '@nuxthq/studio',
   ],
   routeRules: {
     '/about': { prerender: true },
