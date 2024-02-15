@@ -8,8 +8,9 @@ export const instagramLink = 'https://www.instagram.com/howardt12345/';
 
 export const useNavLinks = (): NavLink[] => [
   { name: 'About', path: '/about', icon: 'circle-user' },
-  { name: 'Photography', path: '/photography', icon: 'camera' },
+  { name: 'Photography', path: '/photography', icon: 'images' },
   { name: 'Projects', path: '/projects', icon: 'code' },
+  { name: 'Blog', path: '/blog', icon: 'newspaper' },
   { name: 'Contact', path: '/contact', icon: 'at' },
 ];
 

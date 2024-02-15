@@ -2,6 +2,7 @@
 import { i18nextPromise } from '@/plugins/03.i18n';
 import { usei18n } from '@/store/i18n.store';
 import { usePhotosStore } from '@/store/photos.store';
+import { useBlogStore } from '@/store/blog.store';
 import { useTheme } from '@/store/theme.store';
 
 useHead({
@@ -25,6 +26,7 @@ await i18nextPromise;
 
 usei18n();
 usePhotosStore().getPhotos();
+useBlogStore().getBlogEntries();
 
 const preventRightClick = (e: MouseEvent) => {
   var element = e.target as HTMLElement;

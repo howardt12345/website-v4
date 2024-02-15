@@ -35,12 +35,14 @@
     "vue": "latest"
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.14",
     "@pinia/nuxt": "^0.4.11",
     "@vueuse/core": "^10.4.1",
     "@vueuse/motion": "^2.0.0",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.1",
     "i18next-vue": "^3.0.0",
+    "notion-to-md": "^3.1.1",
     "pinia": "^2.1.6",
     "vue-masonry": "^0.16.0"
   }
