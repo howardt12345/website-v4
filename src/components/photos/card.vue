@@ -46,6 +46,18 @@ const closeDialog = () => (dialogOpen.value = false);
       <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height">
       </v-img>
       <v-card-actions>
+        <v-chip-group v-model="selected" color="primary" variant="flat">
+          <v-chip
+            v-for="tag in photo.tags"
+            :key="tag"
+            :value="tag"
+            label
+            :theme="selected.includes(tag) ? 'primary' : 'dark'"
+            class="chip"
+          >
+            {{ tag }}
+          </v-chip>
+        </v-chip-group>
         <v-btn
           color="primary"
           variant="outlined"
