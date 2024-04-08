@@ -7,9 +7,13 @@ export const useTheme = defineStore('theme', () => {
   const toggleTheme = () => {
     theme.global.name.value = isDark.value ? 'light' : 'dark';
   };
+  const themeColors = computed(() => {
+    return theme.global.current.value.colors;
+  });
 
   return {
     isDark,
     toggleTheme,
+    themeColors,
   };
 });
