@@ -22,6 +22,7 @@ const countryMap = computed<string | undefined>(
   () => am5geodata_data_countries2[props.countryCode.toUpperCase()].maps[1],
 );
 const visited = computed<string[]>(() => props.visitedStates ?? []);
+const selectedRegion = ref<am5.Sprite & am5map.MapPolygon | null>(null);
 
 const chartdiv = ref<HTMLElement | null>();
 let root!: am5.Root;
@@ -54,21 +55,30 @@ const setGeoData = async () => {
     fill: am5.color(themeColors.value['background_secondary']),
     stroke: am5.color(themeColors.value['text-secondary']),
     strokeWidth: 1,
+    interactive: true,
   });
 
-  // Setup MapPolygon Hover Styling
-  polygonSeries.mapPolygons.template.states.create('hover', {
+  // create highlight state
+  polygonSeries.mapPolygons.template.states.create('active', {
     fill: am5.color(themeColors.value.primary),
     stroke: am5.color(themeColors.value['text-primary']),
     strokeWidth: 4,
   });
 
-  polygonSeries.mapPolygons.template.events.on('click', function (event) {
-    console.log('Clicked: ', event.target.dataItem?.dataContext);
-    if (event.target.dataItem) {
-      polygonSeries.zoomToDataItem(event.target.dataItem);
+  polygonSeries.mapPolygons.template.events.on('click', async (event) => {
+    const target = event.target;
+    if (selectedRegion.value) {
+      selectedRegion.value.states.apply("default");
     }
-    emits('selectState', event.target.dataItem?.dataContext.id);
+    target.states.apply('active');
+    const dataItem = target.dataItem;
+    if (dataItem) {
+      const data = dataItem.dataContext;
+      const zoomAnimation = polygonSeries.zoomToDataItem(dataItem);
+      await zoomAnimation?.waitForStop();
+      emits('selectState', data.name);
+      selectedRegion.value = target;
+    }
   });
 
   if (visited.value.length) {
@@ -96,6 +106,8 @@ onMounted(async () => {
   if (chartdiv.value) {
     // Create the Root
     root = am5.Root.new(chartdiv.value);
+    // Setup Animations
+    root.setThemes([am5themes_Animated.new(root)]);
 
     // Setup the MapChart
     chart = root.container.children.push(
@@ -107,9 +119,6 @@ onMounted(async () => {
     );
 
     polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {}));
-
-    // Setup Animations
-    root.setThemes([am5themes_Animated.new(root)]);
 
     // Create MapPolygons
     await setGeoData();
