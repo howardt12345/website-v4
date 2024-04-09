@@ -40,14 +40,14 @@ onMounted(() => {
       templateField: 'polygonSettings',
       fill: am5.color(themeColors.value['background_secondary']),
       stroke: am5.color(themeColors.value['text-secondary']),
-      strokeWidth: 2,
+      strokeWidth: 1,
     });
 
     // Setup MapPolygon Hover Styling
     polygonSeries.mapPolygons.template.states.create('hover', {
       fill: am5.color(themeColors.value.primary),
       stroke: am5.color(themeColors.value['text-primary']),
-      strokeWidth: 3,
+      strokeWidth: 4,
     });
 
     polygonSeries.mapPolygons.template.events.on('click', function (event) {
@@ -58,15 +58,41 @@ onMounted(() => {
     });
 
     // highlight some regions
-    const ids = ['JP-40', 'JP-42', 'JP-43', 'JP-35', 'JP-34', 'JP-38', 'JP-33', 'JP-27', 'JP-29', 'JP-28', 'JP-26', 'JP-23', 'JP-17', 'JP-22', 'JP-19', 'JP-13']
-    polygonSeries.data.setAll(
-      ids.map((id) => ({
+    const visited_ids = [
+      'JP-40',
+      'JP-42',
+      'JP-43',
+      'JP-35',
+      'JP-34',
+      'JP-38',
+      'JP-27',
+      'JP-29',
+      'JP-28',
+      'JP-26',
+      'JP-23',
+      'JP-17',
+      'JP-22',
+      'JP-19',
+      'JP-13',
+    ];
+    const transited_ids = ['JP-33', 'JP-18'];
+    polygonSeries.data.setAll([
+      ...visited_ids.map((id) => ({
         id,
         polygonSettings: {
           fill: am5.color(themeColors.value.primary),
         },
-      }))
-    );
+      })),
+      ...transited_ids.map((id) => ({
+        id,
+        polygonSettings: {
+          fillPattern: am5.LinePattern.new(root, {
+            color: am5.color(themeColors.value.primary),
+            rotation: 45,
+          }),
+        },
+      })),
+    ]);
   }
 });
 
