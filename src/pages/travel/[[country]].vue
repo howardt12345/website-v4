@@ -12,12 +12,24 @@ let root!: am5.Root;
 const { themeColors } = storeToRefs(useTheme());
 
 const route = useRoute();
-const countryParam = computed<string>(
+const countryCode = computed<string>(
   () => route.params.country.toString().toUpperCase() ?? '',
 );
-const countryMap = computed<string | undefined>(
-  () => am5geodata_data_countries2[countryParam.value].maps[1],
+const countryName = computed<string>(
+  () => am5geodata_data_countries2[countryCode.value].country,
 );
+const countryMap = computed<string | undefined>(
+  () => am5geodata_data_countries2[countryCode.value].maps[1],
+);
+
+useSeoMeta({
+  title: `Travel - ${countryName.value}`,
+  ogTitle: `Travel - ${countryName.value}`,
+  description: `Travel photos and timeline of ${countryName.value}`,
+  ogDescription: `Travel photos and timeline of ${countryName.value}`,
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
+});
 
 onMounted(() => {
   if (chartdiv.value) {
@@ -88,12 +100,13 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <h1 class="section-title">{{ countryName }}</h1>
   <div class="testClass" ref="chartdiv"></div>
 </template>
 
 <style scoped lang="scss">
 .testClass {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   border: 1px solid $accent;
 }
