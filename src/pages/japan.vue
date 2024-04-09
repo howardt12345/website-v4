@@ -37,7 +37,8 @@ onMounted(() => {
     // Setup MapPolygon Styling
     polygonSeries.mapPolygons.template.setAll({
       tooltipText: '{name}',
-      fill: am5.color(themeColors.value.background),
+      templateField: 'polygonSettings',
+      fill: am5.color(themeColors.value['background_secondary']),
       stroke: am5.color(themeColors.value['text-secondary']),
       strokeWidth: 2,
     });
@@ -50,11 +51,22 @@ onMounted(() => {
     });
 
     polygonSeries.mapPolygons.template.events.on('click', function (event) {
-      console.log("Clicked: ", event.target.dataItem?.dataContext.name);
+      console.log('Clicked: ', event.target.dataItem?.dataContext);
       if (event.target.dataItem) {
         polygonSeries.zoomToDataItem(event.target.dataItem);
       }
     });
+
+    // highlight some regions
+    const ids = ['JP-40', 'JP-42', 'JP-43', 'JP-35', 'JP-34', 'JP-38', 'JP-33', 'JP-27', 'JP-29', 'JP-28', 'JP-26', 'JP-23', 'JP-17', 'JP-22', 'JP-19', 'JP-13']
+    polygonSeries.data.setAll(
+      ids.map((id) => ({
+        id,
+        polygonSettings: {
+          fill: am5.color(themeColors.value.primary),
+        },
+      }))
+    );
   }
 });
 
