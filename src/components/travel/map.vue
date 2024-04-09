@@ -8,11 +8,11 @@ import { useTheme } from '@/store/theme.store';
 
 interface Props {
   countryCode: string;
-  visitedStates?: string[];
+  visitedRegions?: string[];
 }
 
 interface Emits {
-  (event: 'selectState', state: string): void;
+  (event: 'selectRegion', region: string): void;
 }
 
 const props = defineProps<Props>();
@@ -21,7 +21,7 @@ const emits = defineEmits<Emits>();
 const countryMap = computed<string | undefined>(
   () => am5geodata_data_countries2[props.countryCode.toUpperCase()].maps[1],
 );
-const visited = computed<string[]>(() => props.visitedStates ?? []);
+const visited = computed<string[]>(() => props.visitedRegions ?? []);
 const selectedRegion = ref<am5.Sprite & am5map.MapPolygon | null>(null);
 
 const chartdiv = ref<HTMLElement | null>();
@@ -76,7 +76,8 @@ const setGeoData = async () => {
       const data = dataItem.dataContext;
       const zoomAnimation = polygonSeries.zoomToDataItem(dataItem);
       await zoomAnimation?.waitForStop();
-      emits('selectState', data.name);
+      emits('selectRegion', data.name);
+      console.log('Clicked: ', data.id);
       selectedRegion.value = target;
     }
   });

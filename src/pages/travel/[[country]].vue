@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import am5geodata_data_countries2 from '@amcharts/amcharts5-geodata/data/countries2';
+import { TravelItem } from '@/types/travel';
 
 const route = useRoute();
 const countryCode = computed<string>(
@@ -8,6 +9,10 @@ const countryCode = computed<string>(
 const countryName = computed<string>(
   () => am5geodata_data_countries2[countryCode.value].country,
 );
+
+const { data } = await useAsyncData('travel', () => {
+  return queryContent<TravelItem>(`/travel/${countryCode.value.toLowerCase()}`).findOne();
+});
 
 useSeoMeta({
   title: `Travel - ${countryName.value}`,
@@ -45,23 +50,8 @@ useSeoMeta({
     </div>
     <TravelMap
       :countryCode="countryCode"
-      :visitedStates="[
-        'JP-40',
-        'JP-42',
-        'JP-43',
-        'JP-35',
-        'JP-34',
-        'JP-38',
-        'JP-27',
-        'JP-29',
-        'JP-28',
-        'JP-26',
-        'JP-23',
-        'JP-17',
-        'JP-22',
-        'JP-19',
-        'JP-13',
-      ]"
+      :visitedRegions="data.visited ?? []"
+      @selectRegion="console.log($event)"
     />
   </div>
 </template>
