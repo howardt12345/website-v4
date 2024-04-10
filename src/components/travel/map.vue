@@ -55,6 +55,23 @@ const setGeoData = async () => {
     geoJSON: geodata,
   });
 
+  polygonSeries.mapPolygons.template.events.on('click', async (event) => {
+    const target = event.target;
+    if (selectedRegion.value) {
+      selectedRegion.value.states.apply('default');
+    }
+    target.states.apply('active');
+    const dataItem = target.dataItem;
+    if (dataItem) {
+      const data = dataItem.dataContext;
+      const zoomAnimation = polygonSeries.zoomToDataItem(dataItem);
+      await zoomAnimation?.waitForStop();
+      emits('selectRegion', data.name);
+      console.log('Clicked: ', data.id);
+      selectedRegion.value = target;
+    }
+  });
+
   setPolygonStyling();
 };
 
@@ -74,23 +91,6 @@ const setPolygonStyling = () => {
     fill: am5.color(themeColors.value.primary),
     stroke: am5.color(themeColors.value['text-primary']),
     strokeWidth: 4,
-  });
-
-  polygonSeries.mapPolygons.template.events.on('click', async (event) => {
-    const target = event.target;
-    if (selectedRegion.value) {
-      selectedRegion.value.states.apply('default');
-    }
-    target.states.apply('active');
-    const dataItem = target.dataItem;
-    if (dataItem) {
-      const data = dataItem.dataContext;
-      const zoomAnimation = polygonSeries.zoomToDataItem(dataItem);
-      await zoomAnimation?.waitForStop();
-      emits('selectRegion', data.name);
-      console.log('Clicked: ', data.id);
-      selectedRegion.value = target;
-    }
   });
 
   if (visited.value.length) {
