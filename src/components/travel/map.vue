@@ -30,9 +30,19 @@ let chart: am5map.MapChart;
 let polygonSeries: am5map.MapPolygonSeries;
 const { themeColors } = storeToRefs(useTheme());
 
-watch([() => props.countryCode, () => themeColors.value], async () => {
-  await setGeoData();
-});
+watch(
+  () => props.countryCode,
+  async () => {
+    await setGeoData();
+  },
+);
+
+watch(
+  () => themeColors.value,
+  () => {
+    setPolygonStyling();
+  },
+);
 
 const setGeoData = async () => {
   const result = await am5.net.load(
@@ -45,6 +55,10 @@ const setGeoData = async () => {
     geoJSON: geodata,
   });
 
+  setPolygonStyling();
+};
+
+const setPolygonStyling = () => {
   // Setup MapPolygon Styling
   polygonSeries.mapPolygons.template.setAll({
     tooltipText: '{name}',
