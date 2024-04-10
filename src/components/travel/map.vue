@@ -22,7 +22,7 @@ const countryMap = computed<string | undefined>(
   () => am5geodata_data_countries2[props.countryCode.toUpperCase()].maps[1],
 );
 const visited = computed<string[]>(() => props.visitedRegions ?? []);
-const selectedRegion = ref<am5.Sprite & am5map.MapPolygon | null>(null);
+const selectedRegion = ref<(am5.Sprite & am5map.MapPolygon) | null>(null);
 
 const chartdiv = ref<HTMLElement | null>();
 let root!: am5.Root;
@@ -30,12 +30,9 @@ let chart: am5map.MapChart;
 let polygonSeries: am5map.MapPolygonSeries;
 const { themeColors } = storeToRefs(useTheme());
 
-watch(
-  () => props.countryCode,
-  async () => {
-    await setGeoData();
-  },
-);
+watch([() => props.countryCode, () => themeColors.value], async () => {
+  await setGeoData();
+});
 
 const setGeoData = async () => {
   const result = await am5.net.load(
@@ -68,7 +65,7 @@ const setGeoData = async () => {
   polygonSeries.mapPolygons.template.events.on('click', async (event) => {
     const target = event.target;
     if (selectedRegion.value) {
-      selectedRegion.value.states.apply("default");
+      selectedRegion.value.states.apply('default');
     }
     target.states.apply('active');
     const dataItem = target.dataItem;
