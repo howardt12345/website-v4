@@ -40,6 +40,7 @@ watch(
 watch(
   () => themeColors.value,
   () => {
+    chart.goHome();
     setPolygonStyling();
   },
 );
