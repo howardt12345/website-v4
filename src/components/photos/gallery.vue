@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhotoItem } from '~/types/photos';
+import type { PhotoItem } from '@/types/photos';
 
 interface Props {
   photos: PhotoItem[];

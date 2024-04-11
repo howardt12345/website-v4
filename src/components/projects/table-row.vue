@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProjectItem } from '@/types/projects';
+import type { ProjectItem } from '@/types/projects';
 
 interface Props {
   selectedTags?: string[];

@@ -6,6 +6,8 @@ export default defineNuxtConfig({
   build: { transpile: ['vuetify'] },
   devtools: { enabled: true },
   rootDir: 'src/',
+  '~': '/<srcDir>',
+  '@': '/<srcDir>',
   css: [
     'vuetify/lib/styles/main.sass',
     '@/assets/scss/global.scss',

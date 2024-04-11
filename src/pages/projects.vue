@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useArrayFilter } from '@vueuse/core';
-import { ProjectItem } from '@/types/projects';
+import type { ProjectItem } from '@/types/projects';
 
 interface TechOnly {
   tech: string[];

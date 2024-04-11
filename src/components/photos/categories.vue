@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhotoCategory } from '@/types/photos';
+import type { PhotoCategory } from '@/types/photos';
 
 interface Props {
   categories: PhotoCategory[];
