@@ -9,6 +9,7 @@ export const theme_light = {
   dark: false,
   colors: {
     background: BG,
+    background_secondary: DARK_BG,
     surface: BG,
     'surface-variant': DARK_BG,
     primary: ACCENT,
