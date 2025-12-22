@@ -1,48 +1,47 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt prepare && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "i18n-unused:missed": "i18n-unused display-missed",
-    "i18n-unused:unused": "i18n-unused display-unused",
-    "deploy": "node src/.output/server/index.mjs"
+    "lint": "eslint .",
+    "deploy": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.2",
-    "@fortawesome/fontawesome-svg-core": "^6.4.2",
-    "@fortawesome/free-brands-svg-icons": "^6.4.2",
-    "@fortawesome/free-regular-svg-icons": "^6.4.2",
-    "@fortawesome/free-solid-svg-icons": "^6.4.2",
-    "@fortawesome/vue-fontawesome": "^3.0.3",
-    "@nuxt/content": "^2.8.2",
-    "@nuxt/devtools": "latest",
-    "@nuxthq/studio": "^1.0.11",
-    "@nuxtjs/supabase": "^1.1.0",
-    "eslint": "^8.48.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "i18n-unused": "^0.14.0",
-    "nuxt": "^3.7.0",
-    "prettier": "^3.0.3",
-    "sass": "^1.66.1",
-    "sass-loader": "^13.3.2",
-    "vuetify": "^3.3.15"
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@nuxt/content": "^3.3.0",
+    "@nuxt/devtools": "^2.3.1",
+    "@nuxt/eslint": "^1.2.0",
+    "@nuxtjs/supabase": "^1.6.0",
+    "eslint": "^9.17.0",
+    "nuxt": "^4.0.0",
+    "prettier": "^3.4.2",
+    "sass": "^1.83.0",
+    "sass-loader": "^16.0.4",
+    "vuetify": "^3.7.6"
   },
   "overrides": {
-    "vue": "latest"
+    "vue": "latest",
+    "cookie": "0.7.2"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.11",
-    "@vueuse/core": "^10.4.1",
-    "@vueuse/motion": "^2.0.0",
-    "i18next-browser-languagedetector": "^7.1.0",
-    "i18next-http-backend": "^2.2.1",
-    "i18next-vue": "^3.0.0",
-    "pinia": "^2.1.6",
+    "@pinia/nuxt": "^0.11.3",
+    "@vueuse/core": "^12.4.0",
+    "@vueuse/motion": "^2.2.6",
+    "better-sqlite3": "^12.5.0",
+    "i18next-browser-languagedetector": "^8.0.2",
+    "i18next-http-backend": "^3.0.2",
+    "i18next-vue": "^5.0.0",
+    "pinia": "^3.0.4",
     "vue-masonry": "^0.16.0"
   }
 }
