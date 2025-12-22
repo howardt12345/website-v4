@@ -57,8 +57,8 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
         {{ formatDate(new Date(experience.start_date)) }}
         {{
           experience.end_date
-            ? '-' + formatDate(new Date(experience.end_date))
-            : ''
+            ? ' - ' + formatDate(new Date(experience.end_date))
+            : ' - Present'
         }}
       </div>
       <div
