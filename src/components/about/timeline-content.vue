@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TimelineItem } from '@/types/about';
+import type { TimelineItem } from '@/types/about';
 import { formatDate } from '@/composables/date';
 const { isMobile } = useMediaQueries();
 

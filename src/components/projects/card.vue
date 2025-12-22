@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProjectItem } from '@/types/projects';
+import type { ProjectItem } from '@/types/projects';
 import { useTheme } from '@/store/theme.store';
 import { formatDate } from '@/composables/date';
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProjectItem } from '@/types/projects';
+import type { ProjectItem } from '@/types/projects';
 import { useMediaQueries } from '@/composables/media-queries';
 
 interface Props {
