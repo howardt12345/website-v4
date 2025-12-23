@@ -17,6 +17,9 @@ export default defineNuxtConfig({
         },
       },
     },
+    optimizeDeps: {
+      include: ['cookie', '@supabase/ssr']
+    },
     ssr: {
       noExternal: ['vuetify'],
     },
