@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import type { IconSet, IconAliases, IconProps } from 'vuetify';
+import type { IconSet, IconProps } from 'vuetify';
 import redbubble from './redbubble.vue';
 
 const customSvgs = {

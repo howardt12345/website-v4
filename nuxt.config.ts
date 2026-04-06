@@ -4,11 +4,28 @@ export default defineNuxtConfig({
   build: { transpile: ['vuetify'] },
   devtools: { enabled: true },
   css: [
-    'vuetify/lib/styles/main.sass',
     '~/assets/scss/global.scss',
     '@fortawesome/fontawesome-svg-core/styles.css',
   ],
   vite: {
+    // cookie v1.x is CJS-only; wrap it as ESM so browsers can do named imports.
+    plugins: [{
+      name: 'cookie-cjs-esm-compat',
+      transform(code: string, id: string) {
+        if (!id.includes('/node_modules/cookie/dist/index.js')) return;
+        return [
+          'const module = { exports: {} }; const exports = module.exports;',
+          code,
+          'const _c = module.exports;',
+          // Function declarations are hoisted — re-export them directly to avoid redeclaration.
+          // parse/serialize are aliases (not function names), so export via _c.
+          'export { parseCookie, stringifyCookie, stringifySetCookie, parseSetCookie };',
+          'export const parse = _c.parse;',
+          'export const serialize = _c.serialize;',
+          'export default _c;',
+        ].join('\n');
+      },
+    } as any],
     css: {
       preprocessorOptions: {
         scss: {
@@ -18,7 +35,7 @@ export default defineNuxtConfig({
       },
     },
     optimizeDeps: {
-      include: ['cookie', '@supabase/ssr']
+      include: ['cookie', '@supabase/ssr', '@supabase/ssr > cookie']
     },
     ssr: {
       noExternal: ['vuetify'],

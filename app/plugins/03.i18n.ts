@@ -1,6 +1,5 @@
 import i18next from 'i18next';
 import I18NextVue from 'i18next-vue';
-import detector from 'i18next-browser-languagedetector';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
@@ -14,9 +13,8 @@ export const SUPPORTED_LANGUAGES: Record<string, { nativeName: string }> = {
 };
 
 export const i18nextPromise = i18next
-  .use(detector)
-  .use(Backend)
   .use(LanguageDetector)
+  .use(Backend)
   .init({
     debug: true,
     fallbackLng: 'en',

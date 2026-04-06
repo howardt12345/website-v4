@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { PhotoItem } from '~/types/photos';
+import type { PhotoItem } from '~/types/photos';
 
 interface Props {
   photos: PhotoItem[];
   selectedTags: string[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
   <v-row v-masonry dense>
     <v-col
       v-for="(photo, index) in photos"
-      v-masonry-tile
       :key="`${index}-photo-${photo.name}`"
+      v-masonry-tile
       cols="12"
       sm="12"
       md="6"

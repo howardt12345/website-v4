@@ -43,30 +43,29 @@ const clearFilters = () => {
 
     <div class="filter__buttons">
       <v-btn
-        @click="toggleFilters"
         :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
         :text="
           showFilters ? $t('Show Featured Projects') : $t('View All Projects')
         "
         size="large"
+        @click="toggleFilters"
       />
       <v-btn
         v-if="showFilters"
         class="clear-button"
-        @click="clearFilters"
         prepend-icon="fas fa-broom"
         :text="$t('Clear Filters')"
         size="large"
-      >
-      </v-btn>
+        @click="clearFilters"
+      />
     </div>
 
     <Transition name="a-project-filter">
       <div v-if="showFilters">
         <CommonFilterChips
+          v-model:selected-tags="selectedTags"
           class="filter__chips"
           :tags="uniqueTags"
-          v-model:selected-tags="selectedTags"
         />
         <ProjectsTable
           :projects="filteredProjects"

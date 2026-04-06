@@ -26,7 +26,6 @@ const toggleTagsFilter = () => {
 <template>
   <div>
     <v-btn
-      @click="toggleTagsFilter"
       :text="
         !showTagsFilter
           ? buttonText ?? $t('Filter by Tags')
@@ -34,11 +33,12 @@ const toggleTagsFilter = () => {
       "
       :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times'"
       size="small"
-    ></v-btn>
+      @click="toggleTagsFilter"
+    />
     <CommonFilterChips
       v-if="showTagsFilter"
-      :tags="availableTags"
       v-model:selected-tags="selectedTags"
+      :tags="availableTags"
     />
   </div>
 </template>

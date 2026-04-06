@@ -3,16 +3,17 @@ interface Props {
   items: string[];
   grid?: boolean
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
-  <ul :class="{
+  <ul
+:class="{
     'list-items': true,
     'list-items--grid': grid
   }">
     <li v-for="item in items" :key="item" class="list-items__item">
-      <v-icon class="list-items__icon"></v-icon>
+      <v-icon class="list-items__icon"/>
       <span class="list-items__text">{{ item }}</span>
     </li>
   </ul>

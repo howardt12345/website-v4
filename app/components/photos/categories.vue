@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { PhotoCategory } from '~/types/photos';
+import type { PhotoCategory } from '~/types/photos';
 
 interface Props {
   categories: PhotoCategory[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const { isMobile } = useMediaQueries();
 </script>
 
@@ -30,11 +30,7 @@ const { isMobile } = useMediaQueries();
           class="align-end"
           gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.3)"
         >
-          <v-card-title
-            class="text-white"
-            v-text="category.category"
-          ></v-card-title
-        ></v-img>
+          <v-card-title class="text-white">{{ category.category }}</v-card-title></v-img>
       </v-card>
     </v-col>
   </v-row>

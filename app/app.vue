@@ -27,7 +27,7 @@ usei18n();
 usePhotosStore().getPhotos();
 
 const preventRightClick = (e: MouseEvent) => {
-  var element = e.target as HTMLElement;
+  const element = e.target as HTMLElement;
   if (element.tagName === 'IMG') {
     e.preventDefault();
     e.stopPropagation();

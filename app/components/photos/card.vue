@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhotoItem } from '~/types/photos';
+import type { PhotoItem } from '~/types/photos';
 
 interface Props {
   photo: PhotoItem;
@@ -43,8 +43,7 @@ const closeDialog = () => (dialogOpen.value = false);
     :max-width="(photo.width / photo.height) * 1000"
   >
     <v-card>
-      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height">
-      </v-img>
+      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height"/>
       <v-card-actions>
         <v-chip-group v-model="selected" color="primary" variant="flat">
           <v-chip

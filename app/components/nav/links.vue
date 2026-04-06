@@ -6,7 +6,7 @@ interface Props {
   delay?: number;
   isMobile?: boolean;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const links = useNavLinks();
 </script>
@@ -15,8 +15,8 @@ const links = useNavLinks();
   <div class="nav-links">
     <div
       v-for="(link, index) in links"
-      v-motion
       :key="link.name"
+      v-motion
       :initial="{ opacity: 0, y: 10 }"
       :enter="{
         opacity: 1,

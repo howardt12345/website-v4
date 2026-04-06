@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ProjectItem } from '~/types/projects';
+import type { ProjectItem } from '~/types/projects';
 
 interface Props {
   projects: ProjectItem[];
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>

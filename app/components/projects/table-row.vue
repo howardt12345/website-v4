@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProjectItem } from '~/types/projects';
+import type { ProjectItem } from '~/types/projects';
 
 interface Props {
   selectedTags?: string[];
@@ -28,7 +28,7 @@ const selected = computed<number[]>(() => {
     </td>
     <td v-if="!hideTech">
       <v-chip-group v-model="selected" color="primary">
-        <v-chip v-for="tech in project.tech">
+        <v-chip v-for="tech in project.tech" :key="tech">
           {{ tech }}
         </v-chip>
       </v-chip-group>

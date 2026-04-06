@@ -17,7 +17,7 @@ const { changeLanguage } = usei18n();
           <strong v-if="currentLanguage === lng">
             {{ languages[lng].nativeName }}
           </strong>
-          <a v-else @click="changeLanguage(lng)" class="language-link">
+          <a v-else class="language-link" @click="changeLanguage(lng)">
             {{ languages[lng].nativeName }}
           </a>
           <span v-if="index < languageKeys.length - 1">&nbsp;|&nbsp;</span>

@@ -1,13 +1,12 @@
-import projectsVue from '~/pages/projects.vue';
 <script setup lang="ts">
-import { ProjectItem } from '~/types/projects';
+import type { ProjectItem } from '~/types/projects';
 import { useMediaQueries } from '~/composables/media-queries';
 
 interface Props {
   projects: ProjectItem[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const { isTablet } = useMediaQueries();
 </script>
 
@@ -16,12 +15,12 @@ const { isTablet } = useMediaQueries();
   <v-timeline :side="isTablet ? 'end' : ''" :line-thickness="isTablet ? 2 : 0">
     <v-timeline-item
       v-for="(project, index) in projects"
+      :key="project.title"
       :hide-dot="!isTablet"
       dot-color="primary"
       :class="{
         'timeline-item-right': !isTablet && index % 2 === 0,
       }"
-      :key="project.title"
     >
       <template #opposite>
         <div class="project-image__container">
@@ -37,7 +36,7 @@ const { isTablet } = useMediaQueries();
               :src="project.imagePath"
               :aspect-ratio="16 / 9"
               cover
-            ></v-img>
+            />
           </v-card>
         </div>
       </template>

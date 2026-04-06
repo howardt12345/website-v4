@@ -40,7 +40,7 @@ defineProps<Props>();
         target="_blank"
         rel="nofollow noopener noreferrer"
       >
-        <v-img src="images/me.jpg"></v-img>
+        <v-img src="images/me.jpg"/>
       </a>
     </div>
   </div>
