@@ -1,4 +1,4 @@
-import { PhotoCategory, PhotoItem } from '~/types/photos';
+import type { PhotoCategory, PhotoItem } from '~/types/photos';
 
 export const usePhotosStore = defineStore('photos', () => {
   const photos = ref<PhotoItem[]>([]);

@@ -1,5 +1,3 @@
-import { AboutListItems } from '#build/components'; import { text } from
-'@fortawesome/fontawesome-svg-core';
 <script setup lang="ts">
 import { usei18n } from '~/store/i18n.store';
 
@@ -8,7 +6,7 @@ interface Props {
   hobbies: string[];
   languages: { name: string; value: number }[];
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const { t } = usei18n();
 
@@ -42,10 +40,9 @@ const languageLevel = (value: number) => {
       </div>
       <div>
         <h2 class="skills-title">{{ $t('Languages') }}</h2>
-        <div v-for="{ name, value } in languages" class="language-item">
+        <div v-for="{ name, value } in languages" :key="name" class="language-item">
           <span class="language-item__text">{{ name }}</span>
           <v-slider
-            :key="name"
             :model-value="value * 20"
             color="primary"
             track-color="gray"

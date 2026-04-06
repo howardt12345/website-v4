@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { TimelineItem } from '~/types/about';
+import type { TimelineItem } from '~/types/about';
 import { formatDate } from '~/composables/date';
-const { isMobile } = useMediaQueries();
 
 interface Props {
   experience: TimelineItem;
@@ -31,7 +30,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
           </template>
         </v-toolbar-title>
 
-        <template v-slot:append>
+        <template #append>
           <div
             v-if="experience.location && !isMobile"
             class="timeline-card__location"
@@ -47,7 +46,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
             :href="experience.link.url"
             target="_blank"
             rel="nofollow noopener noreferrer"
-          ></v-btn>
+          />
         </template>
       </v-toolbar>
     </v-card-title>
@@ -82,6 +81,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
       >
         <v-chip
           v-for="skill in experience.skills"
+          :key="skill"
           class="timeline-card__chip"
           :value="skill"
         >

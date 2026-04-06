@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProjectItem } from '~/types/projects';
+import type { ProjectItem } from '~/types/projects';
 import { useTheme } from '~/store/theme.store';
 import { formatDate } from '~/composables/date';
 
@@ -8,7 +8,7 @@ interface Props {
   showImage?: boolean;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const { isDark } = storeToRefs(useTheme());
 </script>
 
@@ -45,7 +45,7 @@ const { isDark } = storeToRefs(useTheme());
 
     <v-card-actions v-if="project.tech" class="projects-card__actions">
       <v-chip-group class="projects-card__actions-chips">
-        <v-chip v-for="tech in project.tech">
+        <v-chip v-for="tech in project.tech" :key="tech">
           {{ tech }}
         </v-chip>
       </v-chip-group>

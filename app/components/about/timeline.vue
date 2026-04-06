@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TimelineItem } from '~/types/about';
+import type { TimelineItem } from '~/types/about';
 import { useMediaQueries } from '~/composables/media-queries';
 import { formatDate } from '~/composables/date';
 
@@ -34,9 +34,9 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
   <h1 class="section-title">{{ $t('Timeline') }}</h1>
 
   <CommonFilters
-    :available-tags="availableSkills"
     v-model:selected-tags="selectedSkills"
-    :buttonText="$t('Filter by Skills')"
+    :available-tags="availableSkills"
+    :button-text="$t('Filter by Skills')"
   />
 
   <v-timeline

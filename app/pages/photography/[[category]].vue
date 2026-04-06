@@ -85,20 +85,20 @@ const toggleCategoriesView = () =>
         {{ !!category ? category : $t('All Photos') }}
       </h1>
       <v-btn
-        @click="toggleCategoriesView"
         :text="!showCategoriesView ? $t('Show Categories') : $t('Show Photos')"
         :prepend-icon="
           !showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'
         "
         class="categories-button"
-      ></v-btn>
+        @click="toggleCategoriesView"
+      />
     </div>
     <v-breadcrumbs
       v-if="category"
       class="breadcrumbs"
       :items="breadcrumbItems"
       icon="far fa-images"
-    ></v-breadcrumbs>
+    />
     <CommonFilters
       v-if="availableTags.length && !showCategoriesView"
       v-model:selected-tags="selectedTags"

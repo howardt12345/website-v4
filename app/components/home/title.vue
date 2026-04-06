@@ -4,7 +4,7 @@ interface Props {
   isTablet?: boolean;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
@@ -29,7 +29,7 @@ const props = defineProps<Props>();
         {{ $t('HOWARD') }}
       </h1>
     </div>
-    <hr class="line" />
+    <hr class="line" >
     <div class="subtitle-container">
       <h2
         :class="{

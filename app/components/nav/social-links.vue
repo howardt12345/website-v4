@@ -7,9 +7,9 @@ const socialLinks = useSocialLinks();
 <template>
   <div class="social-links">
     <div
-      v-for="(link, index) in socialLinks"
-      v-motion
+      v-for="link in socialLinks"
       :key="link.name"
+      v-motion
       :initial="{ y: 0 }"
     >
       <v-btn

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ProjectItem } from '~/types/projects';
+import type { ProjectItem } from '~/types/projects';
 
 interface Props {
   project: ProjectItem;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const props = defineProps<Props>();
     target="_blank"
     rel="nofollow noopener noreferrer"
     variant="plain"
-  ></v-btn>
+  />
   <v-btn
     v-if="project.externalLink"
     icon="fas fa-arrow-up-right-from-square"
@@ -24,5 +24,5 @@ const props = defineProps<Props>();
     target="_blank"
     rel="nofollow noopener noreferrer"
     variant="plain"
-  ></v-btn>
+  />
 </template>

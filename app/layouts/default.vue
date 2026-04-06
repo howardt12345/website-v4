@@ -24,7 +24,7 @@ const links = useNavLinks();
         :ripple="false"
         >Howard Tseng</v-btn
       >
-      <v-divider></v-divider>
+      <v-divider/>
       <v-list class="nav-drawer-content">
         <v-list-item
           v-for="link in links"
@@ -34,8 +34,7 @@ const links = useNavLinks();
           :to="link.path"
           :title="$t(link.name)"
           :ripple="false"
-        >
-        </v-list-item>
+        />
       </v-list>
     </v-navigation-drawer>
     <v-footer class="app-bar" elevation="0" color="background">
@@ -43,7 +42,7 @@ const links = useNavLinks();
         v-if="isTablet"
         v-model="drawerOpen"
         @click="toggleDrawer"
-      ></v-app-bar-nav-icon>
+      />
       <v-app-bar-title>
         <v-btn
           nuxt
