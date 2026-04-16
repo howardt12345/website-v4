@@ -5,6 +5,7 @@ interface NavLink {
 }
 
 export const instagramLink = 'https://www.instagram.com/howardt12345/';
+export const resumeUrl = '/resume.pdf';
 
 export const useNavLinks = (): NavLink[] => [
   { name: 'About', path: '/about', icon: 'circle-user' },

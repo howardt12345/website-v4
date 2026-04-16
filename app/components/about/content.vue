@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { instagramLink } from '~/composables/links';
+import { instagramLink, resumeUrl } from '~/composables/links';
 import type { CollectionItemBase } from '@nuxt/content';
 
 interface AboutData extends CollectionItemBase {
@@ -20,7 +20,7 @@ defineProps<Props>();
     <div class="about__content">
       <ContentRenderer class="content-renderer" :value="data" />
       <v-btn
-        href="/resume.pdf"
+        :href="resumeUrl"
         target="_blank"
         rel="nofollow noopener noreferrer"
         class="resume-button"
@@ -54,7 +54,7 @@ defineProps<Props>();
   width: 100%;
   margin-bottom: rem(32);
 
-  @media (max-width: 600px) {
+  @media (max-width: $breakpoint-mobile) {
     flex-direction: column;
     margin-bottom: rem(16);
   }
@@ -65,7 +65,7 @@ defineProps<Props>();
     align-items: center;
     width: 65%;
 
-    @media (max-width: 600px) {
+    @media (max-width: $breakpoint-mobile) {
       width: 100%;
     }
   }
@@ -78,7 +78,7 @@ defineProps<Props>();
     border-radius: rem(4);
     margin-left: rem(60);
 
-    @media (max-width: 600px) {
+    @media (max-width: $breakpoint-mobile) {
       width: 100%;
       margin-left: 0;
     }

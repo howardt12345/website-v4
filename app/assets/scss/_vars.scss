@@ -7,3 +7,6 @@ $background: rgb(var(--v-theme-background));
 $shadow-bg: rgba(var(--v-theme-shadow-bg));
 
 $transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+$breakpoint-mobile: 600px;
+$home-title-width: 800px;

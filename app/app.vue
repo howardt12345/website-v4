@@ -15,7 +15,6 @@ useSeoMeta({
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
   ogDescription:
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
-  ogImage: 'https://example.com/image.png',
   twitterCard: 'summary_large_image',
 });
 
@@ -26,21 +25,7 @@ await i18nextPromise;
 usei18n();
 usePhotosStore().getPhotos();
 
-const preventRightClick = (e: MouseEvent) => {
-  const element = e.target as HTMLElement;
-  if (element.tagName === 'IMG') {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener('contextmenu', preventRightClick);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('contextmenu', preventRightClick);
-});
+useImageProtection();
 </script>
 
 <template>

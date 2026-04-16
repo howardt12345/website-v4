@@ -56,7 +56,7 @@ defineProps<Props>();
 <style scoped lang="scss">
 .home-title {
   flex-direction: column;
-  width: 800px;
+  width: $home-title-width;
   @media screen and (max-width: 1000px) {
     width: 80vw;
   }

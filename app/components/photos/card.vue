@@ -23,18 +23,7 @@ const closeDialog = () => (dialogOpen.value = false);
       class="align-end"
     >
       <v-card-actions v-if="selected.length" class="chip-group">
-        <v-chip-group v-model="selected" color="primary" variant="flat">
-          <v-chip
-            v-for="tag in photo.tags"
-            :key="tag"
-            :value="tag"
-            label
-            :theme="selected.includes(tag) ? 'primary' : 'dark'"
-            class="chip"
-          >
-            {{ tag }}
-          </v-chip>
-        </v-chip-group>
+        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
       </v-card-actions>
     </v-img>
   </v-card>
@@ -45,18 +34,7 @@ const closeDialog = () => (dialogOpen.value = false);
     <v-card>
       <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height"/>
       <v-card-actions>
-        <v-chip-group v-model="selected" color="primary" variant="flat">
-          <v-chip
-            v-for="tag in photo.tags"
-            :key="tag"
-            :value="tag"
-            label
-            :theme="selected.includes(tag) ? 'primary' : 'dark'"
-            class="chip"
-          >
-            {{ tag }}
-          </v-chip>
-        </v-chip-group>
+        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
         <v-btn
           color="primary"
           variant="outlined"
@@ -72,9 +50,6 @@ const closeDialog = () => (dialogOpen.value = false);
 <style scoped lang="scss">
 .chip-group {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-}
-.chip {
-  text-transform: capitalize;
 }
 .close-button {
   margin: rem(8);

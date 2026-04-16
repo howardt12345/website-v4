@@ -43,4 +43,4 @@ const toggleTagsFilter = () => {
   </div>
 </template>
 
-<stype scoped lang="scss"></stype>
+<style scoped lang="scss"></style>
