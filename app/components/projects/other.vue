@@ -9,8 +9,8 @@ defineProps<Props>();
 
 <template>
   <h2 class="section-subtitle">{{ $t('Other Recent Projects') }}</h2>
-  <v-container>
-    <v-row>
+  <v-container class="other-projects">
+    <v-row dense>
       <v-col
         v-for="(project, index) in projects"
         :key="`other-project-${index}`"
@@ -25,4 +25,13 @@ defineProps<Props>();
   </v-container>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.other-projects {
+  padding: 0;
+  margin-top: rem(20);
+
+  :deep(.v-col) {
+    display: flex;
+  }
+}
+</style>

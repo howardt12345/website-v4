@@ -31,7 +31,20 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     },
     defaults: {
-      VBtn: { variant: 'outlined' },
+      VBtn: {
+        variant: 'outlined',
+        rounded: 'md',
+      },
+      VCard: {
+        rounded: 'lg',
+      },
+      VChip: {
+        rounded: 'md',
+        size: 'small',
+      },
+      VChipGroup: {
+        column: true,
+      },
     },
     display: {
       mobileBreakpoint: 'sm',

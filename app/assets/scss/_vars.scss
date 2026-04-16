@@ -5,8 +5,11 @@ $text: rgb(var(--v-theme-text-primary));
 $text-secondary: rgb(var(--v-theme-text-secondary));
 $background: rgb(var(--v-theme-background));
 $shadow-bg: rgba(var(--v-theme-shadow-bg));
+$background-glass: rgba(var(--v-theme-background), 0.85);
 
 $transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+$transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
 $breakpoint-mobile: 600px;
 $home-title-width: 800px;
+$nav-height: 3.75rem; // 60px

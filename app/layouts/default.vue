@@ -18,13 +18,13 @@ const links = useNavLinks();
       <v-btn
         nuxt
         to="/"
-        class="title-button"
+        class="drawer-brand"
         size="x-large"
         variant="plain"
         :ripple="false"
         >Howard Tseng</v-btn
       >
-      <v-divider/>
+      <v-divider />
       <v-list class="nav-drawer-content">
         <v-list-item
           v-for="link in links"
@@ -37,34 +37,59 @@ const links = useNavLinks();
         />
       </v-list>
     </v-navigation-drawer>
-    <v-footer class="app-bar" elevation="0" color="background">
-      <v-app-bar-nav-icon
+
+    <header class="top-nav">
+      <v-btn
         v-if="isTablet"
-        v-model="drawerOpen"
+        :icon="drawerOpen ? 'fas fa-xmark' : 'fas fa-bars'"
+        variant="plain"
+        :ripple="false"
+        class="top-nav__menu-btn"
         @click="toggleDrawer"
       />
-      <v-app-bar-title>
-        <v-btn
-          nuxt
-          to="/"
-          class="title-button"
-          size="x-large"
-          variant="plain"
-          :ripple="false"
-          >Howard Tseng</v-btn
-        >
-      </v-app-bar-title>
+      <v-btn
+        nuxt
+        to="/"
+        class="top-nav__brand"
+        size="x-large"
+        variant="plain"
+        :ripple="false"
+        >Howard Tseng</v-btn
+      >
+      <div class="top-nav__spacer" />
       <NavLinks v-if="!isTablet" />
       <CommonThemeToggle />
-    </v-footer>
+    </header>
+
     <slot />
     <NavFooter />
   </div>
 </template>
 
 <style scoped lang="scss">
-.app-bar {
-  padding: rem(12);
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: rem(8);
+  padding: rem(8) rem(24);
+  min-height: $nav-height;
+  background: $background-glass;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid $border-color;
+  transition: background $transition-fast;
+
+  &__brand {
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+
+  &__spacer {
+    flex: 1;
+  }
 }
 
 .nav-drawer-content {
@@ -83,7 +108,7 @@ const links = useNavLinks();
   }
 }
 
-.title-button {
+.drawer-brand {
   z-index: 1;
 }
 </style>

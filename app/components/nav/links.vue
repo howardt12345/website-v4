@@ -34,6 +34,7 @@ const links = useNavLinks();
         nuxt
         :to="link.path"
         variant="plain"
+        class="nav-link-btn"
         >{{ $t(link.name) }}
       </v-btn>
       <v-btn
@@ -52,5 +53,37 @@ const links = useNavLinks();
   display: flex;
   flex-direction: row;
   height: rem(36);
+  gap: rem(4);
+}
+
+.nav-link-btn {
+  position: relative;
+  transition: color $transition-fast;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: rem(4);
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 2px;
+    background: $accent;
+    border-radius: 1px;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover::after,
+  &.router-link-active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  &.router-link-active {
+    color: $accent;
+  }
+}
+
+.v-btn.router-link-active {
+  color: $accent;
 }
 </style>

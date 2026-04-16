@@ -2,9 +2,9 @@
 import { usei18n } from '~/store/i18n.store';
 
 interface Props {
-  technologies: string[];
-  hobbies: string[];
-  languages: { name: string; value: number }[];
+  technologies?: string[];
+  hobbies?: string[];
+  languages?: { name: string; value: number }[];
 }
 defineProps<Props>();
 
@@ -29,16 +29,16 @@ const languageLevel = (value: number) => {
 
 <template>
   <div class="skills">
-    <div>
+    <div v-if="technologies">
       <h2 class="skills-title">{{ $t('Recent Technologies') }}</h2>
       <AboutListItems :items="technologies" grid />
     </div>
     <div class="skills-row">
-      <div>
+      <div v-if="hobbies">
         <h2 class="skills-title">{{ $t('Hobbies') }}</h2>
         <AboutListItems :items="hobbies" />
       </div>
-      <div>
+      <div v-if="languages">
         <h2 class="skills-title">{{ $t('Languages') }}</h2>
         <div v-for="{ name, value } in languages" :key="name" class="language-item">
           <span class="language-item__text">{{ name }}</span>

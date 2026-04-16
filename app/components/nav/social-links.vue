@@ -28,5 +28,6 @@ const socialLinks = useSocialLinks();
   display: flex;
   flex-direction: row;
   height: rem(36);
+  gap: rem(4);
 }
 </style>

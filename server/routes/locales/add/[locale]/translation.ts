@@ -1,16 +1,17 @@
 import fs from 'fs';
 
 export default defineEventHandler(async (event) => {
-  const locale = event.context.params?.locale;
+  const locale = event.context.params?.locale?.split('-')[0];
   const body = await readBody(event);
 
-  const translationJSON = fs.readFileSync(`public/locales/${locale}/translation.json`, 'utf8');
+  const filePath = `public/locales/${locale}/translation.json`;
+  const translationJSON = fs.readFileSync(filePath, 'utf8');
   const translation = JSON.parse(translationJSON);
 
   const newTranslation = { ...translation, ...body };
   const newTranslationJSON = JSON.stringify(newTranslation, null, 2);
 
-  fs.writeFileSync(`public/locales/${locale}/translation.json`, newTranslationJSON, 'utf8');
+  fs.writeFileSync(filePath, newTranslationJSON, 'utf8');
 
   console.log(`Added translation to ${locale}`);
 

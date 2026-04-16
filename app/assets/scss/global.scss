@@ -3,6 +3,10 @@
   src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 *,
 *::before,
 *::after {
@@ -11,6 +15,41 @@
   font-weight: normal;
   font-family: 'Poppins', sans-serif;
 }
+
+::selection {
+  background: $translucent-accent;
+  color: $accent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-color;
+  border-radius: 3px;
+
+  &:hover {
+    background: $text-secondary;
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $border-color transparent;
+}
+
+:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .v-btn {
   &--variant-plain {
     opacity: 1 !important;
@@ -21,8 +60,27 @@
   }
 }
 
+.v-chip-group .v-slide-group__content {
+  gap: rem(8);
+
+  .v-chip {
+    margin: 0 !important;
+  }
+}
+
+.v-btn__prepend {
+  margin-inline-end: rem(6) !important;
+}
+
+.v-btn__append {
+  margin-inline-start: rem(6) !important;
+}
+
 .section-title {
   font-size: rem(72);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 
   @media (max-width: 900px) {
     font-size: rem(48);
@@ -31,6 +89,9 @@
 
 .section-subtitle {
   font-size: rem(48);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 
   @media (max-width: 600px) {
     font-size: rem(32);
@@ -40,22 +101,30 @@
 .content-renderer {
   p {
     margin-bottom: rem(8);
+    line-height: 1.7;
     :last-child {
       margin-bottom: 0;
     }
   }
   ul > li {
     margin-left: rem(16);
+    line-height: 1.7;
   }
 
   a {
     text-decoration: none;
     color: $accent;
+    transition: $transition-fast;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 
 .content-container {
   max-width: rem(1200);
-  width: 80vw;
+  width: 85vw;
   margin: 0 auto;
+  padding: rem(32) 0;
 }

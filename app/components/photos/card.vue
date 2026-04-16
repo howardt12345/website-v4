@@ -15,7 +15,7 @@ const closeDialog = () => (dialogOpen.value = false);
 </script>
 
 <template>
-  <v-card variant="flat" @click="openDialog">
+  <v-card variant="flat" class="photo-card" @click="openDialog">
     <v-img
       :src="photo.url"
       cover
@@ -27,18 +27,20 @@ const closeDialog = () => (dialogOpen.value = false);
       </v-card-actions>
     </v-img>
   </v-card>
+
   <v-dialog
     v-model="dialogOpen"
     :max-width="(photo.width / photo.height) * 1000"
   >
     <v-card>
-      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height"/>
-      <v-card-actions>
+      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height" />
+      <v-card-actions class="dialog-actions">
         <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
-          class="close-button"
+          size="small"
           @click="closeDialog"
           >{{ $t('Close') }}</v-btn
         >
@@ -48,11 +50,24 @@ const closeDialog = () => (dialogOpen.value = false);
 </template>
 
 <style scoped lang="scss">
-.chip-group {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+.photo-card {
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
-.close-button {
-  margin: rem(8);
-  margin-left: auto;
+
+.chip-group {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+  padding: rem(8);
+}
+
+.dialog-actions {
+  padding: rem(8) rem(12);
+  flex-wrap: wrap;
+  gap: rem(8);
 }
 </style>

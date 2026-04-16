@@ -26,7 +26,7 @@ defineProps<Props>();
         class="resume-button"
         size="large"
         color="primary"
-        >{{ $t('Resume') }}</v-btn
+        >{{ $t('View Resume') }}</v-btn
       >
       <AboutSkills
         :technologies="data.technologies"

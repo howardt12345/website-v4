@@ -16,9 +16,7 @@ export const i18nextPromise = i18next
   .use(LanguageDetector)
   .use(Backend)
   .init({
-    debug: true,
     fallbackLng: 'en',
-
     interpolation: {
       escapeValue: false,
     },

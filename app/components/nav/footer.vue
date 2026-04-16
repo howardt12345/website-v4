@@ -19,8 +19,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: rem(8);
-  margin-bottom: rem(16);
+  gap: rem(12);
+  padding: rem(24) 0;
 }
 .copyright {
   font-size: rem(14);

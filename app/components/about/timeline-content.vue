@@ -13,42 +13,39 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
 </script>
 
 <template>
-  <v-card class="timeline-card" elevation="0" :side="isMobile ? 'end' : ''">
-    <v-card-title class="timeline-card__title">
-      <v-toolbar color="rgba(0, 0, 0, 0)" height="auto">
-        <v-toolbar-title class="timeline-card__title_toolbar">
-          <template #text>
-            <span class="timeline-card__title_text">{{
-              experience.title
-            }}</span>
-            <span
-              v-if="experience.organization"
-              class="timeline-card__title_subtitle"
-            >
-              @ {{ experience.organization }}
-            </span>
-          </template>
-        </v-toolbar-title>
-
-        <template #append>
-          <div
-            v-if="experience.location && !isMobile"
-            class="timeline-card__location"
-          >
-            <v-icon size="small">fas fa-map-marker-alt</v-icon>
-            {{ experience.location }}
-          </div>
-          <v-btn
-            v-if="experience.link"
-            icon="fas fa-arrow-up-right-from-square"
-            color="primary"
-            class="timeline-card__link"
-            :href="experience.link.url"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          />
-        </template>
-      </v-toolbar>
+  <v-card class="timeline-card" elevation="0">
+    <v-card-title class="timeline-card__header">
+      <div class="timeline-card__header-info">
+        <span class="timeline-card__title-text">{{ experience.title }}</span>
+        <span
+          v-if="experience.organization"
+          class="timeline-card__title-org"
+        >
+          @ {{ experience.organization }}
+        </span>
+      </div>
+      <div class="timeline-card__header-actions">
+        <span
+          v-if="experience.location && !isMobile"
+          class="timeline-card__location"
+        >
+          <v-icon size="x-small">fas fa-map-marker-alt</v-icon>
+          {{ experience.location }}
+        </span>
+        <v-btn
+          v-if="experience.link"
+          :icon="true"
+          size="small"
+          variant="plain"
+          color="primary"
+          :href="experience.link.url"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+          class="timeline-card__link-btn"
+        >
+          <v-icon size="small">fas fa-arrow-up-right-from-square</v-icon>
+        </v-btn>
+      </div>
     </v-card-title>
 
     <v-card-subtitle>
@@ -84,6 +81,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
           :key="skill"
           class="timeline-card__chip"
           :value="skill"
+          variant="tonal"
         >
           {{ skill }}
         </v-chip>
@@ -95,57 +93,66 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
 <style scoped lang="scss">
 .timeline-card {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: transparent;
 
-  &__title {
-    padding-right: 0;
-    padding-top: 0;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: rem(8);
+    white-space: normal;
+    padding-top: rem(8);
+    padding-bottom: 0;
 
-    &_toolbar {
-      margin: 0;
-
-      :deep(.v-toolbar-title__placeholder) {
-        white-space: normal;
-        padding-right: rem(8);
-      }
+    &-info {
+      display: flex;
+      flex-direction: column;
+      gap: rem(2);
     }
 
-    &_text {
-      color: $text;
-    }
-
-    &_subtitle {
-      margin: 0;
-      color: $accent;
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: rem(2);
+      flex-shrink: 0;
+      margin-top: rem(2);
     }
   }
 
-  &__link {
+  &__title-text {
+    color: $text;
+    font-size: rem(17);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  &__title-org {
+    color: $accent;
+    font-size: rem(14);
+    font-weight: 400;
+  }
+
+  &__link-btn {
     height: auto;
+    padding: rem(4);
   }
 
   &__location {
     color: $text-secondary;
-    font-size: rem(16);
-    margin-right: rem(8);
-
-    @media (max-width: 480px) {
-      margin-top: rem(8);
-    }
+    font-size: rem(13);
+    display: flex;
+    align-items: center;
+    gap: rem(4);
+    white-space: nowrap;
   }
 
   &__actions {
     padding-top: 0;
   }
 
-  &__chip {
-    margin-right: rem(8);
-    margin-bottom: rem(8);
-
-    &-group {
-      padding: rem(4);
-      padding-top: 0;
-    }
+  &__chip-group {
+    padding: rem(4);
+    padding-top: 0;
   }
 }
 </style>
