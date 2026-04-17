@@ -12,15 +12,16 @@ const { isTablet } = useMediaQueries();
 
 <template>
   <h2 class="section-subtitle">{{ $t('Featured Projects') }}</h2>
-  <v-timeline :side="isTablet ? 'end' : undefined" :line-thickness="isTablet ? 2 : 0">
+  <v-timeline
+    :side="isTablet ? 'end' : undefined"
+    :line-thickness="isTablet ? 2 : 0"
+  >
     <v-timeline-item
       v-for="(project, index) in projects"
       :key="project.title"
+      class="timeline-item"
       :hide-dot="!isTablet"
       dot-color="primary"
-      :class="{
-        'timeline-item-right': !isTablet && index % 2 === 0,
-      }"
     >
       <template #opposite>
         <div class="project-image__container">
@@ -28,15 +29,11 @@ const { isTablet } = useMediaQueries();
             v-if="!isTablet"
             :class="{
               'project-image': true,
-              'project-image-right': index % 2 === 0,
+              'project-image-left': index % 2 === 0,
             }"
             variant="outlined"
           >
-            <v-img
-              :src="project.imagePath"
-              :aspect-ratio="16 / 9"
-              cover
-            />
+            <v-img :src="project.imagePath" :aspect-ratio="16 / 9" cover />
           </v-card>
         </div>
       </template>
@@ -48,7 +45,7 @@ const { isTablet } = useMediaQueries();
 </template>
 
 <style scoped lang="scss">
-.timeline-item-right {
+.timeline-item {
   :deep(.v-timeline-item__opposite) {
     justify-self: normal !important;
   }
@@ -62,7 +59,7 @@ const { isTablet } = useMediaQueries();
   margin-left: -25%;
   width: 125%;
 
-  &-right {
+  &-left {
     margin-left: 0;
     margin-right: -25%;
   }
