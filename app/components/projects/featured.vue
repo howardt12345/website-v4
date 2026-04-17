@@ -49,9 +49,6 @@ const { isTablet } = useMediaQueries();
 
 <style scoped lang="scss">
 .timeline-item-right {
-  text-align: right;
-  direction: rtl;
-
   :deep(.v-timeline-item__opposite) {
     justify-self: normal !important;
   }

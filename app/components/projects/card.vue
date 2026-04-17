@@ -109,14 +109,10 @@ defineProps<Props>();
       padding: rem(4) rem(4) 0;
     }
 
-    &-links {
-      direction: ltr;
-    }
   }
 }
 
 .content-renderer {
-  direction: ltr;
   :deep(p) {
     margin: 0;
   }
