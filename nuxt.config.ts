@@ -52,8 +52,10 @@ export default defineNuxtConfig({
     redirect: false,
   },
   routeRules: {
-    '/about': { prerender: true },
-    '/projects': { prerender: true },
+    '/about': { redirect: '/#about' },
+    '/experience': { redirect: '/#experience' },
+    '/projects': { redirect: '/#projects' },
+    '/contact': { redirect: '/#contact' },
   },
   content: {
     experimental: { sqliteConnector: 'native' }

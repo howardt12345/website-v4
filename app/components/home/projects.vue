@@ -16,11 +16,10 @@ const otherProjects = computed<ProjectItem[]>(() =>
   projects.value.filter((project) => !project.featured).slice(0, 9),
 );
 const uniqueTags = computed<string[]>(() =>
-  Array.from(new Set(projects.value.flatMap((project) => project.tech ?? []))),
+  Array.from(new Set(projects.value.flatMap((project) => project.tech ?? []))).sort(),
 );
 
 const selectedTags = ref<string[]>([]);
-
 const filteredProjects = useArrayFilter(
   projects,
   (project: ProjectItem) =>
@@ -29,66 +28,55 @@ const filteredProjects = useArrayFilter(
 );
 
 const showFilters = ref(false);
-const toggleFilters = () => {
-  showFilters.value = !showFilters.value;
-};
-const clearFilters = () => {
-  selectedTags.value = [];
-};
+const toggleFilters = () => (showFilters.value = !showFilters.value);
+const clearFilters = () => (selectedTags.value = []);
 </script>
 
 <template>
-  <div class="content-container">
-    <h1 class="section-title">{{ $t('Projects') }}</h1>
+  <h1 class="section-title">{{ $t('Projects') }}</h1>
 
-    <div class="filter__buttons">
-      <v-btn
-        :prepend-icon="showFilters ? 'fas fa-xmark' : 'fas fa-magnifying-glass'"
-        :text="
-          showFilters ? $t('Show Featured Projects') : $t('View All Projects')
-        "
-        size="large"
-        @click="toggleFilters"
-      />
-      <v-btn
-        v-if="showFilters"
-        class="clear-button"
-        prepend-icon="fas fa-broom"
-        :text="$t('Clear Filters')"
-        size="large"
-        @click="clearFilters"
-      />
-    </div>
-
-    <Transition name="a-project-filter">
-      <div v-if="showFilters">
-        <CommonFilterChips
-          v-model:selected-tags="selectedTags"
-          class="filter__chips"
-          :tags="uniqueTags"
-        />
-        <ProjectsTable
-          :projects="filteredProjects"
-          :selected-tags="selectedTags"
-        />
-      </div>
-    </Transition>
-    <Transition name="a-project-featured" appear>
-      <div v-if="!showFilters">
-        <ProjectsFeatured
-          v-if="featuredProjects.length > 0"
-          :projects="featuredProjects"
-        />
-        <ProjectsOther :projects="otherProjects" />
-      </div>
-    </Transition>
+  <div class="filter__buttons">
+    <v-btn
+      :prepend-icon="showFilters ? 'fas fa-star' : 'fas fa-sliders'"
+      :text="showFilters ? $t('Show Featured Projects') : $t('View All Projects')"
+      size="small"
+      @click="toggleFilters"
+    />
+    <v-btn
+      v-if="showFilters"
+      class="clear-button"
+      prepend-icon="fas fa-filter-circle-xmark"
+      :text="$t('Clear Filters')"
+      size="small"
+      @click="clearFilters"
+    />
   </div>
+
+  <Transition name="a-project-filter">
+    <div v-if="showFilters">
+      <CommonFilterChips
+        v-model:selected-tags="selectedTags"
+        class="filter__chips"
+        :tags="uniqueTags"
+      />
+      <ProjectsTable :projects="filteredProjects" :selected-tags="selectedTags" />
+    </div>
+  </Transition>
+  <Transition name="a-project-featured" appear>
+    <div v-if="!showFilters">
+      <ProjectsFeatured
+        v-if="featuredProjects.length > 0"
+        :projects="featuredProjects"
+      />
+      <ProjectsOther :projects="otherProjects" />
+    </div>
+  </Transition>
 </template>
 
 <style scoped lang="scss">
 .filter {
   &__buttons {
-    margin: rem(16) 0;
+    margin-bottom: rem(16);
     display: flex;
     flex-wrap: wrap;
     gap: rem(16);

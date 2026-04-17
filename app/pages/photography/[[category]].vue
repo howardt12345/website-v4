@@ -6,7 +6,7 @@ const { photos, categories } = storeToRefs(usePhotosStore());
 const router = useRouter();
 const route = useRoute();
 
-const category = computed<string>(() => route.params.category.toString() ?? '');
+const category = computed<string>(() => route.params.category?.toString() ?? '');
 const categoryPhotos = computed(() =>
   photos.value.filter(
     (photo) =>

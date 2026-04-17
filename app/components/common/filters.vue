@@ -26,6 +26,7 @@ const toggleTagsFilter = () => {
 <template>
   <div>
     <v-btn
+      class="filters__button"
       :text="
         !showTagsFilter
           ? buttonText ?? $t('Filter by Tags')
@@ -43,4 +44,10 @@ const toggleTagsFilter = () => {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.filters {
+  &__button {
+    margin-bottom: rem(4);
+  }
+}
+</style>

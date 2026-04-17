@@ -1,4 +1,4 @@
-interface NavLink {
+export interface NavLink {
   name: string;
   path: string;
   icon: string;
@@ -8,10 +8,11 @@ export const instagramLink = 'https://www.instagram.com/howardt12345/';
 export const resumeUrl = '/resume.pdf';
 
 export const useNavLinks = (): NavLink[] => [
-  { name: 'About', path: '/about', icon: 'circle-user' },
+  { name: 'About', path: '/#about', icon: 'circle-user' },
+  { name: 'Experience', path: '/#experience', icon: 'briefcase' },
+  { name: 'Projects', path: '/#projects', icon: 'code' },
   { name: 'Photography', path: '/photography', icon: 'camera' },
-  { name: 'Projects', path: '/projects', icon: 'code' },
-  { name: 'Contact', path: '/contact', icon: 'at' },
+  { name: 'Contact', path: '/#contact', icon: 'at' },
 ];
 
 export const useSocialLinks = (): NavLink[] => [

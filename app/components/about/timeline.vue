@@ -31,10 +31,11 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
 </script>
 
 <template>
-  <h1 class="section-title">{{ $t('Timeline') }}</h1>
+  <h1 class="section-title">{{ $t('Experience') }}</h1>
 
   <CommonFilters
     v-model:selected-tags="selectedSkills"
+    class="timeline__filters"
     :available-tags="availableSkills"
     :button-text="$t('Filter by Skills')"
   />
@@ -76,4 +77,10 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
   </v-timeline>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.timeline {
+  &__filters {
+    margin-bottom: rem(16);
+  }
+}
+</style>

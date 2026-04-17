@@ -12,7 +12,7 @@ const { isTablet } = useMediaQueries();
 
 <template>
   <h2 class="section-subtitle">{{ $t('Featured Projects') }}</h2>
-  <v-timeline :side="isTablet ? 'end' : ''" :line-thickness="isTablet ? 2 : 0">
+  <v-timeline :side="isTablet ? 'end' : undefined" :line-thickness="isTablet ? 2 : 0">
     <v-timeline-item
       v-for="(project, index) in projects"
       :key="project.title"

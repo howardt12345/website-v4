@@ -1,14 +1,32 @@
 <script setup lang="ts">
-import { useNavLinks } from '~/composables/links';
+import { useNavLinks, type NavLink } from '~/composables/links';
+import { useActiveSection } from '~/composables/useActiveSection';
+
+const HASH_SECTION_PREFIX = '/#';
+const ANIMATE_ENTER_DURATION_MS = 500;
+const LINK_STAGGER_MS = 150;
 
 interface Props {
   animate?: boolean;
   delay?: number;
-  isMobile?: boolean;
+  iconOnly?: boolean;
 }
-defineProps<Props>();
+const { animate = false, delay = 0, iconOnly = false } = defineProps<Props>();
 
 const links = useNavLinks();
+const route = useRoute();
+
+const isHashSectionLink = (path: string) => path.startsWith(HASH_SECTION_PREFIX);
+const sectionIdFromPath = (path: string) => path.slice(HASH_SECTION_PREFIX.length);
+
+const { activeSection } = useActiveSection(['about', 'experience', 'projects', 'contact']);
+
+const isLinkActive = (link: NavLink): boolean => {
+  if (isHashSectionLink(link.path)) {
+    return route.path === '/' && activeSection.value === sectionIdFromPath(link.path);
+  }
+  return route.path.startsWith(link.path);
+};
 </script>
 
 <template>
@@ -22,27 +40,34 @@ const links = useNavLinks();
         opacity: 1,
         y: 0,
         transition: {
-          duration: animate ? 500 : 0,
+          duration: animate ? ANIMATE_ENTER_DURATION_MS : 0,
           type: 'keyframes',
           ease: 'easeOut',
         },
       }"
-      :delay="index * 150 + (delay ?? 0)"
+      :delay="index * LINK_STAGGER_MS + delay"
     >
       <v-btn
-        v-if="!isMobile"
+        v-if="!iconOnly"
         nuxt
         :to="link.path"
         variant="plain"
+        active-class=""
+        exact-active-class=""
         class="nav-link-btn"
-        >{{ $t(link.name) }}
+        :class="{ 'nav-link-active': isLinkActive(link) }"
+      >
+        {{ $t(link.name) }}
       </v-btn>
       <v-btn
         v-else
         nuxt
         :to="link.path"
         variant="plain"
+        active-class=""
+        exact-active-class=""
         :icon="`fas fa-${link.icon}`"
+        :class="{ 'nav-link-active': isLinkActive(link) }"
       />
     </div>
   </div>
@@ -74,16 +99,12 @@ const links = useNavLinks();
   }
 
   &:hover::after,
-  &.router-link-active::after {
+  &.nav-link-active::after {
     transform: translateX(-50%) scaleX(1);
   }
 
-  &.router-link-active {
+  &.nav-link-active {
     color: $accent;
   }
-}
-
-.v-btn.router-link-active {
-  color: $accent;
 }
 </style>

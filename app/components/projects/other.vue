@@ -28,7 +28,6 @@ defineProps<Props>();
 <style scoped lang="scss">
 .other-projects {
   padding: 0;
-  margin-top: rem(20);
 
   :deep(.v-col) {
     display: flex;

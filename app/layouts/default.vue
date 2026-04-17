@@ -4,12 +4,35 @@ import { useMediaQueries } from '~/composables/media-queries';
 const { isTablet } = useMediaQueries();
 
 const drawerOpen = ref(false);
-
-const toggleDrawer = () => {
-  drawerOpen.value = !drawerOpen.value;
-};
+const toggleDrawer = () => (drawerOpen.value = !drawerOpen.value);
+const closeDrawer = () => (drawerOpen.value = false);
 
 const links = useNavLinks();
+const route = useRoute();
+
+watch(() => route.fullPath, closeDrawer);
+
+const heroIsInView = ref(route.path === '/');
+const headerVisible = computed(() => !heroIsInView.value);
+let heroObserver: IntersectionObserver | null = null;
+
+const observeHero = () => {
+  heroObserver?.disconnect();
+  const el = document.getElementById('home');
+  if (!el) {
+    heroIsInView.value = false;
+    return;
+  }
+  heroObserver = new IntersectionObserver(
+    (entries) => (heroIsInView.value = entries[0]!.isIntersecting),
+    { threshold: 0.1 },
+  );
+  heroObserver.observe(el);
+};
+
+onMounted(observeHero);
+watch(() => route.path, () => nextTick(observeHero));
+onUnmounted(() => heroObserver?.disconnect());
 </script>
 
 <template>
@@ -38,7 +61,7 @@ const links = useNavLinks();
       </v-list>
     </v-navigation-drawer>
 
-    <header class="top-nav">
+    <header class="top-nav" :class="{ 'top-nav--hidden': !headerVisible }">
       <v-btn
         v-if="isTablet"
         :icon="drawerOpen ? 'fas fa-xmark' : 'fas fa-bars'"
@@ -80,7 +103,8 @@ const links = useNavLinks();
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid $border-color;
-  transition: background $transition-fast;
+  opacity: 1;
+  transition: opacity 0.3s ease, background $transition-fast;
 
   &__brand {
     letter-spacing: 0.01em;
@@ -89,6 +113,11 @@ const links = useNavLinks();
 
   &__spacer {
     flex: 1;
+  }
+
+  &--hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
