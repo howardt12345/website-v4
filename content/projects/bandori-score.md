@@ -7,7 +7,7 @@ tech:
   - MongoDB
   - Discord.py
 showInProjects: true
-featured: true
+featured: false
 ---
 
 Script to get the score information from a BanG Dream! screenshot and store in a database. Discord bot to allow users to easily upload score screenshots and generate statistics on their play data.
