@@ -47,6 +47,7 @@ const languageLevel = (value: number) => {
             color="primary"
             track-color="gray"
             thumb-label
+            :thumb-size="0"
             readonly
             hide-details
           >
