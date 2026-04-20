@@ -2,6 +2,27 @@ import { defineCollection, defineContentConfig, z } from '@nuxt/content';
 
 export default defineContentConfig({
   collections: {
+    blog: defineCollection({
+      type: 'page',
+      source: 'blog/**/*.md',
+      schema: z.object({
+        title: z.string(),
+        summary: z.string(),
+        date: z.string(),
+        readMins: z.number(),
+        category: z.string(),
+        subcategory: z.string(),
+        tags: z.array(z.string()),
+        cover: z.object({
+          hue: z.number(),
+          pattern: z.string(),
+        }),
+        image: z.string().optional(),
+        author: z.string().optional(),
+        featured: z.boolean().optional(),
+        pinned: z.boolean().optional(),
+      }),
+    }),
     projects: defineCollection({
       type: 'page',
       source: 'projects/**/*.md',
