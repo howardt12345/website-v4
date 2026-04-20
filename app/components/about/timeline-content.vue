@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimelineItem } from '~/types/about';
-import { formatDate } from '~/composables/date';
+import { getDateRangeLabel } from '~/composables/date';
 
 interface Props {
   experience: TimelineItem;
@@ -50,12 +50,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
 
     <v-card-subtitle>
       <div>
-        {{ formatDate(new Date(experience.start_date)) }}
-        {{
-          experience.end_date
-            ? ' - ' + formatDate(new Date(experience.end_date))
-            : ' - Present'
-        }}
+        {{ getDateRangeLabel(experience.start_date, experience.end_date) }}
       </div>
       <div
         v-if="experience.location && isMobile"
@@ -138,7 +133,6 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
   }
 
   &__location {
-    color: $text-secondary;
     font-size: rem(13);
     display: flex;
     align-items: center;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TimelineItem } from '~/types/about';
 import { useMediaQueries } from '~/composables/media-queries';
-import { formatDate } from '~/composables/date';
+import { getDateRangeLabel } from '~/composables/date';
 
 interface Props {
   experiences: TimelineItem[];
@@ -54,23 +54,14 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
     >
       <template #opposite>
         <v-chip color="primary" text-color="white">
-          {{ formatDate(new Date(experience.start_date)) }}
-          {{
-            experience.end_date &&
-            new Date(experience.start_date).getMonth() !==
-              new Date(experience.end_date).getMonth() &&
-            new Date(experience.start_date).getFullYear() !==
-              new Date(experience.end_date).getFullYear()
-              ? '-' + formatDate(new Date(experience.end_date))
-              : ''
-          }}
+          {{ getDateRangeLabel(experience.start_date, experience.end_date) }}
         </v-chip>
       </template>
       <template #default>
         <AboutTimelineContent
-          :experience="experience"
-          :is-mobile="isMobile"
-          :selected-skills="selectedSkills"
+          :experience
+          :is-mobile
+          :selected-skills
         />
       </template>
     </v-timeline-item>
