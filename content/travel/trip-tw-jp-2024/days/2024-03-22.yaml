@@ -18,6 +18,10 @@ places:
     name: Philosopher's Path
     lon: 135.794
     lat: 35.020
+  - id: nishiki-market
+    name: Nishiki Market
+    lon: 135.765
+    lat: 35.005
   - id: kodaiji
     name: Kodai-ji
     lon: 135.781

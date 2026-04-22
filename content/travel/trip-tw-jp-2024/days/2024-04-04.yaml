@@ -6,10 +6,10 @@ places:
     name: Asakusa / Senso-ji
     lon: 139.797
     lat: 35.714
-  - id: akihabara
-    name: Akihabara
-    lon: 139.771
-    lat: 35.699
+  - id: jimbocho
+    name: Jimbocho
+    lon: 139.757
+    lat: 35.696
   - id: ikebukuro
     name: Ikebukuro
     lon: 139.710
