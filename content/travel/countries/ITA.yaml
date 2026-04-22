@@ -1,0 +1,16 @@
+iso3: ITA
+iso2: IT
+name: Italy
+hue: 130
+regions: [IT-42, IT-72]
+cities:
+  - id: genova
+    name: Genova
+    lon: 8.946
+    lat: 44.406
+    region: IT-42
+  - id: sorrento
+    name: Sorrento
+    lon: 14.376
+    lat: 40.626
+    region: IT-72

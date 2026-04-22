@@ -1,0 +1,12 @@
+date: '2024-09-13'
+country: ITA
+city: genova
+places:
+  - name: Porto Antico
+    lon: 8.925
+    lat: 44.409
+    photos: 5
+  - name: Boccadasse
+    lon: 8.979
+    lat: 44.393
+    photos: 4

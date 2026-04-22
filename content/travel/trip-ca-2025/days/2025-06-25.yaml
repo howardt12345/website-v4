@@ -1,0 +1,12 @@
+date: '2025-06-25'
+country: CAN
+city: ottawa
+places:
+  - name: Parliament Hill
+    lon: -75.700
+    lat: 45.424
+    photos: 3
+  - name: ByWard Market
+    lon: -75.692
+    lat: 45.427
+    photos: 4

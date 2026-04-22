@@ -1,0 +1,12 @@
+date: '2024-09-10'
+country: FRA
+city: nice
+places:
+  - name: Promenade des Anglais
+    lon: 7.255
+    lat: 43.695
+    photos: 6
+  - name: Vieux Nice
+    lon: 7.277
+    lat: 43.697
+    photos: 4

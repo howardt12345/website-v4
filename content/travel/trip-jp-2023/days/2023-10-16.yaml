@@ -1,0 +1,12 @@
+date: '2023-10-16'
+country: JPN
+city: matsuyama
+places:
+  - name: Dogo Onsen
+    lon: 132.786
+    lat: 33.851
+    photos: 5
+  - name: Matsuyama Castle
+    lon: 132.766
+    lat: 33.846
+    photos: 3
