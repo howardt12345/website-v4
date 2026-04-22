@@ -12,8 +12,8 @@ defineProps<Props>();
 <template>
   <v-row v-masonry dense>
     <v-col
-      v-for="(photo, index) in photos"
-      :key="`${index}-photo-${photo.name}`"
+      v-for="photo in photos"
+      :key="photo.stem"
       v-masonry-tile
       cols="12"
       sm="12"

@@ -2,11 +2,11 @@ date: '2024-03-09'
 country: TWN
 city: taipei
 places:
-  - name: Dihua Street
+  - id: dihua-street
+    name: Dihua Street
     lon: 121.510
     lat: 25.056
-    photos: 5
-  - name: National Palace Museum
+  - id: national-palace-museum
+    name: National Palace Museum
     lon: 121.548
     lat: 25.102
-    photos: 2

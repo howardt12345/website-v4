@@ -2,12 +2,12 @@ date: '2024-03-08'
 country: TWN
 city: taipei
 places:
-  - name: Shilin Night Market
+  - id: shilin-night-market
+    name: Shilin Night Market
     lon: 121.524
     lat: 25.088
-    photos: 4
     blogSlug: rebuilding-portfolio-nuxt-4
-  - name: Elephant Mountain
+  - id: elephant-mountain
+    name: Elephant Mountain
     lon: 121.572
     lat: 25.027
-    photos: 3

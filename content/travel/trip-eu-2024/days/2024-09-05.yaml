@@ -2,11 +2,11 @@ date: '2024-09-05'
 country: FRA
 city: paris
 places:
-  - name: Canal Saint-Martin
+  - id: canal-saint-martin
+    name: Canal Saint-Martin
     lon: 2.367
     lat: 48.871
-    photos: 5
-  - name: Marais rooftops
+  - id: marais-rooftops
+    name: Marais rooftops
     lon: 2.362
     lat: 48.857
-    photos: 4

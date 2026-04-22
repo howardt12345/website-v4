@@ -2,12 +2,12 @@ date: '2023-10-12'
 country: JPN
 city: fukuoka
 places:
-  - name: Ohori Park
+  - id: ohori-park
+    name: Ohori Park
     lon: 130.378
     lat: 33.586
-    photos: 4
-  - name: Yatai food stalls
+  - id: yatai-food-stalls
+    name: Yatai food stalls
     lon: 130.403
     lat: 33.592
-    photos: 6
     blogSlug: travel-kit-prime-lenses
