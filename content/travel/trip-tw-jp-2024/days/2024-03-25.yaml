@@ -2,6 +2,11 @@ date: '2024-03-25'
 country: JPN
 city: nagoya
 places:
+  - id: omicho-market
+    name: Omicho Market
+    lon: 136.656
+    lat: 36.573
+    city: kanazawa
   - id: kenrokuen-garden
     name: Kenroku-en Garden
     lon: 136.663

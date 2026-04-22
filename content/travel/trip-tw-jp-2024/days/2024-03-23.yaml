@@ -2,10 +2,10 @@ date: '2024-03-23'
 country: JPN
 city: kyoto
 places:
-  - id: nishiki-market
-    name: Nishiki Market
-    lon: 135.765
-    lat: 35.005
+  - id: toji-temple
+    name: Toji Temple
+    lon: 135.748
+    lat: 34.981
   - id: kyoto-station
     name: Kyoto Station
     lon: 135.759
