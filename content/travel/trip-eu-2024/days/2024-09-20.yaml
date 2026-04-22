@@ -1,0 +1,12 @@
+date: '2024-09-20'
+country: DEU
+city: frankfurt
+places:
+  - name: Römerberg
+    lon: 8.682
+    lat: 50.111
+    photos: 3
+  - name: Main riverside
+    lon: 8.682
+    lat: 50.105
+    photos: 4

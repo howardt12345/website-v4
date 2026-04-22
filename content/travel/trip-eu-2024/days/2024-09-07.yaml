@@ -1,0 +1,12 @@
+date: '2024-09-07'
+country: FRA
+city: paris
+places:
+  - name: "Musée d'Orsay"
+    lon: 2.327
+    lat: 48.860
+    photos: 3
+  - name: Buttes-Chaumont
+    lon: 2.383
+    lat: 48.880
+    photos: 4

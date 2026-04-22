@@ -1,0 +1,26 @@
+iso3: JPN
+iso2: JP
+name: Japan
+hue: 340
+regions: [JP-13, JP-26, JP-40, JP-38]
+cities:
+  - id: tokyo
+    name: Tokyo
+    lon: 139.691
+    lat: 35.689
+    region: JP-13
+  - id: kyoto
+    name: Kyoto
+    lon: 135.768
+    lat: 35.011
+    region: JP-26
+  - id: fukuoka
+    name: Fukuoka
+    lon: 130.402
+    lat: 33.590
+    region: JP-40
+  - id: matsuyama
+    name: Matsuyama
+    lon: 132.766
+    lat: 33.839
+    region: JP-38
