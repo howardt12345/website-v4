@@ -36,5 +36,22 @@
   "Close": "Close",
   "Filter by Skills": "Filter by Skills",
   "View Resume": "View Resume",
-  "Blog": "Blog"
+  "Blog": "Blog",
+  "Travel": "Travel",
+  "Countries visited, cities explored, and days logged on the road.": "Countries visited, cities explored, and days logged on the road.",
+  "All trips": "All trips",
+  "No trips yet.": "No trips yet.",
+  "Flat": "Flat",
+  "Globe": "Globe",
+  "countries": "countries",
+  "cities": "cities",
+  "trips": "trips",
+  "days on the road": "days on the road",
+  "days logged": "days logged",
+  "days": "days",
+  "photos": "photos",
+  "stops": "stops",
+  "Stop": "Stop",
+  "Read trip writeup": "Read trip writeup",
+  "Read post": "Read post"
 }

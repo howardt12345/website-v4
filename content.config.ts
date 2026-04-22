@@ -23,6 +23,59 @@ export default defineContentConfig({
         pinned: z.boolean().optional(),
       }),
     }),
+    travelTrips: defineCollection({
+      type: 'data',
+      source: 'travel/*/index.yaml',
+      schema: z.object({
+        // Note: `id` is reserved by Nuxt Content — use `stem` for stable trip identification
+        title: z.string(),
+        countries: z.array(z.string()),
+        start: z.string(),
+        end: z.string(),
+        excerpt: z.string(),
+        blogSlug: z.string().optional(),
+      }),
+    }),
+    travelCountries: defineCollection({
+      type: 'data',
+      source: 'travel/countries/*.yaml',
+      schema: z.object({
+        iso3: z.string(),
+        iso2: z.string(),
+        name: z.string(),
+        hue: z.number(),
+        regions: z.array(z.string()).default([]),
+        cities: z.array(z.object({
+          id: z.string(),
+          name: z.string(),
+          lon: z.number(),
+          lat: z.number(),
+          region: z.string(),
+        })).default([]),
+      }),
+    }),
+    travelDays: defineCollection({
+      type: 'data',
+      source: 'travel/*/days/*.yaml',
+      schema: z.object({
+        date: z.string(),
+        // Day-level defaults. Individual places may override these.
+        country: z.string(),
+        city: z.string(),
+        places: z.array(
+          z.object({
+            name: z.string(),
+            lon: z.number(),
+            lat: z.number(),
+            photos: z.number(),
+            blogSlug: z.string().optional(),
+            // Optional overrides for cross-country or cross-city stops within a day.
+            country: z.string().optional(),
+            city: z.string().optional(),
+          }),
+        ),
+      }),
+    }),
     projects: defineCollection({
       type: 'page',
       source: 'projects/**/*.md',
