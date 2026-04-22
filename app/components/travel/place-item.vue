@@ -5,6 +5,7 @@ interface Props {
   place: TravelPlace;
   index: number;
   active: boolean;
+  photoCount: number;
 }
 
 defineProps<Props>();
@@ -32,8 +33,8 @@ defineEmits<{ pick: [index: number] }>();
 
     <v-list-item-title class="place-item__name">{{ place.name }}</v-list-item-title>
 
-    <template #append>
-      <span class="place-item__count">{{ place.photos }} {{ $t('photos') }}</span>
+    <template v-if="photoCount > 0" #append>
+      <span class="place-item__count">{{ photoCount }} {{ $t('photos') }}</span>
     </template>
   </v-list-item>
 </template>

@@ -64,16 +64,41 @@ export default defineContentConfig({
         city: z.string(),
         places: z.array(
           z.object({
+            id: z.string().optional(),
             name: z.string(),
             lon: z.number(),
             lat: z.number(),
-            photos: z.number(),
             blogSlug: z.string().optional(),
             // Optional overrides for cross-country or cross-city stops within a day.
             country: z.string().optional(),
             city: z.string().optional(),
           }),
         ),
+      }),
+    }),
+    photos: defineCollection({
+      type: 'data',
+      source: { include: 'photos/**/*.yaml', exclude: ['photos/**/index.yaml'] },
+      schema: z.object({
+        title: z.string().optional(),
+        caption: z.string().optional(),
+        alt: z.string().optional(),
+        featured: z.boolean().optional(),
+        date: z.string().optional(),
+        tags: z.array(z.string()).optional(),
+        aspectRatio: z.number().optional(),
+        ext: z.string().optional(),
+      }),
+    }),
+    photoFolders: defineCollection({
+      type: 'data',
+      source: 'photos/**/index.yaml',
+      schema: z.object({
+        tripId: z.string().optional(),
+        placeSlug: z.string().optional(),
+        category: z.string().optional(),
+        subcategory: z.string().optional(),
+        tags: z.array(z.string()).optional(),
       }),
     }),
     projects: defineCollection({

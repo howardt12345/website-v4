@@ -45,8 +45,7 @@ const isCountryTransition = (index: number): boolean =>
             <span v-if="multiCountry && isCountryTransition(i)" class="day-card__country">
               {{ countryByIso3(day.country)?.name }} ·
             </span>
-            {{ day.places.length }} {{ $t('stops') }} ·
-            {{ day.places.reduce((sum, p) => sum + p.photos, 0) }} {{ $t('photos') }}
+            {{ day.places.length }} {{ $t('stops') }}
           </span>
         </v-card-text>
       </v-card>

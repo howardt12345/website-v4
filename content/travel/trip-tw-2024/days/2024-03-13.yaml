@@ -2,12 +2,12 @@ date: '2024-03-13'
 country: TWN
 city: kaohsiung
 places:
-  - name: Pier-2 Art Center
+  - id: pier-2-art-center
+    name: Pier-2 Art Center
     lon: 120.282
     lat: 22.620
-    photos: 5
     blogSlug: supabase-masonry-gallery
-  - name: Lotus Pond
+  - id: lotus-pond
+    name: Lotus Pond
     lon: 120.293
     lat: 22.684
-    photos: 3

@@ -2,13 +2,22 @@ import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 export interface TravelPlace {
+  id?: string;
   name: string;
   lon: number;
   lat: number;
-  photos: number;
   blogSlug?: string;
   country?: string;
   city?: string;
+}
+
+export interface TravelPhoto {
+  url: string;
+  title?: string;
+  caption?: string;
+  alt?: string;
+  featured?: boolean;
+  tags: string[];
 }
 
 export interface TravelDay {

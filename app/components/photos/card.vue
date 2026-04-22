@@ -19,7 +19,7 @@ const closeDialog = () => (dialogOpen.value = false);
     <v-img
       :src="photo.url"
       cover
-      :aspect-ratio="photo.width / photo.height"
+      :aspect-ratio="photo.aspectRatio"
       class="align-end"
     >
       <v-card-actions v-if="selected.length" class="chip-group">
@@ -30,10 +30,10 @@ const closeDialog = () => (dialogOpen.value = false);
 
   <v-dialog
     v-model="dialogOpen"
-    :max-width="(photo.width / photo.height) * 1000"
+    :max-width="photo.aspectRatio * 1000"
   >
     <v-card>
-      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height" />
+      <v-img :src="photo.url" :aspect-ratio="photo.aspectRatio" />
       <v-card-actions class="dialog-actions">
         <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
         <v-spacer />

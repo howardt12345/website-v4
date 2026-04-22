@@ -2,11 +2,11 @@ date: '2024-09-16'
 country: ITA
 city: sorrento
 places:
-  - name: Marina Grande
+  - id: marina-grande
+    name: Marina Grande
     lon: 14.360
     lat: 40.630
-    photos: 6
-  - name: Path of the Gods
+  - id: path-of-the-gods
+    name: Path of the Gods
     lon: 14.583
     lat: 40.625
-    photos: 5

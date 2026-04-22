@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelDay, TravelPlace } from '~/composables/travel';
+import type { TravelDay, TravelPlace, TravelPhoto } from '~/composables/travel';
 import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -7,6 +7,7 @@ interface Props {
   day: TravelDay;
   activePlace: number;
   multiCountry: boolean;
+  photosMap?: Record<string, TravelPhoto[]>;
 }
 
 const props = defineProps<Props>();
@@ -24,6 +25,9 @@ const dayCountryNames = computed(() =>
 
 const placeHue = (place: TravelPlace): number =>
   countryByIso3(place.country ?? props.day.country)?.hue ?? 200;
+
+const photosForPlace = (place: TravelPlace): TravelPhoto[] =>
+  place.id ? (props.photosMap?.[place.id] ?? []) : [];
 </script>
 
 <template>
@@ -59,6 +63,7 @@ const placeHue = (place: TravelPlace): number =>
           :place
           :index="i"
           :active="i === activePlace"
+          :photoCount="photosForPlace(place).length"
           @pick="$emit('update:activePlace', $event)"
         />
       </div>
@@ -71,6 +76,7 @@ const placeHue = (place: TravelPlace): number =>
             :placeIndex="i"
             :totalPlaces="day.places.length"
             :baseHue="placeHue(place)"
+            :photos="photosForPlace(place)"
           />
         </template>
       </div>

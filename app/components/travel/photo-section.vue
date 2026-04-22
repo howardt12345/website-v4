@@ -1,26 +1,19 @@
 <script setup lang="ts">
-import type { TravelPlace } from '~/composables/travel';
+import type { TravelPlace, TravelPhoto } from '~/composables/travel';
 
 interface Props {
   place: TravelPlace;
   placeIndex: number;
   totalPlaces: number;
   baseHue: number;
+  photos: TravelPhoto[];
 }
 
-const props = defineProps<Props>();
-
-const HUE_PLACE_STEP = 30;
-const HUE_PHOTO_STEP = 10;
-
-// Deterministic color for each photo placeholder: seeds from the place's country hue,
-// offsets by place position and the first character of the place name, then steps per photo.
-const photoHue = (photoIndex: number): number =>
-  (props.baseHue + props.placeIndex * HUE_PLACE_STEP + props.place.name.charCodeAt(0) + photoIndex * HUE_PHOTO_STEP) % 360;
+defineProps<Props>();
 </script>
 
 <template>
-  <div class="photo-section">
+  <div v-if="photos.length" class="photo-section">
     <div class="photo-section__head">
       <div>
         <div class="photo-section__eyebrow">{{ $t('Stop') }} {{ placeIndex + 1 }} · {{ totalPlaces }}</div>
@@ -38,10 +31,11 @@ const photoHue = (photoIndex: number): number =>
     </div>
 
     <div class="photo-grid">
-      <CommonPhotoPlaceholder
-        v-for="k in place.photos"
-        :key="k"
-        :hue="photoHue(k - 1)"
+      <img
+        v-for="photo in photos"
+        :key="photo.url"
+        :src="photo.url"
+        :alt="photo.alt ?? photo.title ?? place.name"
         class="photo-grid__photo"
       />
     </div>
@@ -93,8 +87,11 @@ const photoHue = (photoIndex: number): number =>
 
   &__photo {
     aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: rem(8);
-    overflow: hidden;
+    display: block;
   }
 }
 </style>

@@ -2,11 +2,11 @@ date: '2025-06-22'
 country: CAN
 city: toronto
 places:
-  - name: Kensington Market
+  - id: kensington-market
+    name: Kensington Market
     lon: -79.400
     lat: 43.653
-    photos: 5
-  - name: Toronto Islands
+  - id: toronto-islands
+    name: Toronto Islands
     lon: -79.378
     lat: 43.618
-    photos: 4

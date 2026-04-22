@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelTrip, TravelDay, TravelCountry } from '~/composables/travel';
+import type { TravelTrip, TravelDay, TravelCountry, TravelPhoto } from '~/composables/travel';
 import { tripsForCountry, tripSlug } from '~/composables/travel';
 import { useTravelNavigation } from '~/composables/useTravelNavigation';
 import { useTravelStore } from '~/store/travel.store';
@@ -23,6 +23,14 @@ const { data: rawTrips } = await useAsyncData('travel-trips', () =>
 
 const { data: rawDays } = await useAsyncData('travel-days', () =>
   queryCollection('travelDays').order('date', 'ASC').all(),
+);
+
+const { data: rawPhotoFolders } = await useAsyncData('photo-folders', () =>
+  queryCollection('photoFolders').all(),
+);
+
+const { data: rawTravelPhotos } = await useAsyncData('travel-photos', () =>
+  queryCollection('photos').order('stem', 'ASC').all(),
 );
 
 watch(rawCountries, (countries) => {
@@ -71,15 +79,49 @@ const countryTrips = computed<TravelTrip[]>(() =>
 const multiCountry = computed(() => (focusTrip.value?.countries.length ?? 0) > 1);
 
 const tripDayCount = computed(() => tripDays.value.length);
-const tripPhotoCount = computed(() =>
-  tripDays.value.reduce((sum, d) => sum + d.places.reduce((s, p) => s + p.photos, 0), 0),
-);
+
 const tripCityCount = computed(() =>
   new Set(
     tripDays.value.flatMap((d) =>
       d.places.map((p) => `${p.country ?? d.country}/${p.city ?? d.city}`),
     ),
   ).size,
+);
+
+const photosByPlace = computed<Record<string, Record<string, TravelPhoto[]>>>(() => {
+  const folderMap = new Map(
+    (rawPhotoFolders.value ?? []).map((f) => [f.stem.replace(/\/index$/, ''), f]),
+  );
+  const result: Record<string, Record<string, TravelPhoto[]>> = {};
+  for (const raw of (rawTravelPhotos.value ?? [])) {
+    const folderPath = raw.stem.split('/').slice(0, -1).join('/');
+    const folder = folderMap.get(folderPath);
+    if (!folder?.tripId || !folder?.placeSlug) continue;
+    const { tripId, placeSlug } = folder;
+    if (!result[tripId]) result[tripId] = {};
+    if (!result[tripId][placeSlug]) result[tripId][placeSlug] = [];
+    result[tripId][placeSlug].push({
+      url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
+      title: raw.title,
+      caption: raw.caption,
+      alt: raw.alt,
+      featured: raw.featured ?? false,
+      tags: raw.tags ?? folder.tags ?? [],
+    });
+  }
+  return result;
+});
+
+const activeTripId = computed(() =>
+  focusTrip.value ? tripSlug(focusTrip.value).replace('travel/', '') : '',
+);
+
+const tripPhotosMap = computed<Record<string, TravelPhoto[]>>(() =>
+  photosByPlace.value[activeTripId.value] ?? {},
+);
+
+const tripPhotoCount = computed(() =>
+  Object.values(tripPhotosMap.value).reduce((sum, photos) => sum + photos.length, 0),
 );
 
 const mapFocusCountries = computed<string[]>(() => {
@@ -210,6 +252,7 @@ const mapCityPins = computed(() => {
         :day="activeDay"
         :activePlace="activePlaceIndex"
         :multiCountry
+        :photosMap="tripPhotosMap"
         @update:activePlace="activePlaceIndex = $event"
       />
     </template>
