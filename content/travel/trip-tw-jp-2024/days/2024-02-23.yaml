@@ -1,0 +1,28 @@
+date: '2024-02-23'
+country: TWN
+city: tainan
+places:
+  - id: eternal-golden-castle
+    name: Eternal Golden Castle
+    lon: 120.158
+    lat: 22.988
+  - id: anping-tree-house
+    name: Anping Tree House
+    lon: 120.163
+    lat: 23.001
+  - id: lin-department-store
+    name: Lin Department Store
+    lon: 120.204
+    lat: 22.986
+  - id: snail-alley
+    name: Snail Alley
+    lon: 120.208
+    lat: 22.993
+  - id: tainan-train-station
+    name: Tainan Train Station
+    lon: 120.212
+    lat: 22.997
+  - id: flower-night-market
+    name: Flower Night Market
+    lon: 120.222
+    lat: 22.996

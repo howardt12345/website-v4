@@ -1,0 +1,20 @@
+date: '2024-03-06'
+country: JPN
+city: nagasaki
+places:
+  - id: nagasaki-station
+    name: Nagasaki Station
+    lon: 129.870
+    lat: 32.753
+  - id: peace-park
+    name: Peace Park / Atomic Bomb Museum
+    lon: 129.864
+    lat: 32.774
+  - id: meganebashi-bridge
+    name: Meganebashi Bridge
+    lon: 129.877
+    lat: 32.750
+  - id: dejima
+    name: Dejima
+    lon: 129.874
+    lat: 32.743

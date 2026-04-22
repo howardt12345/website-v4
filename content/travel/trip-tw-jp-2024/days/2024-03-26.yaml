@@ -1,0 +1,16 @@
+date: '2024-03-26'
+country: JPN
+city: nagoya
+places:
+  - id: nagoya-castle
+    name: Nagoya Castle
+    lon: 136.899
+    lat: 35.185
+  - id: toyota-commemorative-museum
+    name: Toyota Commemorative Museum
+    lon: 136.873
+    lat: 35.179
+  - id: nagoya-station
+    name: Nagoya Station
+    lon: 136.881
+    lat: 35.171

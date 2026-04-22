@@ -1,0 +1,16 @@
+date: '2024-03-30'
+country: JPN
+city: tokyo
+places:
+  - id: jimbocho
+    name: Jimbocho
+    lon: 139.757
+    lat: 35.696
+  - id: tokyo-station
+    name: Tokyo Station
+    lon: 139.767
+    lat: 35.681
+  - id: imperial-palace
+    name: Imperial Palace
+    lon: 139.752
+    lat: 35.685

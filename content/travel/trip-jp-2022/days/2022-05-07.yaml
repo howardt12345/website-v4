@@ -1,8 +1,0 @@
-date: '2022-05-07'
-country: JPN
-city: tokyo
-places:
-  - id: tsukiji-outer-market
-    name: Tsukiji Outer Market
-    lon: 139.770
-    lat: 35.665

@@ -1,0 +1,12 @@
+date: '2024-03-18'
+country: JPN
+city: kobe
+places:
+  - id: kitano-ijinkan
+    name: Kitano Ijinkan
+    lon: 135.192
+    lat: 34.697
+  - id: arima-onsen
+    name: Arima Onsen
+    lon: 135.245
+    lat: 34.793

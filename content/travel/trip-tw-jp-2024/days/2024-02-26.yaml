@@ -1,0 +1,17 @@
+date: '2024-02-26'
+country: TWN
+city: taipei
+places:
+  - id: taichung-hsr-station
+    name: Taichung HSR Station
+    lon: 120.616
+    lat: 24.113
+    city: nantou
+  - id: taipei-main-station
+    name: Taipei Main Station
+    lon: 121.517
+    lat: 25.048
+  - id: huashan-1914
+    name: Huashan 1914 Creative Park
+    lon: 121.529
+    lat: 25.044

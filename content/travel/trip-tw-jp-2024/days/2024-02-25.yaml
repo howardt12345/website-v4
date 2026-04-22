@@ -1,0 +1,16 @@
+date: '2024-02-25'
+country: TWN
+city: nantou
+places:
+  - id: taichung-hsr-station
+    name: Taichung HSR Station
+    lon: 120.616
+    lat: 24.113
+  - id: national-museum-natural-science
+    name: National Museum of Natural Science
+    lon: 120.666
+    lat: 24.158
+  - id: lugu
+    name: Lugu
+    lon: 120.697
+    lat: 23.940

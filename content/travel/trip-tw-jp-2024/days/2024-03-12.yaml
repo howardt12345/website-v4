@@ -1,0 +1,9 @@
+date: '2024-03-12'
+country: JPN
+city: matsuyama
+places:
+  - id: hiroshima-port
+    name: Hiroshima Port
+    lon: 132.455
+    lat: 34.353
+    city: hiroshima
