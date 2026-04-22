@@ -1,0 +1,19 @@
+date: '2024-03-19'
+country: JPN
+city: kyoto
+places:
+  - id: himeji-castle
+    name: Himeji Castle
+    lon: 134.694
+    lat: 34.839
+    city: himeji
+  - id: kokoen-garden
+    name: Kokoen Garden
+    lon: 134.691
+    lat: 34.838
+    city: himeji
+  - id: himeji-station
+    name: Himeji Station
+    lon: 134.689
+    lat: 34.827
+    city: himeji

@@ -1,0 +1,16 @@
+date: '2024-02-24'
+country: TWN
+city: tainan
+places:
+  - id: sicao-green-tunnel
+    name: Sicao Green Tunnel
+    lon: 120.228
+    lat: 22.983
+  - id: chimei-museum
+    name: Chimei Museum
+    lon: 120.227
+    lat: 22.935
+  - id: tainan-metropolitan-park
+    name: Tainan Metropolitan Park
+    lon: 120.278
+    lat: 22.923

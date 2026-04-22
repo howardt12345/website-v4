@@ -1,0 +1,12 @@
+date: '2024-04-02'
+country: JPN
+city: tokyo
+places:
+  - id: tsukiji-outer-market
+    name: Tsukiji Outer Market
+    lon: 139.770
+    lat: 35.665
+  - id: tokyo-tower
+    name: Tokyo Tower
+    lon: 139.745
+    lat: 35.659

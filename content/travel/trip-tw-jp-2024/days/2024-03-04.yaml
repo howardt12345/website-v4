@@ -1,0 +1,24 @@
+date: '2024-03-04'
+country: JPN
+city: fukuoka
+places:
+  - id: kushida-shrine
+    name: Kushida Shrine
+    lon: 130.410
+    lat: 33.591
+  - id: teamlab-forest
+    name: TeamLab Forest
+    lon: 130.412
+    lat: 33.590
+  - id: tenjin-district
+    name: Tenjin District
+    lon: 130.400
+    lat: 33.589
+  - id: ohori-park
+    name: Ohori Park
+    lon: 130.378
+    lat: 33.586
+  - id: fukuoka-tower
+    name: Fukuoka Tower
+    lon: 130.351
+    lat: 33.593

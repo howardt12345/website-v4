@@ -1,0 +1,21 @@
+date: '2024-03-07'
+country: JPN
+city: kumamoto
+places:
+  - id: kumamoto-station
+    name: Kumamoto Station
+    lon: 130.689
+    lat: 32.790
+  - id: kumamoto-castle
+    name: Kumamoto Castle
+    lon: 130.706
+    lat: 32.806
+  - id: shimotori-shopping-street
+    name: Shimotori Shopping Street
+    lon: 130.706
+    lat: 32.800
+  - id: canal-city-hakata
+    name: Canal City Hakata
+    lon: 130.411
+    lat: 33.590
+    city: fukuoka

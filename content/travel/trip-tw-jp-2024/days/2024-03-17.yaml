@@ -1,0 +1,21 @@
+date: '2024-03-17'
+country: JPN
+city: nara
+places:
+  - id: kofukuji
+    name: Kofuku-ji
+    lon: 135.833
+    lat: 34.683
+  - id: isuien-garden
+    name: Isuien Garden
+    lon: 135.843
+    lat: 34.688
+  - id: kasuga-grand-shrine
+    name: Kasuga Grand Shrine
+    lon: 135.849
+    lat: 34.681
+  - id: dotonbori
+    name: Dotonbori
+    lon: 135.501
+    lat: 34.669
+    city: osaka

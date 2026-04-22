@@ -1,0 +1,8 @@
+date: '2024-02-27'
+country: TWN
+city: taipei
+places:
+  - id: dadaocheng-dihua-street
+    name: Dadaocheng / Dihua Street
+    lon: 121.510
+    lat: 25.056

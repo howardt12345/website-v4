@@ -2,7 +2,7 @@ iso3: TWN
 iso2: TW
 name: Taiwan
 hue: 180
-regions: [TW-TPE, TW-TNN, TW-KHH, TW-NWT]
+regions: [TW-TPE, TW-TNN, TW-KHH, TW-NWT, TW-NAN]
 cities:
   - id: taipei
     name: Taipei
@@ -19,3 +19,8 @@ cities:
     lon: 120.308
     lat: 22.633
     region: TW-KHH
+  - id: nantou
+    name: Nantou
+    lon: 120.668
+    lat: 23.989
+    region: TW-NAN

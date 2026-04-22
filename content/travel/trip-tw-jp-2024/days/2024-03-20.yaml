@@ -1,0 +1,28 @@
+date: '2024-03-20'
+country: JPN
+city: kyoto
+places:
+  - id: tenryuji
+    name: Tenryu-ji
+    lon: 135.674
+    lat: 35.016
+  - id: kyoto-station
+    name: Kyoto Station
+    lon: 135.759
+    lat: 34.986
+  - id: toji-temple
+    name: Toji Temple
+    lon: 135.748
+    lat: 34.981
+  - id: nishi-honganji
+    name: Nishi Hongan-ji
+    lon: 135.752
+    lat: 34.991
+  - id: gion-district
+    name: Gion District
+    lon: 135.775
+    lat: 35.004
+  - id: higashiyama
+    name: Higashiyama
+    lon: 135.780
+    lat: 35.000

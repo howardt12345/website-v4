@@ -1,0 +1,19 @@
+date: '2024-03-29'
+country: JPN
+city: tokyo
+places:
+  - id: arakurayama-sengen-park
+    name: Arakurayama Sengen Park
+    lon: 138.804
+    lat: 35.497
+    city: shimoyoshida
+  - id: shimoyoshida-station
+    name: Shimoyoshida Station
+    lon: 138.802
+    lat: 35.490
+    city: shimoyoshida
+  - id: kawaguchiko-music-forest
+    name: Kawaguchiko Music Forest
+    lon: 138.762
+    lat: 35.498
+    city: shimoyoshida

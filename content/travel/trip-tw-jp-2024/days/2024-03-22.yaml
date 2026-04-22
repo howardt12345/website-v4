@@ -1,0 +1,28 @@
+date: '2024-03-22'
+country: JPN
+city: kyoto
+places:
+  - id: kiyomizudera
+    name: Kiyomizu-dera
+    lon: 135.785
+    lat: 34.995
+  - id: kinkakuji
+    name: Kinkaku-ji
+    lon: 135.729
+    lat: 35.039
+  - id: kitano-tenmangu
+    name: Kitano Tenmangu
+    lon: 135.735
+    lat: 35.031
+  - id: philosophers-path
+    name: Philosopher's Path
+    lon: 135.794
+    lat: 35.020
+  - id: kodaiji
+    name: Kodai-ji
+    lon: 135.781
+    lat: 34.999
+  - id: higashiyama
+    name: Higashiyama
+    lon: 135.780
+    lat: 35.000
