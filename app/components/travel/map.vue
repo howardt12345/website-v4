@@ -107,6 +107,7 @@ const { iso2ToIso3, iso3ToIso2 } = storeToRefs(useTravelStore());
 
 const MAX_LATITUDE = 85;
 const MAX_LONGITUDE = 180;
+const MAX_ZOOM_LEVEL = 1024;
 
 
 const landFill = () => vuetifyColorToHex('--v-theme-map-land');
@@ -155,6 +156,57 @@ const colorizeVisitedCountries = (worldSeries: am5map.MapPolygonSeries) => {
       polygon.events.on('click', () => emit('countryClick', iso3));
     }
   });
+};
+
+const zoomToPathBounds = (path: { lon: number; lat: number }[], minPadDeg = 3) => {
+  if (!chart || path.length === 0) return;
+  const lons = path.map((p) => p.lon);
+  const lats = path.map((p) => p.lat);
+  const minLon = Math.min(...lons);
+  const maxLon = Math.max(...lons);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+
+  if (props.mode === 'globe') {
+    const centroidLon = (minLon + maxLon) / 2;
+    const centroidLat = (minLat + maxLat) / 2;
+    const effectiveSpan = Math.max(maxLon - minLon, maxLat - minLat, minPadDeg * 2);
+    const zoomLevel = Math.max(1.5, Math.min(64, 120 / effectiveSpan));
+    const easing = am5.ease.out(am5.ease.cubic);
+    chart.animate({ key: 'rotationX', to: -centroidLon, duration: 600, easing });
+    chart.animate({ key: 'rotationY', to: -centroidLat, duration: 600, easing });
+    chart.animate({ key: 'zoomLevel', to: zoomLevel, duration: 600, easing });
+  } else {
+    const lonPad = Math.max((maxLon - minLon) * 0.15, minPadDeg);
+    const latPad = Math.max((maxLat - minLat) * 0.15, minPadDeg);
+    try {
+      chart.zoomToGeoBounds({
+        left: Math.max(minLon - lonPad, -MAX_LONGITUDE),
+        right: Math.min(maxLon + lonPad, MAX_LONGITUDE),
+        top: Math.min(maxLat + latPad, MAX_LATITUDE),
+        bottom: Math.max(minLat - latPad, -MAX_LATITUDE),
+      }, 500);
+    } catch { /* malformed bounds */ }
+  }
+};
+
+const applyZoom = () => {
+  if (props.placePins.length) {
+    setTimeout(() => {
+      if (!chart || chart.isDisposed()) return;
+      zoomToPathBounds(props.placePins, 0.1);
+    }, 300);
+  } else if (props.tripPath?.length) {
+    setTimeout(() => {
+      if (!chart || chart.isDisposed()) return;
+      zoomToPathBounds(props.tripPath!);
+    }, 300);
+  } else if (!props.focusCountries.length) {
+    setTimeout(() => {
+      if (!chart || chart.isDisposed()) return;
+      chart.goHome(500);
+    }, 300);
+  }
 };
 
 const animateToCountry = (iso3: string) => {
@@ -338,20 +390,6 @@ const addPlacePins = () => {
       idx: i,
     });
   }
-
-  const activePin = props.placePins.find((p) => p.active);
-  if (activePin) {
-    setTimeout(() => {
-      if (!chart || chart.isDisposed()) return;
-      try {
-        chart.zoomToGeoPoint(
-          { longitude: activePin.lon, latitude: activePin.lat },
-          chart.get('zoomLevel') ?? 4,
-          true,
-        );
-      } catch { /* geodata edge case — safe to ignore */ }
-    }, 300);
-  }
 };
 
 const clearOverlays = () => {
@@ -373,6 +411,7 @@ const rebuildOverlays = () => {
   if (loadsInFlight > 0) return;
   clearOverlays();
   addOverlays();
+  applyZoom();
 };
 
 const loadPolygons = async () => {
@@ -463,6 +502,7 @@ const loadPolygons = async () => {
 
     overlaySeriesStart = chart.series.length;
     addOverlays();
+    applyZoom();
   } finally {
     loadsInFlight--;
   }
@@ -483,7 +523,7 @@ const buildChart = () => {
       panY: isGlobe ? 'rotateY' : 'translateY',
       projection: isGlobe ? am5map.geoOrthographic() : am5map.geoMercator(),
       wheelY: 'zoom',
-      maxZoomLevel: 256,
+      maxZoomLevel: MAX_ZOOM_LEVEL,
     }),
   );
 

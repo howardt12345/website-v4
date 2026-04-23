@@ -29,7 +29,7 @@ export const useTravelNavigation = (allTrips: Ref<TravelTrip[]>) => {
 
   const focusCountryIso3 = ref<string | null>(null);
   const focusTripId = ref<string | null>(null);
-  const activeDayIndex = ref(0);
+  const activeDayIndex = ref<number | null>(null);
   const activePlaceIndex = ref(0);
   const mapMode = ref<'flat' | 'globe'>('flat');
 
@@ -44,7 +44,7 @@ export const useTravelNavigation = (allTrips: Ref<TravelTrip[]>) => {
 
   watch(() => route.hash, (hash) => {
     applyHash(hash);
-    activeDayIndex.value = 0;
+    activeDayIndex.value = null;
     activePlaceIndex.value = 0;
   });
 
@@ -69,7 +69,7 @@ export const useTravelNavigation = (allTrips: Ref<TravelTrip[]>) => {
     router.replace({ hash: `#trip/${slug}${countryParam}` });
   };
 
-  const onDayPick = (idx: number) => {
+  const onDayPick = (idx: number | null) => {
     activeDayIndex.value = idx;
     activePlaceIndex.value = 0;
   };

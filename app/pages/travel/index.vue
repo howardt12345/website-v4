@@ -70,7 +70,9 @@ const tripDays = computed<TravelDay[]>(() => {
   return allDays.value.filter((d) => d.stem.startsWith(prefix));
 });
 
-const activeDay = computed<TravelDay | undefined>(() => tripDays.value[activeDayIndex.value]);
+const activeDay = computed<TravelDay | undefined>(() =>
+  activeDayIndex.value !== null ? tripDays.value[activeDayIndex.value] : undefined,
+);
 
 const countryTrips = computed<TravelTrip[]>(() =>
   focusCountry.value ? tripsForCountry(allTrips.value, focusCountry.value.iso3) : [],
@@ -290,7 +292,7 @@ const mapCityPins = computed(() => {
   position: relative;
   width: 100%;
   height: rem(480);
-  border-radius: rem(20);
+  border-radius: rem(8);
   overflow: hidden;
   border: 1px solid $border-color;
   margin-bottom: rem(32);
