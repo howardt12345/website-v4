@@ -1,0 +1,28 @@
+date: '2025-03-03'
+country: FRA
+city: paris
+places:
+  - id: pantheon
+    name: Panthéon
+    lon: 2.346
+    lat: 48.846
+  - id: place-du-chatelet
+    name: Place du Châtelet
+    lon: 2.347
+    lat: 48.858
+  - id: louvre-museum
+    name: Louvre Museum
+    lon: 2.337
+    lat: 48.861
+  - id: carrousel-du-louvre
+    name: Carrousel du Louvre
+    lon: 2.336
+    lat: 48.863
+  - id: quartier-gaillon
+    name: Quartier Gaillon
+    lon: 2.335
+    lat: 48.871
+  - id: gare-austerlitz
+    name: Gare d'Austerlitz
+    lon: 2.365
+    lat: 48.842
