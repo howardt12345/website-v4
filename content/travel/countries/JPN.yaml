@@ -2,7 +2,7 @@ iso3: JPN
 iso2: JP
 name: Japan
 hue: 340
-regions: [JP-13, JP-17, JP-19, JP-23, JP-26, JP-27, JP-28, JP-29, JP-33, JP-34, JP-38, JP-40, JP-42, JP-43]
+regions: [JP-13, JP-17, JP-19, JP-23, JP-26, JP-27, JP-28, JP-29, JP-33, JP-34, JP-35, JP-38, JP-40, JP-42, JP-43]
 cities:
   - id: tokyo
     name: Tokyo
@@ -64,6 +64,11 @@ cities:
     lon: 133.195
     lat: 34.407
     region: JP-34
+  - id: shimonoseki
+    name: Shimonoseki
+    lon: 130.945
+    lat: 33.957
+    region: JP-35
   - id: matsuyama
     name: Matsuyama
     lon: 132.766
