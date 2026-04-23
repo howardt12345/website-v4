@@ -18,7 +18,7 @@ defineProps<Props>();
     />
 
     <div class="featured-card__body">
-      <div class="featured-card__eyebrow">Featured · {{ catName(post.category) }}</div>
+      <div class="featured-card__eyebrow">{{ $t('Featured') }} · {{ catName(post.category) }}</div>
 
       <h2 class="featured-card__title">{{ post.title }}</h2>
 
@@ -34,7 +34,7 @@ defineProps<Props>();
         <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
       </div>
 
-      <span class="featured-card__link">Read article →</span>
+      <span class="featured-card__link">{{ $t('Read article') }} →</span>
     </div>
   </NuxtLink>
 </template>

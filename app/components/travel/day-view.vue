@@ -91,9 +91,6 @@ const photosForPlace = (place: TravelPlace): TravelPhoto[] =>
   gap: rem(20);
 
   &__head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
     padding-bottom: rem(18);
     border-bottom: 1px solid $border-color;
   }
