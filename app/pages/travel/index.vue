@@ -113,7 +113,7 @@ const photosByPlace = computed<Record<string, Record<string, TravelPhoto[]>>>(()
 });
 
 const activeTripId = computed(() =>
-  focusTrip.value ? tripSlug(focusTrip.value).replace('travel/', '') : '',
+  focusTrip.value ? (tripSlug(focusTrip.value).split('/').at(-1) ?? '') : '',
 );
 
 const tripPhotosMap = computed<Record<string, TravelPhoto[]>>(() =>

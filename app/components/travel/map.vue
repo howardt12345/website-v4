@@ -135,6 +135,7 @@ let chart: am5map.MapChart | null = null;
 let loadId = 0;
 let loadsInFlight = 0;
 let overlaySeriesStart = 0;
+const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
 
 const colorizeVisitedCountries = (worldSeries: am5map.MapPolygonSeries) => {
   worldSeries.mapPolygons.each((polygon) => {
@@ -257,12 +258,12 @@ const createActivePinSprite = (label: string): am5.Container => {
   const halo2 = am5.Circle.new(root!, { radius: 8, fill: am5.color(accent), fillOpacity: 0.2 });
   container.children.push(halo2);
   // amCharts5 types omit the `delay` field; stagger via setTimeout instead.
-  setTimeout(() => {
+  pinHaloTimers.push(setTimeout(() => {
     if (!halo2.isDisposed()) {
       halo2.animate({ key: 'radius', from: 7, to: 28, duration: 1600, loops: Infinity });
       halo2.animate({ key: 'fillOpacity', from: 0.3, to: 0, duration: 1600, loops: Infinity });
     }
-  }, 800);
+  }, 800));
 
   container.children.push(am5.Circle.new(root!, {
     radius: 7,
@@ -355,6 +356,8 @@ const addPlacePins = () => {
 
 const clearOverlays = () => {
   if (!chart) return;
+  pinHaloTimers.forEach(clearTimeout);
+  pinHaloTimers.length = 0;
   while (chart.series.length > overlaySeriesStart) {
     chart.series.removeIndex(overlaySeriesStart);
   }
@@ -500,7 +503,10 @@ watch(
 );
 
 onMounted(buildChart);
-onUnmounted(() => root?.dispose());
+onUnmounted(() => {
+  pinHaloTimers.forEach(clearTimeout);
+  root?.dispose();
+});
 </script>
 
 <template>
