@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TravelTrip, TravelDay, TravelCountry, TravelPhoto } from '~/composables/travel';
-import { tripsForCountry, tripSlug } from '~/composables/travel';
+import { tripsForCountry, tripSlug, tripCountryNames, daySpan, formatTripRange } from '~/composables/travel';
 import { useTravelNavigation } from '~/composables/useTravelNavigation';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -70,10 +70,6 @@ const tripDays = computed<TravelDay[]>(() => {
   return allDays.value.filter((d) => d.stem.startsWith(prefix));
 });
 
-const activeDay = computed<TravelDay | undefined>(() =>
-  activeDayIndex.value !== null ? tripDays.value[activeDayIndex.value] : undefined,
-);
-
 const countryTrips = computed<TravelTrip[]>(() =>
   focusCountry.value ? tripsForCountry(allTrips.value, focusCountry.value.iso3) : [],
 );
@@ -126,6 +122,16 @@ const tripPhotoCount = computed(() =>
   Object.values(tripPhotosMap.value).reduce((sum, photos) => sum + photos.length, 0),
 );
 
+const railCollapsed = ref(false);
+
+const railTrips = computed<TravelTrip[]>(() =>
+  view.value === 'country' ? countryTrips.value : allTrips.value,
+);
+
+const stageClass = computed(() => ({
+  'travel-stage--collapsed': railCollapsed.value,
+}));
+
 const mapFocusCountries = computed<string[]>(() => {
   if (view.value === 'country' && focusCountry.value) return [focusCountry.value.iso3];
   if (view.value === 'trip' && focusTrip.value) return focusTrip.value.countries;
@@ -138,6 +144,10 @@ const mapVisitedHues = computed<Record<string, number>>(() =>
 
 const mapVisitedRegions = computed<string[]>(() =>
   mapFocusCountries.value.flatMap((iso3) => travelStore.countryByIso3(iso3)?.regions ?? []),
+);
+
+const activeDay = computed<TravelDay | undefined>(() =>
+  activeDayIndex.value !== null ? tripDays.value[activeDayIndex.value] : undefined,
 );
 
 const mapTripPath = computed<{ lon: number; lat: number }[] | null>(() => {
@@ -163,13 +173,6 @@ const mapCityPins = computed(() => {
 
 <template>
   <div class="travel-page content-container">
-    <div class="travel-page__header">
-      <h1 class="travel-page__title">{{ $t('Travel') }}</h1>
-      <p class="travel-page__subtitle">
-        {{ $t('Countries visited, cities explored, and days logged on the road.') }}
-      </p>
-    </div>
-
     <TravelBreadcrumb
       :country="focusCountry"
       :trip="focusTrip"
@@ -177,94 +180,99 @@ const mapCityPins = computed(() => {
       @navCountry="navCountry"
     />
 
-    <div class="travel-hero">
-      <TravelMap
-        class="travel-hero__map"
-        :mode="mapMode"
-        :focusCountries="mapFocusCountries"
-        :visitedHues="mapVisitedHues"
-        :visitedRegions="mapVisitedRegions"
-        :tripPath="mapTripPath"
-        :placePins="mapPlacePins"
-        :cityPins="mapCityPins"
-        @countryClick="navCountry"
-        @placeClick="activePlaceIndex = $event"
-      />
-
-      <div class="travel-hero__overlay">
-        <TravelStatsBar
-          :view
-          :trips="allTrips"
-          :country="focusCountry"
-          :trip="focusTrip"
-          :tripDayCount
-          :tripPhotoCount
-          :tripCityCount
-        />
-        <v-btn
-          v-if="view === 'trip' && focusTrip?.blogSlug"
-          :to="`/blog/${focusTrip.blogSlug}`"
-          variant="text"
-          size="small"
-          class="travel-hero__blog-link"
-        >
-          {{ $t('Read trip writeup') }} →
-        </v-btn>
-      </div>
-
-      <v-btn-toggle
-        v-model="mapMode"
-        class="travel-hero__controls"
-        mandatory
-        density="compact"
-        variant="outlined"
-        rounded="lg"
-      >
-        <v-btn value="flat" size="small">{{ $t('Flat') }}</v-btn>
-        <v-btn value="globe" size="small">{{ $t('Globe') }}</v-btn>
-      </v-btn-toggle>
+    <div class="travel-page__header">
+      <template v-if="view === 'trip' && focusTrip">
+        <h1 class="travel-page__title">{{ focusTrip.title }}</h1>
+        <div class="travel-page__eyebrow">
+          {{ tripCountryNames(focusTrip).join(' → ') }}
+          · {{ daySpan(focusTrip) }} {{ $t('days') }}
+          · {{ formatTripRange(focusTrip) }}
+        </div>
+        <p class="travel-page__subtitle">{{ focusTrip.excerpt }}</p>
+      </template>
+      <template v-else>
+        <h1 class="travel-page__title">{{ $t('Travel') }}</h1>
+        <p class="travel-page__subtitle">
+          {{ $t('Countries visited, cities explored, and days logged on the road.') }}
+        </p>
+      </template>
     </div>
 
-    <template v-if="view === 'world'">
-      <TravelTimelineRibbon
-        :trips="allTrips"
-        :activeId="null"
-        @pick="navTrip"
-      />
-    </template>
+    <div class="travel-stage" :class="stageClass">
+      <div class="travel-stage__map">
+        <TravelMap
+          :mode="mapMode"
+          :focusCountries="mapFocusCountries"
+          :visitedHues="mapVisitedHues"
+          :visitedRegions="mapVisitedRegions"
+          :tripPath="mapTripPath"
+          :placePins="mapPlacePins"
+          :cityPins="mapCityPins"
+          @countryClick="navCountry"
+          @placeClick="activePlaceIndex = $event"
+        />
 
-    <template v-else-if="view === 'country'">
-      <TravelTimelineVert
-        :trips="countryTrips"
-        :activeId="null"
-        @pick="navTrip"
-      />
-    </template>
+        <div class="travel-stage__overlay">
+          <TravelStatsBar
+            :view
+            :trips="allTrips"
+            :country="focusCountry"
+            :trip="focusTrip"
+            :tripDayCount
+            :tripPhotoCount
+            :tripCityCount
+          />
+          <v-btn
+            v-if="view === 'trip' && focusTrip?.blogSlug"
+            :to="`/blog/${focusTrip.blogSlug}`"
+            variant="text"
+            size="small"
+            class="travel-stage__blog-link"
+          >
+            {{ $t('Read trip writeup') }} →
+          </v-btn>
+        </div>
 
-    <template v-else-if="view === 'trip' && focusTrip">
-      <TravelTripHeader :trip="focusTrip" />
-      <TravelDayRibbon
-        :days="tripDays"
-        :activeIndex="activeDayIndex"
-        :multiCountry
-        @pick="onDayPick"
+        <v-btn-toggle
+          v-model="mapMode"
+          class="travel-stage__controls"
+          mandatory
+          density="compact"
+          variant="outlined"
+          rounded="lg"
+        >
+          <v-btn value="flat" size="small">{{ $t('Flat') }}</v-btn>
+          <v-btn value="globe" size="small">{{ $t('Globe') }}</v-btn>
+        </v-btn-toggle>
+      </div>
+
+      <TravelSideRail
+        :view
+        :trips="railTrips"
+        :tripDays
+        :activeDayIndex
+        :focusCountryName="focusCountry?.name"
+        :focusTrip
+        v-model:collapsed="railCollapsed"
+        @pick-trip="navTrip"
+        @pick-day="onDayPick"
       />
-      <TravelDayView
-        v-if="activeDay"
-        :day="activeDay"
-        :activePlace="activePlaceIndex"
-        :multiCountry
-        :photosMap="tripPhotosMap"
-        @update:activePlace="activePlaceIndex = $event"
-      />
-    </template>
+    </div>
+
+    <TravelDayView
+      v-if="view === 'trip' && activeDay"
+      :day="activeDay"
+      :activePlace="activePlaceIndex"
+      :multiCountry
+      :photosMap="tripPhotosMap"
+      @update:activePlace="activePlaceIndex = $event"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .travel-page {
-  padding-top: rem(48);
-  padding-bottom: rem(96);
+  padding-top: rem(20);
 
   &__header {
     margin-bottom: rem(24);
@@ -279,6 +287,28 @@ const mapCityPins = computed(() => {
     margin: 0;
   }
 
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+    font-size: rem(11);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: $accent;
+    margin-top: rem(10);
+    margin-bottom: rem(10);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: rem(22);
+      height: 1px;
+      background: $accent;
+      flex-shrink: 0;
+    }
+  }
+
   &__subtitle {
     color: $text-secondary;
     margin-top: rem(14);
@@ -288,57 +318,73 @@ const mapCityPins = computed(() => {
   }
 }
 
-.travel-hero {
-  position: relative;
-  width: 100%;
-  height: rem(480);
-  border-radius: rem(8);
-  overflow: hidden;
-  border: 1px solid $border-color;
+.travel-stage {
+  display: grid;
+  grid-template-columns: 1fr rem(300);
+  gap: rem(12);
+  height: clamp(#{rem(600)}, calc(100vh - #{rem(360)}), #{rem(900)});
   margin-bottom: rem(32);
-  background: rgb(var(--v-theme-surface));
 
-  &__map {
-    width: 100%;
-    height: 100%;
-  }
-
-  &__overlay {
-    position: absolute;
-    bottom: rem(20);
-    right: rem(20);
-    display: flex;
-    flex-direction: column;
-    gap: rem(10);
-    background: $background-glass;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid $border-color;
-    border-radius: rem(14);
-    padding: rem(14) rem(18);
-    pointer-events: none;
-
-    > * {
-      pointer-events: auto;
+  @media (min-width: 961px) {
+    &--collapsed {
+      grid-template-columns: 1fr rem(44);
     }
   }
 
-  &__controls {
-    position: absolute;
-    top: rem(14);
-    left: rem(14);
-    background: $background-glass;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    height: auto;
   }
+}
 
-  &__blog-link {
-    color: $accent;
-    letter-spacing: normal;
-    text-transform: none;
-    font-size: rem(13);
-    align-self: flex-start;
-    padding-left: 0;
+.travel-stage__map {
+  position: relative;
+  height: 100%;
+  border-radius: rem(8);
+  overflow: hidden;
+  border: 1px solid $border-color;
+  background: rgb(var(--v-theme-surface));
+
+  @media (max-width: 960px) {
+    height: rem(380);
   }
+}
+
+.travel-stage__overlay {
+  position: absolute;
+  bottom: rem(20);
+  right: rem(20);
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  background: $background-glass;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid $border-color;
+  border-radius: rem(14);
+  padding: rem(14) rem(18);
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.travel-stage__controls {
+  position: absolute;
+  top: rem(14);
+  right: rem(14);
+  background: $background-glass;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.travel-stage__blog-link {
+  color: $accent;
+  letter-spacing: normal;
+  text-transform: none;
+  font-size: rem(13);
+  align-self: flex-start;
+  padding-left: 0;
 }
 </style>

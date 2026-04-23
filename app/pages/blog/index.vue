@@ -133,16 +133,7 @@ const clearFilters = () => {
   padding-bottom: rem(96);
 
   &__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: rem(32);
     margin-bottom: rem(24);
-
-    @media (max-width: 960px) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
   }
 
   &__title {
@@ -161,12 +152,6 @@ const clearFilters = () => {
     line-height: 1.6;
   }
 
-  &__meta {
-    color: $text-secondary;
-    font-size: rem(13);
-    white-space: nowrap;
-    opacity: 0.6;
-  }
 }
 
 .blog-filter-bar {

@@ -39,7 +39,7 @@ defineProps<Props>();
         class="photo-grid__photo"
       />
     </div>
-    <p v-else class="photo-section__empty">No photos for this stop yet.</p>
+    <p v-else class="photo-section__empty">{{ $t('No photos for this stop yet.') }}</p>
   </div>
 </template>
 
@@ -97,7 +97,6 @@ defineProps<Props>();
   &__photo {
     aspect-ratio: 1;
     width: 100%;
-    height: 100%;
     object-fit: cover;
     border-radius: rem(8);
     display: block;
