@@ -1,0 +1,8 @@
+date: '2025-03-12'
+country: DEU
+city: frankfurt
+places:
+  - id: frankfurt-airport
+    name: Frankfurt Airport (FRA)
+    lon: 8.570
+    lat: 50.051

@@ -1,0 +1,16 @@
+date: '2025-03-10'
+country: DEU
+city: frankfurt
+places:
+  - id: goethe-house
+    name: Goethe House
+    lon: 8.678
+    lat: 50.113
+  - id: main-tower
+    name: Main Tower
+    lon: 8.671
+    lat: 50.113
+  - id: sachsenhausen
+    name: Sachsenhausen
+    lon: 8.682
+    lat: 50.103

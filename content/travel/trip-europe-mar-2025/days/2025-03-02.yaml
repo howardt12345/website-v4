@@ -1,0 +1,32 @@
+date: '2025-03-02'
+country: FRA
+city: paris
+places:
+  - id: cdg-airport
+    name: Charles de Gaulle Airport
+    lon: 2.549
+    lat: 49.009
+  - id: gare-du-nord
+    name: Gare du Nord
+    lon: 2.355
+    lat: 48.880
+  - id: marche-des-enfants-rouges
+    name: Marché des Enfants Rouges
+    lon: 2.362
+    lat: 48.862
+  - id: centre-pompidou
+    name: Centre Pompidou
+    lon: 2.352
+    lat: 48.861
+  - id: notre-dame-cathedral
+    name: Notre-Dame Cathedral
+    lon: 2.350
+    lat: 48.853
+  - id: eiffel-tower
+    name: Eiffel Tower
+    lon: 2.294
+    lat: 48.858
+  - id: trocadero
+    name: Trocadéro
+    lon: 2.289
+    lat: 48.863

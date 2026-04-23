@@ -1,0 +1,12 @@
+date: '2025-03-05'
+country: FRA
+city: nice
+places:
+  - id: promenade-des-anglais
+    name: Promenade des Anglais
+    lon: 7.268
+    lat: 43.695
+  - id: vieux-nice
+    name: Vieux-Nice
+    lon: 7.278
+    lat: 43.696

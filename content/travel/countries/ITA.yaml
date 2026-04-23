@@ -9,6 +9,16 @@ cities:
     lon: 8.946
     lat: 44.406
     region: IT-42
+  - id: ventimiglia
+    name: Ventimiglia
+    lon: 7.608
+    lat: 43.791
+    region: IT-42
+  - id: naples
+    name: Naples
+    lon: 14.252
+    lat: 40.851
+    region: IT-72
   - id: sorrento
     name: Sorrento
     lon: 14.376
