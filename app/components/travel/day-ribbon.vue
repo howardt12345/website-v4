@@ -5,12 +5,12 @@ import { useTravelStore } from '~/store/travel.store';
 
 interface Props {
   days: TravelDay[];
-  activeIndex: number;
+  activeIndex: number | null;
   multiCountry: boolean;
 }
 
 const props = defineProps<Props>();
-defineEmits<{ pick: [index: number] }>();
+defineEmits<{ pick: [index: number | null] }>();
 
 const { cityById, countryByIso3 } = useTravelStore();
 
@@ -25,6 +25,22 @@ const isCountryTransition = (index: number): boolean =>
 
 <template>
   <v-slide-group :model-value="activeIndex" class="day-ribbon" mandatory>
+    <v-slide-group-item :value="null" v-slot="{ isSelected }">
+      <v-card
+        :variant="isSelected ? 'tonal' : 'outlined'"
+        :color="isSelected ? 'primary' : undefined"
+        class="day-card"
+        rounded="lg"
+        @click="$emit('pick', null)"
+      >
+        <v-card-text class="day-card__body">
+          <span class="day-card__date">{{ $t('Overview') }}</span>
+          <span class="day-card__city">{{ $t('Full trip') }}</span>
+          <span class="day-card__meta">{{ days.length }} {{ $t('days') }}</span>
+        </v-card-text>
+      </v-card>
+    </v-slide-group-item>
+
     <v-slide-group-item
       v-for="(day, i) in days"
       :key="day.date"
