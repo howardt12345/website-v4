@@ -54,6 +54,11 @@ const displayedPosts = computed(() =>
     : filteredPosts.value,
 );
 
+const onCatChange = (cat: string) => {
+  filterCat.value = cat;
+  filterTags.value = [];
+};
+
 const clearFilters = () => {
   filterCat.value = 'all';
   filterSub.value = null;
@@ -100,7 +105,7 @@ const clearFilters = () => {
         :sub="filterSub"
         :tags="filterTags"
         :archive="filterArchive"
-        @update:cat="filterCat = $event"
+        @update:cat="onCatChange"
         @update:sub="filterSub = $event"
         @update:tags="filterTags = $event"
         @update:archive="filterArchive = $event"

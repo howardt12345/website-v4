@@ -13,7 +13,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="photos.length" class="photo-section">
+  <div class="photo-section">
     <div class="photo-section__head">
       <div>
         <div class="photo-section__eyebrow">{{ $t('Stop') }} {{ placeIndex + 1 }} · {{ totalPlaces }}</div>
@@ -30,7 +30,7 @@ defineProps<Props>();
       </v-btn>
     </div>
 
-    <div class="photo-grid">
+    <div v-if="photos.length" class="photo-grid">
       <img
         v-for="photo in photos"
         :key="photo.url"
@@ -39,6 +39,7 @@ defineProps<Props>();
         class="photo-grid__photo"
       />
     </div>
+    <p v-else class="photo-section__empty">No photos for this stop yet.</p>
   </div>
 </template>
 
@@ -73,6 +74,14 @@ defineProps<Props>();
     letter-spacing: normal;
     text-transform: none;
     font-size: rem(13);
+  }
+
+  &__empty {
+    color: $text-secondary;
+    font-size: rem(13);
+    opacity: 0.6;
+    margin: 0;
+    padding: rem(24) 0;
   }
 }
 
