@@ -9,7 +9,7 @@ useSeoMeta({
   description: 'A gallery of travel and street photography.',
 });
 
-const { allPhotos } = usePhotoItems();
+const { allPhotos, pending } = usePhotoItems();
 
 const categories = computed<PhotoCategory[]>(() => {
   const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
@@ -109,11 +109,11 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
   </div>
   <div class="photos-container">
     <PhotosGallery
-      v-if="!showCategoriesView"
+      v-if="!pending && !showCategoriesView"
       :photos="visiblePhotos"
       :selected-tags="selectedTags"
     />
-    <PhotosCategories v-else :categories="categories" />
+    <PhotosCategories v-else-if="!pending" :categories="categories" />
   </div>
 </template>
 
