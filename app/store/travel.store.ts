@@ -338,14 +338,29 @@ export const useTravelStore = defineStore('travel', () => {
     return [];
   });
   const mapCityPins = computed(() => {
-    if (view.value !== 'country' || !focusCountry.value) return [];
-    return focusCountry.value.cities.map((c) => ({
-      lon: c.lon,
-      lat: c.lat,
-      name: c.name,
-      id: c.id,
-      country: focusCountry.value!.iso3,
-    }));
+    if (view.value === 'country' && focusCountry.value) {
+      return focusCountry.value.cities.map((c) => ({
+        lon: c.lon,
+        lat: c.lat,
+        name: c.name,
+        id: c.id,
+        country: focusCountry.value!.iso3,
+      }));
+    }
+    if (view.value === 'trip' && focusTrip.value && !activeDay.value) {
+      return focusTrip.value.countries.flatMap((iso3) => {
+        const country = countryByIso3(iso3);
+        if (!country) return [];
+        return country.cities.map((c) => ({
+          lon: c.lon,
+          lat: c.lat,
+          name: c.name,
+          id: c.id,
+          country: iso3,
+        }));
+      });
+    }
+    return [];
   });
 
   const activeCityCoords = computed<{ lon: number; lat: number } | null>(() => {
