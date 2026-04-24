@@ -24,6 +24,7 @@ const {
   railProps,
   statsBarProps,
   dayViewProps,
+  tripOverviewProps,
 } = storeToRefs(travelStore);
 
 const { navWorld, navCountry, navTrip, pickDay } = travelStore;
@@ -110,6 +111,11 @@ const stageClass = computed(() => ({
       v-if="view === 'trip' && activeDay"
       v-bind="dayViewProps"
       @update:activePlace="activePlaceIndex = $event"
+    />
+    <TravelTripOverview
+      v-else-if="view === 'trip' && focusTrip"
+      v-bind="tripOverviewProps"
+      @pick-day="pickDay"
     />
   </div>
 </template>

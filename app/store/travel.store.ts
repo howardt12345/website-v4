@@ -31,6 +31,17 @@ interface RawPhoto {
 
 type TravelView = 'world' | 'country' | 'trip';
 
+export interface TripOverviewPhoto {
+  photo: TravelPhoto;
+  placeName: string;
+}
+
+export interface TripOverviewDay {
+  day: TravelDay;
+  dayIndex: number;
+  photos: TripOverviewPhoto[];
+}
+
 const parseHash = (hash: string): { countryIso3: string | null; tripId: string | null } => {
   const raw = hash.replace(/^#/, '');
 
@@ -201,6 +212,22 @@ export const useTravelStore = defineStore('travel', () => {
     Object.values(tripPhotosMap.value).reduce((sum, group) => sum + group.length, 0),
   );
 
+  const tripOverviewDays = computed<TripOverviewDay[]>(() => {
+    if (view.value !== 'trip' || !focusTrip.value) return [];
+    const result: TripOverviewDay[] = [];
+    tripDays.value.forEach((day, dayIndex) => {
+      const photos: TripOverviewPhoto[] = [];
+      for (const place of day.places) {
+        if (!place.id) continue;
+        for (const photo of tripPhotosMap.value[place.id] ?? []) {
+          photos.push({ photo, placeName: place.name });
+        }
+      }
+      if (photos.length) result.push({ day, dayIndex, photos });
+    });
+    return result;
+  });
+
   const railTrips = computed<TravelTrip[]>(() =>
     view.value === 'country' ? countryTrips.value : trips.value,
   );
@@ -273,6 +300,11 @@ export const useTravelStore = defineStore('travel', () => {
     photosMap: tripPhotosMap.value,
   }));
 
+  const tripOverviewProps = computed(() => ({
+    trip: focusTrip.value,
+    days: tripOverviewDays.value,
+  }));
+
   return {
     countries,
     trips,
@@ -298,6 +330,7 @@ export const useTravelStore = defineStore('travel', () => {
     railProps,
     statsBarProps,
     dayViewProps,
+    tripOverviewProps,
     hydrate,
   };
 });
