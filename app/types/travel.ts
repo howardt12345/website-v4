@@ -12,6 +12,7 @@ export interface TravelPlace {
 
 export interface TravelPhoto {
   url: string;
+  date?: string;
   title?: string;
   caption?: string;
   alt?: string;
@@ -69,6 +70,7 @@ export interface RawPhotoFolder {
   stem: string;
   tripId?: string;
   placeSlug?: string;
+  date?: string;
   category?: string;
   subcategory?: string;
   tags?: string[];

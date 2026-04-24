@@ -96,6 +96,7 @@ export default defineContentConfig({
       schema: z.object({
         tripId: z.string().optional(),
         placeSlug: z.string().optional(),
+        date: z.string().optional(),
         category: z.string().optional(),
         subcategory: z.string().optional(),
         tags: z.array(z.string()).optional(),
