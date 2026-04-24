@@ -104,7 +104,7 @@ function openLightbox(dayIdx: number, photoIdx: number) {
       {{ $t('No photos for this trip yet.') }}
     </p>
 
-    <UiPhotoLightbox
+    <CommonPhotoLightbox
       v-model="lightboxOpen"
       :photos="allLightboxPhotos"
       :start-index="lightboxIndex"

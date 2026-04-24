@@ -19,8 +19,8 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
       :aspect-ratio="photo.aspectRatio"
       class="align-end"
     >
-      <v-card-actions v-if="selected.length" class="chip-group">
-        <UiTagChips :tags="photo.tags" :selected-tags="selected" />
+      <v-card-actions v-if="photo.tags.length" class="chip-group">
+        <CommonTagChips :tags="photo.tags" :selected-tags="selected" />
       </v-card-actions>
     </v-img>
   </v-card>
@@ -38,7 +38,7 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
 }
 
 .chip-group {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
-  padding: rem(8);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
+  padding: rem(8) rem(8) rem(6);
 }
 </style>
