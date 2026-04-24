@@ -29,7 +29,7 @@ const stats = computed((): StatItem[] => {
       { value: countries.value.length, label: t('countries') },
       { value: countries.value.reduce((sum, c) => sum + c.cities.length, 0), label: t('cities') },
       { value: props.trips.length, label: t('trips') },
-      { value: props.trips.reduce((sum, t) => sum + daySpan(t), 0), label: t('days on the road') },
+      { value: props.trips.reduce((sum, trip) => sum + daySpan(trip), 0), label: t('days on the road') },
     ];
   }
 

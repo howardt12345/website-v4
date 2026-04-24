@@ -1,4 +1,3 @@
-import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 export interface TravelPlace {
@@ -65,39 +64,33 @@ export const tripCountryNames = (trip: TravelTrip): string[] => {
 
 const MS_PER_DAY = 86_400_000;
 
-// +1 for inclusive counting: a trip starting and ending on the same day is 1 day.
 export const daySpan = (trip: TravelTrip): number => {
   const ms = new Date(trip.end).getTime() - new Date(trip.start).getTime();
   return Math.round(ms / MS_PER_DAY) + 1;
 };
 
-export const formatTripRange = (trip: TravelTrip): string => {
-  const { currentLanguage } = storeToRefs(usei18n());
+export const formatTripRange = (trip: TravelTrip, locale: string): string => {
   const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', timeZone: 'UTC' };
-  const start = new Date(trip.start).toLocaleDateString(currentLanguage.value, opts);
-  const end = new Date(trip.end).toLocaleDateString(currentLanguage.value, { ...opts, year: 'numeric' });
+  const start = new Date(trip.start).toLocaleDateString(locale, opts);
+  const end = new Date(trip.end).toLocaleDateString(locale, { ...opts, year: 'numeric' });
   return `${start} \u2013 ${end}`;
 };
 
-export const formatDayLabel = (date: string): string => {
-  const { currentLanguage } = storeToRefs(usei18n());
-  return new Date(date).toLocaleDateString(currentLanguage.value, {
+export const formatDayLabel = (date: string, locale: string): string =>
+  new Date(date).toLocaleDateString(locale, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
   });
-};
 
-export const formatDayShort = (date: string): string => {
-  const { currentLanguage } = storeToRefs(usei18n());
-  return new Date(date).toLocaleDateString(currentLanguage.value, {
+export const formatDayShort = (date: string, locale: string): string =>
+  new Date(date).toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
     timeZone: 'UTC',
   });
-};
 
 export const dayUniqueCities = (day: TravelDay): { country: string; city: string }[] => {
   const seen = new Set<string>();

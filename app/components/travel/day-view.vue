@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TravelDay, TravelPlace, TravelPhoto } from '~/composables/travel';
 import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
+import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 interface Props {
@@ -14,6 +15,7 @@ const props = defineProps<Props>();
 defineEmits<{ 'update:activePlace': [index: number] }>();
 
 const { cityById, countryByIso3 } = useTravelStore();
+const { currentLanguage } = storeToRefs(usei18n());
 
 const uniqueCities = computed(() => dayUniqueCities(props.day));
 const isMultiCityDay = computed(() => uniqueCities.value.length > 1);
@@ -34,7 +36,7 @@ const photosForPlace = (place: TravelPlace): TravelPhoto[] =>
   <div class="day-view">
     <div class="day-view__head">
       <div>
-        <div class="day-view__date-label">{{ formatDayLabel(day.date) }}</div>
+        <div class="day-view__date-label">{{ formatDayLabel(day.date, currentLanguage) }}</div>
         <div class="day-view__city">
           <template v-if="isMultiCityDay">
             <span

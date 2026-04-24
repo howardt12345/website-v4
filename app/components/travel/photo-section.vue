@@ -36,6 +36,8 @@ defineProps<Props>();
         :key="photo.url"
         :src="photo.url"
         :alt="photo.alt ?? photo.title ?? place.name"
+        width="1"
+        height="1"
         loading="lazy"
         class="photo-grid__photo"
       />
