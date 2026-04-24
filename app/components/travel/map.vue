@@ -135,7 +135,10 @@ let overlaySeriesStart = 0;
 let zoomTimer: ReturnType<typeof setTimeout> | null = null;
 const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
 
-const colorizeVisitedCountries = (worldSeries: am5map.MapPolygonSeries) => {
+const colorizeVisitedCountries = (
+  worldSeries: am5map.MapPolygonSeries,
+  provinceLoaded: Set<string>,
+) => {
   worldSeries.mapPolygons.each((polygon) => {
     const ctx = polygon.dataItem?.dataContext as { id: string } | undefined;
     if (!ctx) return;
@@ -144,7 +147,7 @@ const colorizeVisitedCountries = (worldSeries: am5map.MapPolygonSeries) => {
     const hue = iso3 ? props.visitedHues[iso3] : undefined;
     if (!iso3 || hue === undefined) return;
 
-    if (props.focusCountries.includes(iso3)) {
+    if (props.focusCountries.includes(iso3) && provinceLoaded.has(iso3)) {
       polygon.setAll({ forceHidden: true });
     } else {
       polygon.set('fill', am5.color(visitedCountryFill(hue)));
@@ -427,6 +430,10 @@ const loadPolygons = async () => {
     );
     if (callId !== loadId || !root || !chart) return;
 
+    const provinceLoaded = new Set(
+      provinceGeos.filter((p) => p.geo).map((p) => p.iso3),
+    );
+
     while (chart.series.length) chart.series.removeIndex(0);
 
     if (props.mode === 'globe') {
@@ -455,7 +462,7 @@ const loadPolygons = async () => {
     let hasAnimated = false;
 
     worldSeries.events.on('datavalidated', () => {
-      colorizeVisitedCountries(worldSeries);
+      colorizeVisitedCountries(worldSeries, provinceLoaded);
 
       if (!hasAnimated && props.focusCountries.length && !props.tripPath) {
         hasAnimated = true;

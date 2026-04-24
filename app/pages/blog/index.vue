@@ -56,6 +56,7 @@ const displayedPosts = computed(() =>
 
 const onCatChange = (cat: string) => {
   filterCat.value = cat;
+  filterSub.value = null;
   filterTags.value = [];
 };
 

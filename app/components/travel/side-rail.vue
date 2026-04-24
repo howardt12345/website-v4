@@ -8,6 +8,7 @@ import {
   formatDayShort,
   dayUniqueCities,
 } from '~/composables/travel';
+import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 interface Props {
@@ -28,6 +29,7 @@ const emit = defineEmits<{
 const collapsed = defineModel<boolean>('collapsed', { default: false });
 
 const { cityById } = useTravelStore();
+const { currentLanguage } = storeToRefs(usei18n());
 
 const railBodyRef = ref<HTMLElement | null>(null);
 
@@ -129,7 +131,7 @@ watch(
               @click="emit('pick-day', i)"
             >
               <div class="rail-day">
-                <span class="rail-day__date">{{ formatDayShort(day.date) }}</span>
+                <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
                   {{ day.places.length }} {{ $t('stops') }}
@@ -158,7 +160,7 @@ watch(
                   </span>
                   <span class="rail-trip__title">{{ item.trip.title }}</span>
                   <span class="rail-trip__meta">
-                    {{ formatTripRange(item.trip) }} · {{ daySpan(item.trip) }} {{ $t('days') }}
+                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ daySpan(item.trip) }} {{ $t('days') }}
                   </span>
                 </div>
               </v-timeline-item>

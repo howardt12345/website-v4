@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { TravelTrip, TravelDay, TravelCountry, TravelPhoto } from '~/composables/travel';
-import { tripsForCountry, tripSlug, tripCountryNames, daySpan, formatTripRange } from '~/composables/travel';
-import { useTravelNavigation } from '~/composables/useTravelNavigation';
+import { tripCountryNames, daySpan, formatTripRange } from '~/composables/travel';
+import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 definePageMeta({ layout: 'default' });
@@ -12,164 +11,30 @@ useSeoMeta({
 });
 
 const travelStore = useTravelStore();
-
-const { data: rawCountries } = await useAsyncData('travel-countries', () =>
-  queryCollection('travelCountries').all(),
-);
-
-const { data: rawTrips } = await useAsyncData('travel-trips', () =>
-  queryCollection('travelTrips').order('start', 'DESC').all(),
-);
-
-const { data: rawDays } = await useAsyncData('travel-days', () =>
-  queryCollection('travelDays').order('date', 'ASC').all(),
-);
-
-const { data: rawPhotoFolders } = await useAsyncData('photo-folders', () =>
-  queryCollection('photoFolders').all(),
-);
-
-const { data: rawTravelPhotos } = await useAsyncData('travel-photos', () =>
-  queryCollection('photos').order('stem', 'ASC').all(),
-);
-
-watch(rawCountries, (countries) => {
-  if (countries?.length) {
-    travelStore.setCountries(countries as unknown as TravelCountry[]);
-  }
-}, { immediate: true });
-
-const allTrips = computed<TravelTrip[]>(() =>
-  (rawTrips.value ?? []) as unknown as TravelTrip[],
-);
-
-const allDays = computed<TravelDay[]>(() =>
-  (rawDays.value ?? []) as unknown as TravelDay[],
-);
+await travelStore.hydrate();
 
 const {
-  focusCountryIso3,
-  activeDayIndex,
+  view,
+  focusCountry,
+  focusTrip,
+  activeDay,
   activePlaceIndex,
   mapMode,
-  view,
-  focusTrip,
-  navWorld,
-  navCountry,
-  navTrip,
-  onDayPick,
-} = useTravelNavigation(allTrips);
+  mapProps,
+  railProps,
+  statsBarProps,
+  dayViewProps,
+} = storeToRefs(travelStore);
 
-const focusCountry = computed<TravelCountry | undefined>(() =>
-  focusCountryIso3.value ? travelStore.countryByIso3(focusCountryIso3.value) : undefined,
-);
+const { navWorld, navCountry, navTrip, pickDay } = travelStore;
 
-const tripDays = computed<TravelDay[]>(() => {
-  if (!focusTrip.value) return [];
-  const prefix = tripSlug(focusTrip.value) + '/days/';
-  return allDays.value.filter((d) => d.stem.startsWith(prefix));
-});
-
-const countryTrips = computed<TravelTrip[]>(() =>
-  focusCountry.value ? tripsForCountry(allTrips.value, focusCountry.value.iso3) : [],
-);
-
-const multiCountry = computed(() => (focusTrip.value?.countries.length ?? 0) > 1);
-
-const tripDayCount = computed(() => tripDays.value.length);
-
-const tripCityCount = computed(() =>
-  new Set(
-    tripDays.value.flatMap((d) =>
-      d.places.map((p) => `${p.country ?? d.country}/${p.city ?? d.city}`),
-    ),
-  ).size,
-);
-
-const photoFolderMap = computed(() =>
-  new Map((rawPhotoFolders.value ?? []).map((f) => [f.stem.replace(/\/index$/, ''), f])),
-);
-
-const photosByPlace = computed<Record<string, Record<string, TravelPhoto[]>>>(() => {
-  const result: Record<string, Record<string, TravelPhoto[]>> = {};
-  for (const raw of (rawTravelPhotos.value ?? [])) {
-    const folderPath = raw.stem.split('/').slice(0, -1).join('/');
-    const folder = photoFolderMap.value.get(folderPath);
-    if (!folder?.tripId || !folder?.placeSlug) continue;
-    const { tripId, placeSlug } = folder;
-    if (!result[tripId]) result[tripId] = {};
-    if (!result[tripId][placeSlug]) result[tripId][placeSlug] = [];
-    result[tripId][placeSlug].push({
-      url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
-      title: raw.title,
-      caption: raw.caption,
-      alt: raw.alt,
-      featured: raw.featured ?? false,
-      tags: raw.tags ?? folder.tags ?? [],
-    });
-  }
-  return result;
-});
-
-const activeTripId = computed(() =>
-  focusTrip.value ? (tripSlug(focusTrip.value).split('/').at(-1) ?? '') : '',
-);
-
-const tripPhotosMap = computed<Record<string, TravelPhoto[]>>(() =>
-  photosByPlace.value[activeTripId.value] ?? {},
-);
-
-const tripPhotoCount = computed(() =>
-  Object.values(tripPhotosMap.value).reduce((sum, photos) => sum + photos.length, 0),
-);
+const { currentLanguage } = storeToRefs(usei18n());
 
 const railCollapsed = ref(false);
-
-const railTrips = computed<TravelTrip[]>(() =>
-  view.value === 'country' ? countryTrips.value : allTrips.value,
-);
 
 const stageClass = computed(() => ({
   'travel-stage--collapsed': railCollapsed.value,
 }));
-
-const mapFocusCountries = computed<string[]>(() => {
-  if (view.value === 'country' && focusCountry.value) return [focusCountry.value.iso3];
-  if (view.value === 'trip' && focusTrip.value) return focusTrip.value.countries;
-  return [];
-});
-
-const mapVisitedHues = computed<Record<string, number>>(() =>
-  Object.fromEntries(travelStore.countries.map((c) => [c.iso3, c.hue])),
-);
-
-const mapVisitedRegions = computed<string[]>(() =>
-  mapFocusCountries.value.flatMap((iso3) => travelStore.countryByIso3(iso3)?.regions ?? []),
-);
-
-const activeDay = computed<TravelDay | undefined>(() =>
-  activeDayIndex.value !== null ? tripDays.value[activeDayIndex.value] : undefined,
-);
-
-const mapTripPath = computed<{ lon: number; lat: number }[] | null>(() => {
-  if (view.value !== 'trip' || !tripDays.value.length) return null;
-  return tripDays.value.flatMap((d) => d.places.map((p) => ({ lon: p.lon, lat: p.lat })));
-});
-
-const mapPlacePins = computed(() => {
-  if (view.value !== 'trip' || !activeDay.value) return [];
-  return activeDay.value.places.map((p, i) => ({
-    lon: p.lon,
-    lat: p.lat,
-    label: p.name,
-    active: i === activePlaceIndex.value,
-  }));
-});
-
-const mapCityPins = computed(() => {
-  if (view.value !== 'country' || !focusCountry.value) return [];
-  return focusCountry.value.cities.map((c) => ({ lon: c.lon, lat: c.lat, name: c.name }));
-});
 </script>
 
 <template>
@@ -187,7 +52,7 @@ const mapCityPins = computed(() => {
         <div class="travel-page__eyebrow">
           {{ tripCountryNames(focusTrip).join(' → ') }}
           · {{ daySpan(focusTrip) }} {{ $t('days') }}
-          · {{ formatTripRange(focusTrip) }}
+          · {{ formatTripRange(focusTrip, currentLanguage) }}
         </div>
         <p class="travel-page__subtitle">{{ focusTrip.excerpt }}</p>
       </template>
@@ -202,27 +67,13 @@ const mapCityPins = computed(() => {
     <div class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
         <TravelMap
-          :mode="mapMode"
-          :focusCountries="mapFocusCountries"
-          :visitedHues="mapVisitedHues"
-          :visitedRegions="mapVisitedRegions"
-          :tripPath="mapTripPath"
-          :placePins="mapPlacePins"
-          :cityPins="mapCityPins"
+          v-bind="mapProps"
           @countryClick="navCountry"
           @placeClick="activePlaceIndex = $event"
         />
 
         <div class="travel-stage__overlay">
-          <TravelStatsBar
-            :view
-            :trips="allTrips"
-            :country="focusCountry"
-            :trip="focusTrip"
-            :tripDayCount
-            :tripPhotoCount
-            :tripCityCount
-          />
+          <TravelStatsBar v-bind="statsBarProps" />
           <v-btn
             v-if="view === 'trip' && focusTrip?.blogSlug"
             :to="`/blog/${focusTrip.blogSlug}`"
@@ -248,24 +99,16 @@ const mapCityPins = computed(() => {
       </div>
 
       <TravelSideRail
-        :view
-        :trips="railTrips"
-        :tripDays
-        :activeDayIndex
-        :focusCountryName="focusCountry?.name"
-        :focusTrip
+        v-bind="railProps"
         v-model:collapsed="railCollapsed"
         @pick-trip="navTrip"
-        @pick-day="onDayPick"
+        @pick-day="pickDay"
       />
     </div>
 
     <TravelDayView
       v-if="view === 'trip' && activeDay"
-      :day="activeDay"
-      :activePlace="activePlaceIndex"
-      :multiCountry
-      :photosMap="tripPhotosMap"
+      v-bind="dayViewProps"
       @update:activePlace="activePlaceIndex = $event"
     />
   </div>
