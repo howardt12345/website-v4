@@ -50,6 +50,11 @@ function openLightbox(dayIdx: number, photoIdx: number) {
   lightboxIndex.value = (dayOffsets.value[dayIdx] ?? 0) + photoIdx;
   lightboxOpen.value = true;
 }
+
+function unphotographedPlaces(item: TripOverviewDay) {
+  const photographed = new Set(item.photos.map((p) => p.placeName));
+  return item.day.places.filter((p) => !photographed.has(p.name));
+}
 </script>
 
 <template>
@@ -106,6 +111,22 @@ function openLightbox(dayIdx: number, photoIdx: number) {
             />
             <figcaption class="overview-photo__caption">{{ entry.placeName }}</figcaption>
           </figure>
+        </div>
+
+        <div
+          v-if="item.photos.length && unphotographedPlaces(item).length"
+          class="overview-day__also"
+        >
+          <span class="overview-day__also-label">{{ $t('Also visited') }}</span>
+          <ul class="overview-day__places">
+            <li
+              v-for="place in unphotographedPlaces(item)"
+              :key="place.id ?? place.name"
+              class="overview-day__place"
+            >
+              {{ place.name }}
+            </li>
+          </ul>
         </div>
       </section>
     </div>
@@ -239,6 +260,24 @@ function openLightbox(dayIdx: number, photoIdx: number) {
   color: $text-secondary;
   opacity: 0.6;
   white-space: nowrap;
+}
+
+.overview-day__also {
+  margin-top: rem(12);
+  display: flex;
+  align-items: baseline;
+  gap: rem(10);
+  flex-wrap: wrap;
+}
+
+.overview-day__also-label {
+  font-size: rem(10);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: $text-secondary;
+  opacity: 0.5;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .overview-day__places {
