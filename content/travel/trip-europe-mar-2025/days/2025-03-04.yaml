@@ -2,13 +2,13 @@ date: '2025-03-04'
 country: FRA
 city: nice
 places:
-  - id: villa-massena
-    name: Villa Masséna
-    lon: 7.263
-    lat: 43.695
   - id: promenade-des-anglais
     name: Promenade des Anglais
     lon: 7.268
+    lat: 43.695
+  - id: villa-massena
+    name: Villa Masséna
+    lon: 7.263
     lat: 43.695
   - id: vieux-nice
     name: Vieux-Nice
