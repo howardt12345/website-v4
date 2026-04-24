@@ -12,6 +12,7 @@ export const useNavLinks = (): NavLink[] => [
   { name: 'Experience', path: '/#experience', icon: 'briefcase' },
   { name: 'Projects', path: '/#projects', icon: 'code' },
   { name: 'Photography', path: '/photography', icon: 'camera' },
+  // { name: 'Blog', path: '/blog', icon: 'pen' },
   { name: 'Contact', path: '/#contact', icon: 'at' },
 ];
 
