@@ -7,15 +7,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const emit = defineEmits<{ select: [] }>();
 const selected = computed<string[]>(() => props.selectedTags ?? []);
-const dialogOpen = ref(false);
-const openDialog = () => (dialogOpen.value = true);
-const closeDialog = () => (dialogOpen.value = false);
 </script>
 
 <template>
-  <v-card variant="flat" class="photo-card" @click="openDialog">
+  <v-card variant="flat" class="photo-card" @click="emit('select')">
     <v-img
       :src="photo.url"
       cover
@@ -23,30 +20,10 @@ const closeDialog = () => (dialogOpen.value = false);
       class="align-end"
     >
       <v-card-actions v-if="selected.length" class="chip-group">
-        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
+        <UiTagChips :tags="photo.tags" :selected-tags="selected" />
       </v-card-actions>
     </v-img>
   </v-card>
-
-  <v-dialog
-    v-model="dialogOpen"
-    :max-width="photo.aspectRatio * 1000"
-  >
-    <v-card>
-      <v-img :src="photo.url" :aspect-ratio="photo.aspectRatio" />
-      <v-card-actions class="dialog-actions">
-        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
-        <v-spacer />
-        <v-btn
-          color="primary"
-          variant="outlined"
-          size="small"
-          @click="closeDialog"
-          >{{ $t('Close') }}</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -63,11 +40,5 @@ const closeDialog = () => (dialogOpen.value = false);
 .chip-group {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
   padding: rem(8);
-}
-
-.dialog-actions {
-  padding: rem(8) rem(12);
-  flex-wrap: wrap;
-  gap: rem(8);
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TravelPlace, TravelPhoto } from '~/types/travel';
+import type { LightboxEntry } from '~/types/ui';
 
 interface Props {
   place: TravelPlace;
@@ -9,7 +10,26 @@ interface Props {
   photos: TravelPhoto[];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const lightboxOpen = ref(false);
+const lightboxIndex = ref(0);
+
+const lightboxPhotos = computed<LightboxEntry[]>(() =>
+  props.photos.map((photo) => ({
+    src: photo.url,
+    alt: photo.alt ?? photo.title ?? props.place.name,
+    title: photo.title,
+    caption: photo.caption,
+    label: props.place.name,
+    tags: photo.tags,
+  })),
+);
+
+function openLightbox(index: number) {
+  lightboxIndex.value = index;
+  lightboxOpen.value = true;
+}
 </script>
 
 <template>
@@ -32,16 +52,23 @@ defineProps<Props>();
 
     <div v-if="photos.length" class="photo-grid">
       <v-img
-        v-for="photo in photos"
+        v-for="(photo, i) in photos"
         :key="photo.url"
         :src="photo.url"
         :alt="photo.alt ?? photo.title ?? place.name"
         :aspect-ratio="1"
         cover
         class="photo-grid__photo"
+        @click="openLightbox(i)"
       />
     </div>
     <p v-else class="photo-section__empty">{{ $t('No photos for this stop yet.') }}</p>
+
+    <UiPhotoLightbox
+      v-model="lightboxOpen"
+      :photos="lightboxPhotos"
+      :start-index="lightboxIndex"
+    />
   </div>
 </template>
 
@@ -98,6 +125,12 @@ defineProps<Props>();
 
   &__photo {
     border-radius: rem(8);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.88;
+    }
   }
 }
 </style>
