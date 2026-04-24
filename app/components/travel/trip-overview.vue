@@ -75,12 +75,22 @@ function openLightbox(dayIdx: number, photoIdx: number) {
             <span class="overview-day__date">{{ formatDayLabel(item.day.date, currentLanguage) }}</span>
             <span class="overview-day__city">{{ dayCityLabel(item.day) }}</span>
           </span>
-          <span class="overview-day__count">
+          <span v-if="item.photos.length" class="overview-day__count">
             {{ item.photos.length }} {{ $t('photos') }}
           </span>
         </button>
 
-        <div class="overview-day__photos">
+        <ul v-if="!item.photos.length && item.day.places.length" class="overview-day__places">
+          <li
+            v-for="place in item.day.places"
+            :key="place.id ?? place.name"
+            class="overview-day__place"
+          >
+            {{ place.name }}
+          </li>
+        </ul>
+
+        <div v-if="item.photos.length" class="overview-day__photos">
           <figure
             v-for="(entry, photoIdx) in item.photos"
             :key="entry.photo.url"
@@ -99,10 +109,6 @@ function openLightbox(dayIdx: number, photoIdx: number) {
         </div>
       </section>
     </div>
-
-    <p v-else class="trip-overview__empty">
-      {{ $t('No photos for this trip yet.') }}
-    </p>
 
     <CommonPhotoLightbox
       v-model="lightboxOpen"
@@ -235,6 +241,27 @@ function openLightbox(dayIdx: number, photoIdx: number) {
   white-space: nowrap;
 }
 
+.overview-day__places {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(6);
+}
+
+.overview-day__place {
+  font-size: rem(11);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: $text-secondary;
+  opacity: 0.65;
+  padding: rem(4) rem(10);
+  border: 1px solid $border-color;
+  border-radius: rem(20);
+  white-space: nowrap;
+}
+
 .overview-day__photos {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -272,12 +299,4 @@ function openLightbox(dayIdx: number, photoIdx: number) {
   }
 }
 
-.trip-overview__empty {
-  color: $text-secondary;
-  opacity: 0.6;
-  text-align: center;
-  padding: rem(40) 0;
-  margin: 0;
-  font-size: rem(14);
-}
 </style>
