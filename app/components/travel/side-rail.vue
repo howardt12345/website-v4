@@ -28,8 +28,22 @@ const emit = defineEmits<{
 
 const collapsed = defineModel<boolean>('collapsed', { default: false });
 
-const { cityById } = useTravelStore();
+const travelStore = useTravelStore();
+const { cityById } = travelStore;
+const { travelPhotosByPlace, tripOverviewProps } = storeToRefs(travelStore);
 const { currentLanguage } = storeToRefs(usei18n());
+
+const photoCountForTrip = (trip: TravelTrip): number => {
+  const tId = tripSlug(trip).split('/').at(-1) ?? tripSlug(trip);
+  return Object.values(travelPhotosByPlace.value[tId] ?? {}).reduce((sum, arr) => sum + arr.length, 0);
+};
+
+const photoCountForDay = (day: TravelDay): number =>
+  tripOverviewProps.value.days.find((d) => d.day.date === day.date)?.photos.length ?? 0;
+
+const tripTotalPhotoCount = computed<number>(() =>
+  tripOverviewProps.value.days.reduce((sum, d) => sum + d.photos.length, 0),
+);
 
 const railBodyRef = ref<HTMLElement | null>(null);
 
@@ -117,6 +131,7 @@ watch(
                 <span class="rail-day__city">{{ $t('Full trip') }}</span>
                 <span class="rail-day__meta">
                   {{ tripDays.length }} {{ $t('days') }}
+                  <template v-if="tripTotalPhotoCount"> · {{ tripTotalPhotoCount }} {{ $t('photos') }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -135,6 +150,7 @@ watch(
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
                   {{ day.places.length }} {{ $t('stops') }}
+                  <template v-if="photoCountForDay(day)"> · {{ photoCountForDay(day) }} {{ $t('photos') }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -161,6 +177,7 @@ watch(
                   <span class="rail-trip__title">{{ item.trip.title }}</span>
                   <span class="rail-trip__meta">
                     {{ formatTripRange(item.trip, currentLanguage) }} · {{ daySpan(item.trip) }} {{ $t('days') }}
+                    <template v-if="photoCountForTrip(item.trip)"> · {{ photoCountForTrip(item.trip) }} {{ $t('photos') }}</template>
                   </span>
                 </div>
               </v-timeline-item>
