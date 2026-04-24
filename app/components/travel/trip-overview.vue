@@ -55,12 +55,11 @@ const dayCityLabel = (day: TravelDay): string =>
             :key="entry.photo.url"
             class="overview-photo"
           >
-            <img
+            <v-img
               :src="entry.photo.url"
               :alt="entry.photo.alt ?? entry.photo.title ?? entry.placeName"
-              width="1"
-              height="1"
-              loading="lazy"
+              :aspect-ratio="1"
+              cover
               class="overview-photo__img"
             />
             <figcaption class="overview-photo__caption">{{ entry.placeName }}</figcaption>
@@ -216,11 +215,7 @@ const dayCityLabel = (day: TravelDay): string =>
   margin: 0;
 
   &__img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
     border-radius: rem(8);
-    display: block;
     transition: opacity 0.2s ease;
 
     &:hover {

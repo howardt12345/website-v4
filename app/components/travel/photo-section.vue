@@ -31,14 +31,13 @@ defineProps<Props>();
     </div>
 
     <div v-if="photos.length" class="photo-grid">
-      <img
+      <v-img
         v-for="photo in photos"
         :key="photo.url"
         :src="photo.url"
         :alt="photo.alt ?? photo.title ?? place.name"
-        width="1"
-        height="1"
-        loading="lazy"
+        :aspect-ratio="1"
+        cover
         class="photo-grid__photo"
       />
     </div>
@@ -98,11 +97,7 @@ defineProps<Props>();
   }
 
   &__photo {
-    aspect-ratio: 1;
-    width: 100%;
-    object-fit: cover;
     border-radius: rem(8);
-    display: block;
   }
 }
 </style>
