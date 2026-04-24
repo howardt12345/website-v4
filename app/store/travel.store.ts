@@ -98,11 +98,12 @@ export const useTravelStore = defineStore('travel', () => {
       const byPlace = (result[folder.tripId!] ??= {});
       (byPlace[folder.placeSlug!] ??= []).push({
         url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
+        date: folder.date,
         title: raw.title,
         caption: raw.caption,
         alt: raw.alt,
         featured: raw.featured ?? false,
-        tags: raw.tags ?? folder.tags ?? [],
+        tags: [...new Set([...(raw.tags ?? []), ...(folder.tags ?? [])])],
       });
     }
     return result;
@@ -191,6 +192,7 @@ export const useTravelStore = defineStore('travel', () => {
       for (const place of day.places) {
         if (!place.id) continue;
         for (const photo of tripPhotosMap.value[place.id] ?? []) {
+          if (photo.date && photo.date !== day.date) continue;
           photos.push({ photo, placeName: place.name });
         }
       }

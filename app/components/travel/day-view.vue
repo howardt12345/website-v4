@@ -28,8 +28,11 @@ const dayCountryNames = computed(() =>
 const placeHue = (place: TravelPlace): number =>
   countryByIso3(place.country ?? props.day.country)?.hue ?? 200;
 
-const photosForPlace = (place: TravelPlace): TravelPhoto[] =>
-  place.id ? (props.photosMap?.[place.id] ?? []) : [];
+const photosForPlace = (place: TravelPlace): TravelPhoto[] => {
+  const all = place.id ? (props.photosMap?.[place.id] ?? []) : [];
+  const dated = all.filter((p) => p.date === props.day.date);
+  return dated.length > 0 ? dated : all.filter((p) => !p.date);
+};
 </script>
 
 <template>

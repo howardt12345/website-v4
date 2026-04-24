@@ -32,7 +32,7 @@ const allPhotos = computed<PhotoItem[]>(() =>
       alt: raw.alt,
       date: raw.date,
       featured: raw.featured ?? false,
-      tags: raw.tags ?? folder?.tags ?? [],
+      tags: [...new Set([...(raw.tags ?? []), ...(folder?.tags ?? [])])],
       category: folder?.category,
       subcategory: folder?.subcategory,
       aspectRatio: raw.aspectRatio ?? 1.5,
