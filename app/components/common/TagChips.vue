@@ -9,13 +9,13 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
 </script>
 
 <template>
-  <v-chip-group :model-value="selected" color="primary" variant="flat">
+  <v-chip-group :model-value="selected" variant="flat">
     <v-chip
       v-for="tag in tags"
       :key="tag"
       :value="tag"
+      :color="selected.includes(tag) ? 'primary' : 'secondary'"
       label
-      :theme="selected.includes(tag) ? 'primary' : 'dark'"
       class="chip"
     >
       {{ tag }}

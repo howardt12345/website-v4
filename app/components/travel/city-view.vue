@@ -68,7 +68,7 @@ function openLightbox(place: CityViewPlace, photoIdx: number) {
       {{ $t('No places recorded for this city yet.') }}
     </p>
 
-    <UiPhotoLightbox
+    <CommonPhotoLightbox
       v-model="lightboxOpen"
       :photos="lightboxPhotos"
       :start-index="lightboxIndex"

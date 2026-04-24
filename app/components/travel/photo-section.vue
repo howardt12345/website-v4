@@ -64,7 +64,7 @@ function openLightbox(index: number) {
     </div>
     <p v-else class="photo-section__empty">{{ $t('No photos for this stop yet.') }}</p>
 
-    <UiPhotoLightbox
+    <CommonPhotoLightbox
       v-model="lightboxOpen"
       :photos="lightboxPhotos"
       :start-index="lightboxIndex"

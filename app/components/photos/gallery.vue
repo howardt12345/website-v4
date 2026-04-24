@@ -45,7 +45,7 @@ function openLightbox(index: number) {
     </v-col>
   </v-row>
 
-  <UiPhotoLightbox
+  <CommonPhotoLightbox
     v-model="lightboxOpen"
     :photos="lightboxPhotos"
     :start-index="lightboxIndex"

@@ -67,7 +67,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
           <p v-if="current.title" class="lightbox__title">{{ current.title }}</p>
           <p v-if="current.caption" class="lightbox__caption">{{ current.caption }}</p>
           <slot name="meta" :entry="current" />
-          <UiTagChips
+          <CommonTagChips
             v-if="current.tags?.length"
             :tags="current.tags"
             :selected-tags="selectedTags"
