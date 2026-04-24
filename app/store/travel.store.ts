@@ -8,25 +8,51 @@ import type {
   TravelView,
   TripOverviewDay,
   TripOverviewPhoto,
+  CityViewPlace,
   RawPhotoFolder,
   RawPhoto,
 } from '~/types/travel';
 import { tripSlug, tripsForCountry } from '~/composables/travel';
 
-const parseHash = (hash: string): { countryIso3: string | null; tripId: string | null } => {
+interface ParsedHash {
+  countryIso3: string | null;
+  tripId: string | null;
+  dayDate: string | null;
+  cityFocus: { country: string; city: string } | null;
+}
+
+const parseHash = (hash: string): ParsedHash => {
   const raw = hash.replace(/^#/, '');
 
+  // country/ISO3/city/CITY_ID
+  const countryWithCity = raw.match(/^country\/([A-Z]{3})\/city\/([^/]+)$/);
+  if (countryWithCity) {
+    return { countryIso3: countryWithCity[1]!, tripId: null, dayDate: null, cityFocus: { country: countryWithCity[1]!, city: countryWithCity[2]! } };
+  }
+
+  // country/ISO3
   const countryOnly = raw.match(/^country\/([A-Z]{3})$/);
-  if (countryOnly) return { countryIso3: countryOnly[1]!, tripId: null };
+  if (countryOnly) return { countryIso3: countryOnly[1]!, tripId: null, dayDate: null, cityFocus: null };
 
   const tripPrefix = raw.match(/^trip\/(.+)$/);
-  if (!tripPrefix) return { countryIso3: null, tripId: null };
+  if (!tripPrefix) return { countryIso3: null, tripId: null, dayDate: null, cityFocus: null };
 
   const tripTail = tripPrefix[1]!;
-  const tripWithCountry = tripTail.match(/^(.+)\/country\/([A-Z]{3})$/);
-  if (tripWithCountry) return { countryIso3: tripWithCountry[2]!, tripId: tripWithCountry[1]! };
 
-  return { countryIso3: null, tripId: tripTail };
+  // trip/slug/day/DATE/city/ISO3/CITY_ID
+  const tripDayCity = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/city\/([A-Z]{3})\/([^/]+)$/);
+  if (tripDayCity) {
+    return { countryIso3: null, tripId: tripDayCity[1]!, dayDate: tripDayCity[2]!, cityFocus: { country: tripDayCity[3]!, city: tripDayCity[4]! } };
+  }
+
+  // trip/slug/day/DATE
+  const tripDay = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})$/);
+  if (tripDay) return { countryIso3: null, tripId: tripDay[1]!, dayDate: tripDay[2]!, cityFocus: null };
+
+  const tripWithCountry = tripTail.match(/^(.+)\/country\/([A-Z]{3})$/);
+  if (tripWithCountry) return { countryIso3: tripWithCountry[2]!, tripId: tripWithCountry[1]!, dayDate: null, cityFocus: null };
+
+  return { countryIso3: null, tripId: tripTail, dayDate: null, cityFocus: null };
 };
 
 export const useTravelStore = defineStore('travel', () => {
@@ -115,21 +141,24 @@ export const useTravelStore = defineStore('travel', () => {
   const focusCountryIso3 = ref<string | null>(null);
   const focusTripId = ref<string | null>(null);
   const activeDayIndex = ref<number | null>(null);
+  const pendingDayDate = ref<string | null>(null);
   const activePlaceIndex = ref(0);
+  const activeCityFocus = ref<{ country: string; city: string } | null>(null);
   const mapMode = ref<'flat' | 'globe'>('flat');
 
   const applyHash = (hash: string): void => {
     const parsed = parseHash(hash);
     focusCountryIso3.value = parsed.countryIso3;
     focusTripId.value = parsed.tripId;
+    activeCityFocus.value = parsed.cityFocus;
+    pendingDayDate.value = parsed.dayDate;
   };
 
-  applyHash(route.hash);
-
   watch(() => route.hash, (hash) => {
-    applyHash(hash);
     activeDayIndex.value = null;
     activePlaceIndex.value = 0;
+    applyHash(hash);
+    resolvePendingDay();
   });
 
   const view = computed<TravelView>(() => {
@@ -148,18 +177,39 @@ export const useTravelStore = defineStore('travel', () => {
 
   const navWorld = (): void => { router.push({ hash: '' }); };
   const navCountry = (iso3: string): void => { router.push({ hash: `#country/${iso3}` }); };
+  const navCity = (iso3: string, cityId: string): void => { router.push({ hash: `#country/${iso3}/city/${cityId}` }); };
+  const navTripDayCity = (dayDate: string, country: string, cityId: string): void => {
+    if (!focusTripId.value) return;
+    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/city/${country}/${cityId}` });
+  };
   const navTrip = (slug: string): void => {
     const countryParam = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
     router.push({ hash: `#trip/${slug}${countryParam}` });
   };
   const pickDay = (idx: number | null): void => {
-    activeDayIndex.value = idx;
-    activePlaceIndex.value = 0;
+    if (!focusTripId.value) return;
+    const hash = idx !== null && tripDays.value[idx]
+      ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}`
+      : `#trip/${focusTripId.value}`;
+    router.push({ hash });
   };
 
   const tripDays = computed<TravelDay[]>(() =>
     focusTrip.value ? daysForTripSlug(tripSlug(focusTrip.value)) : [],
   );
+
+  const resolvePendingDay = (): void => {
+    if (!pendingDayDate.value || !tripDays.value.length) return;
+    const idx = tripDays.value.findIndex((d) => d.date === pendingDayDate.value);
+    if (idx !== -1) {
+      activeDayIndex.value = idx;
+      pendingDayDate.value = null;
+    }
+  };
+  watch(tripDays, resolvePendingDay);
+  watch(pendingDayDate, resolvePendingDay);
+  applyHash(route.hash);
+  resolvePendingDay();
 
   const countryTrips = computed<TravelTrip[]>(() =>
     focusCountry.value ? tripsForCountry(trips.value, focusCountry.value.iso3) : [],
@@ -201,6 +251,36 @@ export const useTravelStore = defineStore('travel', () => {
     return result;
   });
 
+  const activeCityPlaces = computed<CityViewPlace[]>(() => {
+    if (view.value !== 'country' || !activeCityFocus.value) return [];
+    const { country: iso3, city: cityId } = activeCityFocus.value;
+    const hue = countryByIso3(iso3)?.hue ?? 200;
+    const result: CityViewPlace[] = [];
+    for (const trip of trips.value) {
+      const slug = tripSlug(trip);
+      
+      const tId = slug.split('/').at(-1) ?? slug;
+      const photosForTrip = travelPhotosByPlace.value[tId] ?? {};
+      for (const day of daysForTripSlug(slug)) {
+        for (const place of day.places) {
+          if ((place.country ?? day.country) !== iso3) continue;
+          if ((place.city ?? day.city) !== cityId) continue;
+          const allPhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
+          const photos = allPhotos.filter((p) => !p.date || p.date === day.date);
+          result.push({ place, tripTitle: trip.title, dayDate: day.date, hue, photos });
+        }
+      }
+    }
+    return result;
+  });
+
+  const cityViewProps = computed(() => {
+    if (view.value !== 'country' || !activeCityFocus.value) return null;
+    const city = cityById(activeCityFocus.value.country, activeCityFocus.value.city);
+    if (!city) return null;
+    return { city, places: activeCityPlaces.value };
+  });
+
   const railTrips = computed<TravelTrip[]>(() =>
     view.value === 'country' ? countryTrips.value : trips.value,
   );
@@ -224,17 +304,47 @@ export const useTravelStore = defineStore('travel', () => {
     return tripDays.value.flatMap((d) => d.places.map((p) => ({ lon: p.lon, lat: p.lat })));
   });
   const mapPlacePins = computed(() => {
-    if (view.value !== 'trip' || !activeDay.value) return [];
-    return activeDay.value.places.map((p, i) => ({
-      lon: p.lon,
-      lat: p.lat,
-      label: p.name,
-      active: i === activePlaceIndex.value,
-    }));
+    if (view.value === 'trip' && activeDay.value) {
+      return activeDay.value.places.map((p, i) => ({
+        lon: p.lon,
+        lat: p.lat,
+        label: p.name,
+        active: i === activePlaceIndex.value,
+      }));
+    }
+    if (view.value === 'country' && activeCityFocus.value && activeCityPlaces.value.length) {
+      const seen = new Set<string>();
+      return activeCityPlaces.value
+        .filter((item) => {
+          const key = item.place.id ?? `${item.place.lon},${item.place.lat}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        })
+        .map((item, i) => ({
+          lon: item.place.lon,
+          lat: item.place.lat,
+          label: item.place.name,
+          active: false,
+        }));
+    }
+    return [];
   });
   const mapCityPins = computed(() => {
     if (view.value !== 'country' || !focusCountry.value) return [];
-    return focusCountry.value.cities.map((c) => ({ lon: c.lon, lat: c.lat, name: c.name }));
+    return focusCountry.value.cities.map((c) => ({
+      lon: c.lon,
+      lat: c.lat,
+      name: c.name,
+      id: c.id,
+      country: focusCountry.value!.iso3,
+    }));
+  });
+
+  const activeCityCoords = computed<{ lon: number; lat: number } | null>(() => {
+    if (!activeCityFocus.value) return null;
+    const city = cityById(activeCityFocus.value.country, activeCityFocus.value.city);
+    return city ? { lon: city.lon, lat: city.lat } : null;
   });
 
   const mapProps = computed(() => ({
@@ -245,6 +355,7 @@ export const useTravelStore = defineStore('travel', () => {
     tripPath: mapTripPath.value,
     placePins: mapPlacePins.value,
     cityPins: mapCityPins.value,
+    focusCityPin: activeCityCoords.value,
   }));
 
   const railProps = computed(() => ({
@@ -294,9 +405,12 @@ export const useTravelStore = defineStore('travel', () => {
     focusTrip,
     activeDay,
     activePlaceIndex,
+    activeCityFocus,
     mapMode,
     navWorld,
     navCountry,
+    navCity,
+    navTripDayCity,
     navTrip,
     pickDay,
     mapProps,
@@ -304,6 +418,7 @@ export const useTravelStore = defineStore('travel', () => {
     statsBarProps,
     dayViewProps,
     tripOverviewProps,
+    cityViewProps,
     hydrate,
   };
 });

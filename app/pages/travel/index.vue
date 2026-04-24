@@ -19,15 +19,25 @@ const {
   focusTrip,
   activeDay,
   activePlaceIndex,
+  activeCityFocus,
   mapMode,
   mapProps,
   railProps,
   statsBarProps,
   dayViewProps,
   tripOverviewProps,
+  cityViewProps,
 } = storeToRefs(travelStore);
 
-const { navWorld, navCountry, navTrip, pickDay } = travelStore;
+const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay } = travelStore;
+
+const handleCityClick = (loc: { country: string; city: string }) => {
+  if (view.value === 'trip' && activeDay.value) {
+    navTripDayCity(activeDay.value.date, loc.country, loc.city);
+  } else {
+    navCity(loc.country, loc.city);
+  }
+};
 
 const { currentLanguage } = storeToRefs(usei18n());
 
@@ -71,6 +81,7 @@ const stageClass = computed(() => ({
           v-bind="mapProps"
           @countryClick="navCountry"
           @placeClick="activePlaceIndex = $event"
+          @cityClick="handleCityClick"
         />
 
         <div class="travel-stage__overlay">
@@ -111,11 +122,16 @@ const stageClass = computed(() => ({
       v-if="view === 'trip' && activeDay"
       v-bind="dayViewProps"
       @update:activePlace="activePlaceIndex = $event"
+      @cityClick="handleCityClick"
     />
     <TravelTripOverview
       v-else-if="view === 'trip' && focusTrip"
       v-bind="tripOverviewProps"
       @pick-day="pickDay"
+    />
+    <TravelCityView
+      v-else-if="cityViewProps"
+      v-bind="cityViewProps"
     />
   </div>
 </template>
