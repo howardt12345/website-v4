@@ -66,3 +66,24 @@ export interface CityViewPlace {
   photos: PhotoItem[];
 }
 
+export interface TravelTimelinePhoto {
+  url: string;
+  alt?: string;
+  label?: string;
+  title?: string;
+  caption?: string;
+  tags?: string[];
+}
+
+export interface TravelTimelineEntry {
+  key: string;
+  eyebrow: string;
+  title: string;
+  photos: TravelTimelinePhoto[];
+  titleSub?: string;
+  noPhotoPlaces?: string[];
+  alsoVisited?: string[];
+  dividerBefore?: string;
+  onClick?: () => void;
+}
+

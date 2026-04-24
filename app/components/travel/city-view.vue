@@ -1,78 +1,72 @@
 <script setup lang="ts">
-import type { TravelCity, CityViewPlace } from '~/types/travel';
-import type { LightboxEntry } from '~/types/ui';
-import { formatDayShort } from '~/composables/travel';
+import type { TravelCity, CityViewPlace, TravelTimelineEntry } from '~/types/travel';
+import { formatDayLabel } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 
-defineProps<{
+const props = defineProps<{
   city: TravelCity;
+  countryName?: string;
   places: CityViewPlace[];
 }>();
 
 const { currentLanguage } = storeToRefs(usei18n());
 
-const lightboxOpen = ref(false);
-const lightboxPhotos = ref<LightboxEntry[]>([]);
-const lightboxIndex = ref(0);
-
-function openLightbox(place: CityViewPlace, photoIdx: number) {
-  lightboxPhotos.value = place.photos.map((photo) => ({
-    src: photo.url,
-    alt: photo.alt ?? photo.title ?? place.place.name,
-    title: photo.title,
-    caption: photo.caption,
-    label: place.place.name,
-    tags: photo.tags,
-  }));
-  lightboxIndex.value = photoIdx;
-  lightboxOpen.value = true;
+interface DateGroup {
+  date: string;
+  label: string;
+  entries: TravelTimelineEntry[];
 }
+
+const dateGroups = computed<DateGroup[]>(() => {
+  const groups: DateGroup[] = [];
+  let current: DateGroup | null = null;
+
+  for (const item of props.places) {
+    if (!current || current.date !== item.dayDate) {
+      current = {
+        date: item.dayDate,
+        label: formatDayLabel(item.dayDate, currentLanguage.value),
+        entries: [],
+      };
+      groups.push(current);
+    }
+    current.entries.push({
+      key: `${item.dayDate}-${item.place.id ?? item.place.name}`,
+      eyebrow: item.tripTitle,
+      title: item.place.name,
+      photos: item.photos.map((p) => ({
+        url: p.url,
+        alt: p.alt ?? p.title ?? item.place.name,
+        title: p.title,
+        caption: p.caption,
+        tags: p.tags,
+      })),
+    });
+  }
+
+  return groups;
+});
 </script>
 
 <template>
   <div class="city-view">
     <div class="city-view__head">
       <div class="city-view__eyebrow">{{ $t('City') }}</div>
-      <h2 class="city-view__title">{{ city.name }}</h2>
+      <h2 class="city-view__title">
+        {{ city.name }}<span v-if="countryName" class="city-view__country"> · {{ countryName }}</span>
+      </h2>
     </div>
 
-    <div v-if="places.length" class="city-view__timeline">
-      <section
-        v-for="(item, i) in places"
-        :key="`${item.dayDate}-${item.place.id ?? i}`"
-        class="city-place"
-      >
-        <div class="city-place__head">
-          <div class="city-place__eyebrow">
-            {{ item.tripTitle }} · {{ formatDayShort(item.dayDate, currentLanguage) }}
-          </div>
-          <div class="city-place__name">{{ item.place.name }}</div>
+    <template v-if="dateGroups.length">
+      <div v-for="group in dateGroups" :key="group.date" class="city-view__group">
+        <div class="city-view__date-header">
+          <span class="city-view__date-label">{{ group.label }}</span>
         </div>
+        <TravelTimeline :entries="group.entries" />
+      </div>
+    </template>
 
-        <div v-if="item.photos.length" class="city-place__photos">
-          <v-img
-            v-for="(photo, photoIdx) in item.photos"
-            :key="photo.url"
-            :src="photo.url"
-            :alt="photo.alt ?? photo.title ?? item.place.name"
-            :aspect-ratio="1"
-            cover
-            class="city-place__photo"
-            @click="openLightbox(item, photoIdx)"
-          />
-        </div>
-      </section>
-    </div>
-
-    <p v-else class="city-view__empty">
-      {{ $t('No places recorded for this city yet.') }}
-    </p>
-
-    <CommonPhotoLightbox
-      v-model="lightboxOpen"
-      :photos="lightboxPhotos"
-      :start-index="lightboxIndex"
-    />
+    <p v-else class="city-view__empty">{{ $t('No places recorded for this city yet.') }}</p>
   </div>
 </template>
 
@@ -103,19 +97,39 @@ function openLightbox(place: CityViewPlace, photoIdx: number) {
     margin: 0;
   }
 
-  &__timeline {
-    position: relative;
-    padding-left: rem(28);
+  &__country {
+    font-size: rem(20);
+    font-weight: 400;
+    color: $text-secondary;
+    letter-spacing: -0.01em;
+  }
 
-    &::before {
+  &__group + &__group {
+    margin-top: rem(32);
+  }
+
+  &__date-header {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+    margin-bottom: rem(16);
+
+    &::after {
       content: '';
-      position: absolute;
-      left: rem(7);
-      top: rem(8);
-      bottom: rem(8);
-      width: 1px;
+      flex: 1;
+      height: 1px;
       background: $border-color;
     }
+  }
+
+  &__date-label {
+    font-size: rem(11);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: $text-secondary;
+    opacity: 0.65;
+    white-space: nowrap;
   }
 
   &__empty {
@@ -125,75 +139,6 @@ function openLightbox(place: CityViewPlace, photoIdx: number) {
     padding: rem(40) 0;
     margin: 0;
     font-size: rem(14);
-  }
-}
-
-.city-place {
-  position: relative;
-  margin-bottom: rem(44);
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  &__head {
-    display: flex;
-    flex-direction: column;
-    gap: rem(2);
-    margin-bottom: rem(14);
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: rem(-28);
-      top: rem(6);
-      width: rem(11);
-      height: rem(11);
-      border-radius: 50%;
-      background: rgb(var(--v-theme-background));
-      border: 2px solid $accent;
-    }
-  }
-
-  &__eyebrow {
-    font-size: rem(11);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: $text-secondary;
-    font-weight: 600;
-    opacity: 0.7;
-  }
-
-  &__name {
-    font-size: rem(18);
-    font-weight: 500;
-    color: $text;
-    line-height: 1.25;
-  }
-
-  &__photos {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: rem(10);
-
-    @media (max-width: 960px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (max-width: 600px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  &__photo {
-    border-radius: rem(8);
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      opacity: 0.88;
-    }
   }
 }
 </style>
