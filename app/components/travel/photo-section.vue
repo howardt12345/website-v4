@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TravelPlace, TravelPhoto } from '~/types/travel';
+import type { TravelPlace } from '~/types/travel';
+import type { PhotoItem } from '~/types/photos';
 import type { LightboxEntry } from '~/types/ui';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
   placeIndex: number;
   totalPlaces: number;
   baseHue: number;
-  photos: TravelPhoto[];
+  photos: PhotoItem[];
 }
 
 const props = defineProps<Props>();

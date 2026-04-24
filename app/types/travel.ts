@@ -1,3 +1,5 @@
+import type { PhotoItem } from '~/types/photos';
+
 export type TravelView = 'world' | 'country' | 'trip';
 
 export interface TravelPlace {
@@ -8,16 +10,6 @@ export interface TravelPlace {
   blogSlug?: string;
   country?: string;
   city?: string;
-}
-
-export interface TravelPhoto {
-  url: string;
-  date?: string;
-  title?: string;
-  caption?: string;
-  alt?: string;
-  featured?: boolean;
-  tags: string[];
 }
 
 export interface TravelDay {
@@ -56,7 +48,7 @@ export interface TravelCountry {
 }
 
 export interface TripOverviewPhoto {
-  photo: TravelPhoto;
+  photo: PhotoItem;
   placeName: string;
 }
 
@@ -71,27 +63,6 @@ export interface CityViewPlace {
   tripTitle: string;
   dayDate: string;
   hue: number;
-  photos: TravelPhoto[];
+  photos: PhotoItem[];
 }
 
-export interface RawPhotoFolder {
-  stem: string;
-  tripId?: string;
-  placeSlug?: string;
-  date?: string;
-  category?: string;
-  subcategory?: string;
-  tags?: string[];
-}
-
-export interface RawPhoto {
-  stem: string;
-  title?: string;
-  caption?: string;
-  alt?: string;
-  date?: string;
-  featured?: boolean;
-  tags?: string[];
-  aspectRatio?: number;
-  ext?: string;
-}

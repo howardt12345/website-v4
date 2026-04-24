@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TravelDay, TravelPlace, TravelPhoto } from '~/types/travel';
+import type { TravelDay, TravelPlace } from '~/types/travel';
+import type { PhotoItem } from '~/types/photos';
 import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
@@ -8,7 +9,7 @@ interface Props {
   day: TravelDay;
   activePlace: number;
   multiCountry: boolean;
-  photosMap?: Record<string, TravelPhoto[]>;
+  photosMap?: Record<string, PhotoItem[]>;
 }
 
 const props = defineProps<Props>();
@@ -31,7 +32,7 @@ const dayCountryNames = computed(() =>
 const placeHue = (place: TravelPlace): number =>
   countryByIso3(place.country ?? props.day.country)?.hue ?? 200;
 
-const photosForPlace = (place: TravelPlace): TravelPhoto[] => {
+const photosForPlace = (place: TravelPlace): PhotoItem[] => {
   const all = place.id ? (props.photosMap?.[place.id] ?? []) : [];
   const dated = all.filter((p) => p.date === props.day.date);
   return dated.length > 0 ? dated : all.filter((p) => !p.date);
