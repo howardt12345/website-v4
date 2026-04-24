@@ -12,17 +12,19 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
 </script>
 
 <template>
-  <v-card variant="flat" class="photo-card" @click="emit('select')">
-    <v-img
-      :src="photo.url"
-      cover
-      :aspect-ratio="photo.aspectRatio"
-      class="align-end"
-    >
-      <v-card-actions v-if="photo.tags.length" class="chip-group">
-        <CommonTagChips :tags="photo.tags" :selected-tags="selected" />
-      </v-card-actions>
-    </v-img>
+  <v-card
+    variant="flat"
+    class="photo-card d-flex flex-column"
+    :style="{ aspectRatio: photo.aspectRatio }"
+    @click="emit('select')"
+  >
+    <template #image>
+      <v-img :src="photo.url" cover />
+    </template>
+    <v-spacer />
+    <v-card-actions v-if="photo.tags.length" class="chip-group">
+      <CommonTagChips :tags="photo.tags" :selected-tags="selected"/>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -31,7 +33,7 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
   cursor: pointer;
   overflow: hidden;
   transition: opacity 0.2s ease;
-
+  
   &:hover {
     opacity: 0.9;
   }
