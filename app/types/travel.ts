@@ -66,6 +66,14 @@ export interface TripOverviewDay {
   photos: TripOverviewPhoto[];
 }
 
+export interface CityViewPlace {
+  place: TravelPlace;
+  tripTitle: string;
+  dayDate: string;
+  hue: number;
+  photos: TravelPhoto[];
+}
+
 export interface RawPhotoFolder {
   stem: string;
   tripId?: string;

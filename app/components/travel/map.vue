@@ -73,6 +73,8 @@ interface CityPin {
   lon: number;
   lat: number;
   name: string;
+  id: string;
+  country: string;
 }
 
 interface Props {
@@ -83,6 +85,7 @@ interface Props {
   tripPath?: { lon: number; lat: number }[] | null;
   placePins?: MapPin[];
   cityPins?: CityPin[];
+  focusCityPin?: { lon: number; lat: number } | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -93,11 +96,13 @@ const props = withDefaults(defineProps<Props>(), {
   tripPath: null,
   placePins: () => [],
   cityPins: () => [],
+  focusCityPin: null,
 });
 
 const emit = defineEmits<{
   countryClick: [iso3: string];
   placeClick: [index: number];
+  cityClick: [loc: { country: string; city: string }];
 }>();
 
 const { isDark } = storeToRefs(useTheme());
@@ -158,19 +163,30 @@ const colorizeVisitedCountries = (
   });
 };
 
-const zoomToPathBounds = (path: { lon: number; lat: number }[], minPadDeg = 3) => {
+const zoomToPathBounds = (
+  path: { lon: number; lat: number }[],
+  minPadDeg = 3,
+  minSpanDeg = 0,
+) => {
   if (!chart || path.length === 0) return;
   const lons = path.map((p) => p.lon);
   const lats = path.map((p) => p.lat);
-  const minLon = Math.min(...lons);
-  const maxLon = Math.max(...lons);
-  const minLat = Math.min(...lats);
-  const maxLat = Math.max(...lats);
+  const rawMinLon = Math.min(...lons);
+  const rawMaxLon = Math.max(...lons);
+  const rawMinLat = Math.min(...lats);
+  const rawMaxLat = Math.max(...lats);
+
+  const centLon = (rawMinLon + rawMaxLon) / 2;
+  const centLat = (rawMinLat + rawMaxLat) / 2;
+  const minLon = Math.min(rawMinLon, centLon - minSpanDeg / 2);
+  const maxLon = Math.max(rawMaxLon, centLon + minSpanDeg / 2);
+  const minLat = Math.min(rawMinLat, centLat - minSpanDeg / 2);
+  const maxLat = Math.max(rawMaxLat, centLat + minSpanDeg / 2);
 
   if (props.mode === 'globe') {
     const centroidLon = (minLon + maxLon) / 2;
     const centroidLat = (minLat + maxLat) / 2;
-    const effectiveSpan = Math.max(maxLon - minLon, maxLat - minLat, minPadDeg * 2);
+    const effectiveSpan = Math.max(maxLon - minLon, maxLat - minLat, minSpanDeg, minPadDeg * 2);
     const zoomLevel = Math.max(1.5, Math.min(64, 120 / effectiveSpan));
     const easing = am5.ease.out(am5.ease.cubic);
     chart.animate({ key: 'rotationX', to: -centroidLon, duration: 600, easing });
@@ -192,7 +208,12 @@ const zoomToPathBounds = (path: { lon: number; lat: number }[], minPadDeg = 3) =
 
 const applyZoom = () => {
   if (zoomTimer !== null) clearTimeout(zoomTimer);
-  if (props.placePins.length) {
+  if (props.focusCityPin) {
+    zoomTimer = setTimeout(() => {
+      if (!chart || chart.isDisposed() || !props.focusCityPin) return;
+      zoomToPathBounds([props.focusCityPin], 0, 0.18);
+    }, 300);
+  } else if (props.placePins.length) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
       zoomToPathBounds(props.placePins, 0.1);
@@ -270,8 +291,10 @@ const addCityPins = () => {
   if (!root || !chart || !props.cityPins.length) return;
 
   const series = chart.series.push(am5map.MapPointSeries.new(root, {}));
-  series.bullets.push(() => {
+  series.bullets.push((_r, _s, dataItem) => {
+    const ctx = dataItem.dataContext as { name: string; id: string; country: string };
     const container = am5.Container.new(root!, {});
+
     container.children.push(am5.Circle.new(root!, {
       radius: 5,
       fill: am5.color(accentHex()),
@@ -287,6 +310,12 @@ const addCityPins = () => {
       y: -10,
       populateText: true,
     }));
+
+    container.set('cursorOverStyle', 'pointer');
+    container.events.on('click', () => {
+      emit('cityClick', { country: ctx.country, city: ctx.id });
+    });
+
     return am5.Bullet.new(root!, { sprite: container });
   });
 
@@ -294,6 +323,8 @@ const addCityPins = () => {
     series.data.push({
       geometry: { type: 'Point', coordinates: [pin.lon, pin.lat] },
       name: pin.name,
+      id: pin.id,
+      country: pin.country,
     });
   }
 };
@@ -540,7 +571,7 @@ watch(
   { deep: true },
 );
 watch(
-  [() => props.tripPath, () => props.placePins, () => props.cityPins],
+  [() => props.tripPath, () => props.placePins, () => props.cityPins, () => props.focusCityPin],
   rebuildOverlays,
   { deep: true },
 );

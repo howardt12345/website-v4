@@ -12,7 +12,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-defineEmits<{ 'update:activePlace': [index: number] }>();
+defineEmits<{
+  'update:activePlace': [index: number];
+  cityClick: [loc: { country: string; city: string }];
+}>();
 
 const { cityById, countryByIso3 } = useTravelStore();
 const { currentLanguage } = storeToRefs(usei18n());
@@ -47,11 +50,17 @@ const photosForPlace = (place: TravelPlace): TravelPhoto[] => {
               :key="`${loc.country}/${loc.city}`"
             >
               <span v-if="idx > 0" class="day-view__city-sep"> → </span>
-              {{ cityById(loc.country, loc.city)?.name ?? loc.city }}
+              <span
+                class="day-view__city-link"
+                @click="$emit('cityClick', { country: loc.country, city: loc.city })"
+              >{{ cityById(loc.country, loc.city)?.name ?? loc.city }}</span>
             </span>
           </template>
           <template v-else>
-            {{ cityById(day.country, day.city)?.name }}
+            <span
+              class="day-view__city-link"
+              @click="$emit('cityClick', { country: day.country, city: day.city })"
+            >{{ cityById(day.country, day.city)?.name }}</span>
           </template>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
             · {{ dayCountryNames.join(' → ') }}
@@ -116,6 +125,15 @@ const photosForPlace = (place: TravelPlace): TravelPhoto[] => {
     letter-spacing: -0.02em;
     font-weight: 500;
     color: $text;
+  }
+
+  &__city-link {
+    cursor: pointer;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 0.7;
+    }
   }
 
   &__country {
