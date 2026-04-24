@@ -83,7 +83,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
             :disabled="!hasPrev"
             @click="prev"
           >
-            <v-icon>mdi-chevron-left</v-icon>
+            <v-icon>fas fa-chevron-left</v-icon>
           </v-btn>
           <span class="lightbox__counter">{{ currentIndex + 1 }} / {{ photos.length }}</span>
           <v-btn
@@ -93,7 +93,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown));
             :disabled="!hasNext"
             @click="next"
           >
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon>fas fa-chevron-right</v-icon>
           </v-btn>
         </div>
       </div>
