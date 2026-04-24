@@ -1,58 +1,5 @@
+import type { TravelDay, TravelTrip } from '~/types/travel';
 import { useTravelStore } from '~/store/travel.store';
-
-export interface TravelPlace {
-  id?: string;
-  name: string;
-  lon: number;
-  lat: number;
-  blogSlug?: string;
-  country?: string;
-  city?: string;
-}
-
-export interface TravelPhoto {
-  url: string;
-  title?: string;
-  caption?: string;
-  alt?: string;
-  featured?: boolean;
-  tags: string[];
-}
-
-export interface TravelDay {
-  stem: string;
-  date: string;
-  country: string;
-  city: string;
-  places: TravelPlace[];
-}
-
-export interface TravelTrip {
-  stem: string;
-  title: string;
-  countries: string[];
-  start: string;
-  end: string;
-  excerpt: string;
-  blogSlug?: string;
-}
-
-export interface TravelCity {
-  id: string;
-  name: string;
-  lon: number;
-  lat: number;
-  region: string;
-}
-
-export interface TravelCountry {
-  iso3: string;
-  iso2: string;
-  name: string;
-  hue: number;
-  regions: string[];
-  cities: TravelCity[];
-}
 
 export const tripSlug = (trip: TravelTrip): string =>
   trip.stem.replace(/\/index$/, '');
@@ -73,7 +20,7 @@ export const formatTripRange = (trip: TravelTrip, locale: string): string => {
   const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', timeZone: 'UTC' };
   const start = new Date(trip.start).toLocaleDateString(locale, opts);
   const end = new Date(trip.end).toLocaleDateString(locale, { ...opts, year: 'numeric' });
-  return `${start} \u2013 ${end}`;
+  return `${start} – ${end}`;
 };
 
 export const formatDayLabel = (date: string, locale: string): string =>

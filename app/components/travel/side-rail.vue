@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelTrip, TravelDay } from '~/composables/travel';
+import type { TravelTrip, TravelDay, TravelView } from '~/types/travel';
 import {
   tripSlug,
   tripCountryNames,
@@ -12,7 +12,7 @@ import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 interface Props {
-  view: 'world' | 'country' | 'trip';
+  view: TravelView;
   trips: TravelTrip[];
   tripDays: TravelDay[];
   activeDayIndex: number | null;

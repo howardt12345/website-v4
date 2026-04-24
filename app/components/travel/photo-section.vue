@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelPlace, TravelPhoto } from '~/composables/travel';
+import type { TravelPlace, TravelPhoto } from '~/types/travel';
 
 interface Props {
   place: TravelPlace;

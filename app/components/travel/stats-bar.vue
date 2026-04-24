@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { TravelTrip, TravelCountry } from '~/composables/travel';
+import type { TravelTrip, TravelCountry, TravelView } from '~/types/travel';
 import { daySpan, tripsForCountry } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
 interface Props {
-  view: 'world' | 'country' | 'trip';
+  view: TravelView;
   trips: TravelTrip[];
   country?: TravelCountry;
   trip?: TravelTrip;
