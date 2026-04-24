@@ -10,6 +10,14 @@ places:
     name: Gare du Nord
     lon: 2.355
     lat: 48.880
+  - id: place-de-la-bastille
+    name: Place de la Bastille
+    lon: 2.369
+    lat: 48.853
+  - id: place-des-vosges
+    name: Place des Vosges
+    lon: 2.362
+    lat: 48.855
   - id: marche-des-enfants-rouges
     name: Marché des Enfants Rouges
     lon: 2.362

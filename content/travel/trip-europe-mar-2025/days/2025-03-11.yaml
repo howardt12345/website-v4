@@ -2,6 +2,10 @@ date: '2025-03-11'
 country: DEU
 city: frankfurt
 places:
+  - id: kleinmarkthalle
+    name: Kleinmarkthalle
+    lon: 8.683
+    lat: 50.111
   - id: roemerberg
     name: Römerberg
     lon: 8.682

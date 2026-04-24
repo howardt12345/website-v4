@@ -2,6 +2,10 @@ date: '2025-03-10'
 country: DEU
 city: frankfurt
 places:
+  - id: eschenheimer-turm
+    name: Eschenheimer Turm
+    lon: 8.681
+    lat: 50.120
   - id: goethe-house
     name: Goethe House
     lon: 8.678
