@@ -20,7 +20,6 @@ defineProps<Props>();
 .blog-cover-art {
   position: relative;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 
   &__img {
