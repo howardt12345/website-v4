@@ -29,21 +29,23 @@ function openLightbox(index: number) {
 </script>
 
 <template>
-  <v-row v-masonry dense>
-    <v-col
+  <div
+    v-masonry
+    class="masonry-grid"
+    item-selector=".masonry-item"
+    column-width=".masonry-sizer"
+    percent-position="true"
+  >
+    <div class="masonry-sizer" />
+    <div
       v-for="(photo, index) in photos"
       :key="photo.stem"
       v-masonry-tile
-      cols="12"
-      sm="12"
-      md="6"
-      lg="4"
-      xl="3"
-      xxl="2"
+      class="masonry-item"
     >
       <PhotosCard :photo="photo" :selected-tags="selectedTags" @select="openLightbox(index)" />
-    </v-col>
-  </v-row>
+    </div>
+  </div>
 
   <CommonPhotoLightbox
     v-model="lightboxOpen"
@@ -53,4 +55,27 @@ function openLightbox(index: number) {
   />
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.masonry-grid {
+  width: 100%;
+}
+
+.masonry-sizer,
+.masonry-item {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+
+  @media (min-width: 540px) {
+    width: 50%;
+  }
+
+  @media (min-width: 800px) {
+    width: 33.333%;
+  }
+
+  @media (min-width: 1280px) {
+    width: 25%;
+  }
+}
+</style>
