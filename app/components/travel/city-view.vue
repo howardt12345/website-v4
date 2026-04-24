@@ -22,6 +22,7 @@ function openLightbox(place: CityViewPlace, photoIdx: number) {
     title: photo.title,
     caption: photo.caption,
     label: place.place.name,
+    tags: photo.tags,
   }));
   lightboxIndex.value = photoIdx;
   lightboxOpen.value = true;

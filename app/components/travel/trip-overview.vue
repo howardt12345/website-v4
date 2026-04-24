@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TravelTrip, TravelDay, TripOverviewDay } from '~/types/travel';
+import type { LightboxEntry } from '~/types/ui';
 import { formatDayLabel, dayUniqueCities } from '~/composables/travel';
 import { useTravelStore } from '~/store/travel.store';
 import { usei18n } from '~/store/i18n.store';
@@ -9,7 +10,7 @@ interface Props {
   days: TripOverviewDay[];
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 defineEmits<{ 'pick-day': [idx: number] }>();
 
 const { cityById } = useTravelStore();
@@ -19,6 +20,36 @@ const dayCityLabel = (day: TravelDay): string =>
   dayUniqueCities(day)
     .map((loc) => cityById(loc.country, loc.city)?.name ?? loc.city)
     .join(' → ');
+
+const allLightboxPhotos = computed<LightboxEntry[]>(() =>
+  props.days.flatMap((item) =>
+    item.photos.map((entry) => ({
+      src: entry.photo.url,
+      alt: entry.photo.alt ?? entry.photo.title ?? entry.placeName,
+      title: entry.photo.title,
+      caption: entry.photo.caption,
+      label: entry.placeName,
+      tags: entry.photo.tags,
+    })),
+  ),
+);
+
+const dayOffsets = computed<number[]>(() => {
+  let offset = 0;
+  return props.days.map((item) => {
+    const start = offset;
+    offset += item.photos.length;
+    return start;
+  });
+});
+
+const lightboxOpen = ref(false);
+const lightboxIndex = ref(0);
+
+function openLightbox(dayIdx: number, photoIdx: number) {
+  lightboxIndex.value = (dayOffsets.value[dayIdx] ?? 0) + photoIdx;
+  lightboxOpen.value = true;
+}
 </script>
 
 <template>
@@ -30,7 +61,7 @@ const dayCityLabel = (day: TravelDay): string =>
 
     <div v-if="days.length" class="trip-overview__timeline">
       <section
-        v-for="item in days"
+        v-for="(item, dayIdx) in days"
         :key="item.day.date"
         class="overview-day"
       >
@@ -51,9 +82,10 @@ const dayCityLabel = (day: TravelDay): string =>
 
         <div class="overview-day__photos">
           <figure
-            v-for="entry in item.photos"
+            v-for="(entry, photoIdx) in item.photos"
             :key="entry.photo.url"
             class="overview-photo"
+            @click="openLightbox(dayIdx, photoIdx)"
           >
             <v-img
               :src="entry.photo.url"
@@ -71,6 +103,12 @@ const dayCityLabel = (day: TravelDay): string =>
     <p v-else class="trip-overview__empty">
       {{ $t('No photos for this trip yet.') }}
     </p>
+
+    <UiPhotoLightbox
+      v-model="lightboxOpen"
+      :photos="allLightboxPhotos"
+      :start-index="lightboxIndex"
+    />
   </div>
 </template>
 
@@ -213,13 +251,14 @@ const dayCityLabel = (day: TravelDay): string =>
 
 .overview-photo {
   margin: 0;
+  cursor: pointer;
 
   &__img {
     border-radius: rem(8);
     transition: opacity 0.2s ease;
 
     &:hover {
-      opacity: 0.92;
+      opacity: 0.88;
     }
   }
 
