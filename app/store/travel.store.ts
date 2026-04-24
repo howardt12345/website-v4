@@ -254,9 +254,10 @@ export const useTravelStore = defineStore('travel', () => {
 
   const cityViewProps = computed(() => {
     if (view.value !== 'country' || !activeCityFocus.value) return null;
-    const city = cityById(activeCityFocus.value.country, activeCityFocus.value.city);
+    const iso3 = activeCityFocus.value.country;
+    const city = cityById(iso3, activeCityFocus.value.city);
     if (!city) return null;
-    return { city, places: activeCityPlaces.value };
+    return { city, countryName: countryByIso3(iso3)?.name, places: activeCityPlaces.value };
   });
 
   const railTrips = computed<TravelTrip[]>(() =>
