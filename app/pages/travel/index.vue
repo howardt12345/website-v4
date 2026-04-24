@@ -86,14 +86,15 @@ const tripCityCount = computed(() =>
   ).size,
 );
 
+const photoFolderMap = computed(() =>
+  new Map((rawPhotoFolders.value ?? []).map((f) => [f.stem.replace(/\/index$/, ''), f])),
+);
+
 const photosByPlace = computed<Record<string, Record<string, TravelPhoto[]>>>(() => {
-  const folderMap = new Map(
-    (rawPhotoFolders.value ?? []).map((f) => [f.stem.replace(/\/index$/, ''), f]),
-  );
   const result: Record<string, Record<string, TravelPhoto[]>> = {};
   for (const raw of (rawTravelPhotos.value ?? [])) {
     const folderPath = raw.stem.split('/').slice(0, -1).join('/');
-    const folder = folderMap.get(folderPath);
+    const folder = photoFolderMap.value.get(folderPath);
     if (!folder?.tripId || !folder?.placeSlug) continue;
     const { tripId, placeSlug } = folder;
     if (!result[tripId]) result[tripId] = {};

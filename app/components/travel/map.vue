@@ -1,8 +1,6 @@
 <script lang="ts">
 import type { FeatureCollection } from 'geojson';
 
-// Module-level geodata registry and cache — persists across component remounts.
-// Add entries here as new visited countries are added.
 const PROVINCE_LOADERS: Record<string, () => Promise<{ default: FeatureCollection }>> = {
   TWN: () => import('@amcharts/amcharts5-geodata/taiwanLow'),
   JPN: () => import('@amcharts/amcharts5-geodata/japanLow'),
@@ -109,14 +107,12 @@ const MAX_LATITUDE = 85;
 const MAX_LONGITUDE = 180;
 const MAX_ZOOM_LEVEL = 1024;
 
-
 const landFill = () => vuetifyColorToHex('--v-theme-map-land');
 const landStroke = () => vuetifyColorToHex('--v-theme-map-land-stroke');
 const landHover = () => vuetifyColorToHex('--v-theme-map-land-hover');
 const labelFill = () => vuetifyColorToHex('--v-theme-map-label');
 const accentHex = () => vuetifyColorToHex('--v-theme-primary');
 const backgroundHex = () => vuetifyColorToHex('--v-theme-background');
-
 
 const visitedCountryFill = (hue: number) =>
   isDark.value ? hslToHex(hue, 55, 44) : hslToHex(hue, 62, 60);
@@ -136,6 +132,7 @@ let chart: am5map.MapChart | null = null;
 let loadId = 0;
 let loadsInFlight = 0;
 let overlaySeriesStart = 0;
+let zoomTimer: ReturnType<typeof setTimeout> | null = null;
 const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
 
 const colorizeVisitedCountries = (worldSeries: am5map.MapPolygonSeries) => {
@@ -191,18 +188,19 @@ const zoomToPathBounds = (path: { lon: number; lat: number }[], minPadDeg = 3) =
 };
 
 const applyZoom = () => {
+  if (zoomTimer !== null) clearTimeout(zoomTimer);
   if (props.placePins.length) {
-    setTimeout(() => {
+    zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
       zoomToPathBounds(props.placePins, 0.1);
     }, 300);
   } else if (props.tripPath?.length) {
-    setTimeout(() => {
+    zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
       zoomToPathBounds(props.tripPath!);
     }, 300);
   } else if (!props.focusCountries.length) {
-    setTimeout(() => {
+    zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
       chart.goHome(500);
     }, 300);
@@ -454,8 +452,6 @@ const loadPolygons = async () => {
       fill: am5.color(landHover()),
     });
 
-    // amCharts fires `datavalidated` on every layout recalculation;
-    // the flag prevents re-animating on subsequent fires.
     let hasAnimated = false;
 
     worldSeries.events.on('datavalidated', () => {
@@ -544,6 +540,7 @@ watch(
 
 onMounted(buildChart);
 onUnmounted(() => {
+  if (zoomTimer !== null) clearTimeout(zoomTimer);
   pinHaloTimers.forEach(clearTimeout);
   root?.dispose();
 });

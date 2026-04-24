@@ -40,7 +40,8 @@ const tripRailItems = computed((): TripRailItem[] => {
   const byYear = new Map<string, TravelTrip[]>();
   for (const trip of sorted) {
     const year = trip.start.slice(0, 4);
-    (byYear.get(year) ?? byYear.set(year, []).get(year)!).push(trip);
+    if (!byYear.has(year)) byYear.set(year, []);
+    byYear.get(year)!.push(trip);
   }
   const items: TripRailItem[] = [];
   for (const [year, trips] of byYear) {
@@ -184,6 +185,11 @@ watch(
     align-items: center;
     padding-top: rem(12);
     cursor: pointer;
+  }
+
+  @media (max-width: 960px) {
+    height: auto;
+    max-height: rem(400);
   }
 }
 
