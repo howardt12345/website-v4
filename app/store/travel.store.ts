@@ -253,7 +253,7 @@ export const useTravelStore = defineStore('travel', () => {
           photos.push({ photo, placeName: place.name });
         }
       }
-      if (photos.length) result.push({ day, dayIndex, photos });
+      result.push({ day, dayIndex, photos });
     });
     return result;
   });
