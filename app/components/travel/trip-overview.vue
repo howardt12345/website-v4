@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { TravelTrip, TravelDay } from '~/composables/travel';
+import type { TravelTrip, TravelDay, TripOverviewDay } from '~/types/travel';
 import { formatDayLabel, dayUniqueCities } from '~/composables/travel';
-import type { TripOverviewDay } from '~/store/travel.store';
 import { useTravelStore } from '~/store/travel.store';
 import { usei18n } from '~/store/i18n.store';
 

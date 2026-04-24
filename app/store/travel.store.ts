@@ -5,42 +5,13 @@ import type {
   TravelTrip,
   TravelDay,
   TravelPhoto,
-} from '~/composables/travel';
+  TravelView,
+  TripOverviewDay,
+  TripOverviewPhoto,
+  RawPhotoFolder,
+  RawPhoto,
+} from '~/types/travel';
 import { tripSlug, tripsForCountry } from '~/composables/travel';
-
-interface RawPhotoFolder {
-  stem: string;
-  tripId?: string;
-  placeSlug?: string;
-  category?: string;
-  subcategory?: string;
-  tags?: string[];
-}
-
-interface RawPhoto {
-  stem: string;
-  title?: string;
-  caption?: string;
-  alt?: string;
-  date?: string;
-  featured?: boolean;
-  tags?: string[];
-  aspectRatio?: number;
-  ext?: string;
-}
-
-type TravelView = 'world' | 'country' | 'trip';
-
-export interface TripOverviewPhoto {
-  photo: TravelPhoto;
-  placeName: string;
-}
-
-export interface TripOverviewDay {
-  day: TravelDay;
-  dayIndex: number;
-  photos: TripOverviewPhoto[];
-}
 
 const parseHash = (hash: string): { countryIso3: string | null; tripId: string | null } => {
   const raw = hash.replace(/^#/, '');

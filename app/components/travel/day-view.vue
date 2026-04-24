@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelDay, TravelPlace, TravelPhoto } from '~/composables/travel';
+import type { TravelDay, TravelPlace, TravelPhoto } from '~/types/travel';
 import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';

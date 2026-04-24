@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TravelCountry, TravelTrip } from '~/composables/travel';
+import type { TravelCountry, TravelTrip } from '~/types/travel';
 import { usei18n } from '~/store/i18n.store';
 
 interface Props {
