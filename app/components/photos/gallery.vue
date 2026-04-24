@@ -26,6 +26,16 @@ function openLightbox(index: number) {
   lightboxIndex.value = index;
   lightboxOpen.value = true;
 }
+
+const redrawMasonry = inject<(id?: string) => void>('redrawVueMasonry');
+
+watch(
+  () => props.photos,
+  async () => {
+    await nextTick();
+    redrawMasonry?.();
+  },
+);
 </script>
 
 <template>
