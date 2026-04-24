@@ -39,10 +39,16 @@ const parseHash = (hash: string): ParsedHash => {
 
   const tripTail = tripPrefix[1]!;
 
-  // trip/slug/day/DATE/city/ISO3/CITY_ID
-  const tripDayCity = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/city\/([A-Z]{3})\/([^/]+)$/);
-  if (tripDayCity) {
-    return { countryIso3: null, tripId: tripDayCity[1]!, dayDate: tripDayCity[2]!, cityFocus: { country: tripDayCity[3]!, city: tripDayCity[4]! } };
+  // trip/slug/day/DATE/country/ISO3/city/CITY_ID
+  const tripDayCountryCity = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/country\/([A-Z]{3})\/city\/([^/]+)$/);
+  if (tripDayCountryCity) {
+    return { countryIso3: tripDayCountryCity[3]!, tripId: tripDayCountryCity[1]!, dayDate: tripDayCountryCity[2]!, cityFocus: { country: tripDayCountryCity[3]!, city: tripDayCountryCity[4]! } };
+  }
+
+  // trip/slug/day/DATE/country/ISO3
+  const tripDayCountry = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/country\/([A-Z]{3})$/);
+  if (tripDayCountry) {
+    return { countryIso3: tripDayCountry[3]!, tripId: tripDayCountry[1]!, dayDate: tripDayCountry[2]!, cityFocus: null };
   }
 
   // trip/slug/day/DATE
@@ -180,7 +186,7 @@ export const useTravelStore = defineStore('travel', () => {
   const navCity = (iso3: string, cityId: string): void => { router.push({ hash: `#country/${iso3}/city/${cityId}` }); };
   const navTripDayCity = (dayDate: string, country: string, cityId: string): void => {
     if (!focusTripId.value) return;
-    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/city/${country}/${cityId}` });
+    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
   };
   const navTrip = (slug: string): void => {
     const countryParam = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
@@ -188,9 +194,10 @@ export const useTravelStore = defineStore('travel', () => {
   };
   const pickDay = (idx: number | null): void => {
     if (!focusTripId.value) return;
+    const countryPart = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
     const hash = idx !== null && tripDays.value[idx]
-      ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}`
-      : `#trip/${focusTripId.value}`;
+      ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}${countryPart}`
+      : `#trip/${focusTripId.value}${countryPart}`;
     router.push({ hash });
   };
 
@@ -347,6 +354,13 @@ export const useTravelStore = defineStore('travel', () => {
     return city ? { lon: city.lon, lat: city.lat } : null;
   });
 
+  const mapZoomCountry = computed<string | null>(() => {
+    if (view.value !== 'trip') return null;
+    if (!activeDay.value) return null;
+    if (activeCityFocus.value) return null;
+    return focusCountryIso3.value;
+  });
+
   const mapProps = computed(() => ({
     mode: mapMode.value,
     focusCountries: mapFocusCountries.value,
@@ -356,6 +370,7 @@ export const useTravelStore = defineStore('travel', () => {
     placePins: mapPlacePins.value,
     cityPins: mapCityPins.value,
     focusCityPin: activeCityCoords.value,
+    zoomCountry: mapZoomCountry.value,
   }));
 
   const railProps = computed(() => ({

@@ -86,6 +86,7 @@ interface Props {
   placePins?: MapPin[];
   cityPins?: CityPin[];
   focusCityPin?: { lon: number; lat: number } | null;
+  zoomCountry?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -97,6 +98,7 @@ const props = withDefaults(defineProps<Props>(), {
   placePins: () => [],
   cityPins: () => [],
   focusCityPin: null,
+  zoomCountry: null,
 });
 
 const emit = defineEmits<{
@@ -212,6 +214,11 @@ const applyZoom = () => {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed() || !props.focusCityPin) return;
       zoomToPathBounds([props.focusCityPin], 0, 0.18);
+    }, 300);
+  } else if (props.zoomCountry) {
+    zoomTimer = setTimeout(() => {
+      if (!chart || chart.isDisposed() || !props.zoomCountry) return;
+      animateToCountry(props.zoomCountry);
     }, 300);
   } else if (props.placePins.length) {
     zoomTimer = setTimeout(() => {
@@ -575,6 +582,7 @@ watch(
   rebuildOverlays,
   { deep: true },
 );
+watch(() => props.zoomCountry, applyZoom);
 
 onMounted(buildChart);
 onUnmounted(() => {
