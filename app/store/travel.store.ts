@@ -4,15 +4,14 @@ import type {
   TravelCity,
   TravelTrip,
   TravelDay,
-  TravelPhoto,
   TravelView,
   TripOverviewDay,
   TripOverviewPhoto,
   CityViewPlace,
-  RawPhotoFolder,
-  RawPhoto,
 } from '~/types/travel';
+import type { PhotoItem } from '~/types/photos';
 import { tripSlug, tripsForCountry } from '~/composables/travel';
+import { usePhotoItems } from '~/composables/photos';
 
 interface ParsedHash {
   countryIso3: string | null;
@@ -65,24 +64,20 @@ export const useTravelStore = defineStore('travel', () => {
   const countries = ref<TravelCountry[]>([]);
   const trips = ref<TravelTrip[]>([]);
   const days = ref<TravelDay[]>([]);
-  const photoFolders = ref<RawPhotoFolder[]>([]);
-  const photos = ref<RawPhoto[]>([]);
   const hydrated = ref(false);
+
+  const { allPhotos } = usePhotoItems();
 
   const hydrate = async (): Promise<void> => {
     if (hydrated.value) return;
-    const [c, t, d, f, p] = await Promise.all([
+    const [c, t, d] = await Promise.all([
       useAsyncData('travel-countries', () => queryCollection('travelCountries').all()),
       useAsyncData('travel-trips', () => queryCollection('travelTrips').order('start', 'DESC').all()),
       useAsyncData('travel-days', () => queryCollection('travelDays').order('date', 'ASC').all()),
-      useAsyncData('photo-folders', () => queryCollection('photoFolders').all()),
-      useAsyncData('photos', () => queryCollection('photos').order('stem', 'ASC').all()),
     ]);
     countries.value = (c.data.value ?? []) as unknown as TravelCountry[];
     trips.value = (t.data.value ?? []) as unknown as TravelTrip[];
     days.value = (d.data.value ?? []) as unknown as TravelDay[];
-    photoFolders.value = (f.data.value ?? []) as unknown as RawPhotoFolder[];
-    photos.value = (p.data.value ?? []) as unknown as RawPhoto[];
     hydrated.value = true;
   };
 
@@ -107,36 +102,12 @@ export const useTravelStore = defineStore('travel', () => {
     return days.value.filter((d) => d.stem.startsWith(prefix));
   };
 
-  const photoFolderByPath = computed(
-    () => new Map(photoFolders.value.map((f) => [f.stem.replace(/\/index$/, ''), f])),
-  );
-
-  const travelPhotosByPlace = computed<Record<string, Record<string, TravelPhoto[]>>>(() => {
-    const result: Record<string, Record<string, TravelPhoto[]>> = {};
-    for (const raw of photos.value) {
-      const folderPath = raw.stem.split('/').slice(0, -1).join('/');
-      const folder = photoFolderByPath.value.get(folderPath);
-      if (!folder) continue;
-      const hasTrip = !!folder.tripId;
-      const hasPlace = !!folder.placeSlug;
-      if (!hasTrip || !hasPlace) {
-        if (import.meta.dev && (hasTrip || hasPlace)) {
-          console.warn(
-            `[travel] folder ${folderPath}: set both tripId and placeSlug, or neither`,
-          );
-        }
-        continue;
-      }
-      const byPlace = (result[folder.tripId!] ??= {});
-      (byPlace[folder.placeSlug!] ??= []).push({
-        url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
-        date: folder.date,
-        title: raw.title,
-        caption: raw.caption,
-        alt: raw.alt,
-        featured: raw.featured ?? false,
-        tags: [...new Set([...(raw.tags ?? []), ...(folder.tags ?? [])])],
-      });
+  const travelPhotosByPlace = computed<Record<string, Record<string, PhotoItem[]>>>(() => {
+    const result: Record<string, Record<string, PhotoItem[]>> = {};
+    for (const photo of allPhotos.value) {
+      if (!photo.tripId || !photo.placeSlug) continue;
+      const byPlace = (result[photo.tripId] ??= {});
+      (byPlace[photo.placeSlug] ??= []).push(photo);
     }
     return result;
   });

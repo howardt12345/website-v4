@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { PhotoItem, PhotoCategory } from '~/types/photos';
+import type { PhotoCategory, PhotoItem } from '~/types/photos';
+import { usePhotoItems } from '~/composables/photos';
 
 definePageMeta({ layout: 'default' });
 
@@ -8,39 +9,7 @@ useSeoMeta({
   description: 'A gallery of travel and street photography.',
 });
 
-const { data: rawPhotoFolders } = await useAsyncData('photo-folders', () =>
-  queryCollection('photoFolders').all(),
-);
-
-const { data: rawPhotos } = await useAsyncData('photos', () =>
-  queryCollection('photos').order('stem', 'ASC').all(),
-);
-
-const folderMap = computed(() =>
-  new Map((rawPhotoFolders.value ?? []).map((f) => [f.stem.replace(/\/index$/, ''), f])),
-);
-
-const allPhotos = computed<PhotoItem[]>(() =>
-  (rawPhotos.value ?? []).map((raw) => {
-    const folderPath = raw.stem.split('/').slice(0, -1).join('/');
-    const folder = folderMap.value.get(folderPath);
-    return {
-      stem: raw.stem,
-      url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
-      title: raw.title,
-      caption: raw.caption,
-      alt: raw.alt,
-      date: raw.date,
-      featured: raw.featured ?? false,
-      tags: [...new Set([...(raw.tags ?? []), ...(folder?.tags ?? [])])],
-      category: folder?.category,
-      subcategory: folder?.subcategory,
-      aspectRatio: raw.aspectRatio ?? 1.5,
-      tripId: folder?.tripId,
-      placeSlug: folder?.placeSlug,
-    };
-  }),
-);
+const { allPhotos } = usePhotoItems();
 
 const categories = computed<PhotoCategory[]>(() => {
   const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
