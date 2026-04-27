@@ -1,0 +1,20 @@
+date: '2025-03-09'
+country: DEU
+city: frankfurt
+places:
+  - id: bagni-della-regina-giovanna
+    name: Bagni della Regina Giovanna
+    lon: 14.395
+    lat: 40.612
+    country: ITA
+    city: sorrento
+  - id: naples-airport
+    name: Naples Airport (Capodichino)
+    lon: 14.291
+    lat: 40.882
+    country: ITA
+    city: naples
+  - id: frankfurt-airport
+    name: Frankfurt Airport (FRA)
+    lon: 8.570
+    lat: 50.051

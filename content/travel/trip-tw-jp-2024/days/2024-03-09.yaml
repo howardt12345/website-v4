@@ -1,0 +1,16 @@
+date: '2024-03-09'
+country: JPN
+city: hiroshima
+places:
+  - id: hiroshima-castle
+    name: Hiroshima Castle
+    lon: 132.459
+    lat: 34.402
+  - id: atomic-bomb-dome
+    name: Atomic Bomb Dome
+    lon: 132.453
+    lat: 34.396
+  - id: peace-memorial-park
+    name: Peace Memorial Park
+    lon: 132.453
+    lat: 34.394

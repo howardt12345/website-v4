@@ -1,0 +1,16 @@
+date: '2024-03-11'
+country: JPN
+city: hiroshima
+places:
+  - id: itsukushima-shrine
+    name: Itsukushima Shrine
+    lon: 132.320
+    lat: 34.296
+  - id: miyajima-town
+    name: Miyajima Town
+    lon: 132.322
+    lat: 34.279
+  - id: hondori-shopping-street
+    name: Hondori Shopping Street
+    lon: 132.459
+    lat: 34.393

@@ -1,0 +1,20 @@
+date: '2024-02-20'
+country: TWN
+city: tainan
+places:
+  - id: guohua-street
+    name: Guohua Street
+    lon: 120.198
+    lat: 22.990
+  - id: sicao-green-tunnel
+    name: Sicao Green Tunnel
+    lon: 120.228
+    lat: 22.983
+  - id: anping-old-street
+    name: Anping Old Street
+    lon: 120.163
+    lat: 22.998
+  - id: anping-old-fort
+    name: Anping Old Fort
+    lon: 120.160
+    lat: 22.997

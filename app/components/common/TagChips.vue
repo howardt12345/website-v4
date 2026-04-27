@@ -1,21 +1,19 @@
 <script setup lang="ts">
 interface Props {
   tags: string[];
-  selectedTags: string[];
+  selectedTags?: string[];
 }
 
 const props = defineProps<Props>();
-const selected = computed<string[]>(() => props.selectedTags);
+const selected = computed<string[]>(() => props.selectedTags ?? []);
 </script>
 
 <template>
-  <v-chip-group v-model="selected" color="primary" variant="flat">
+  <v-chip-group :model-value="selected" color="primary">
     <v-chip
       v-for="tag in tags"
       :key="tag"
       :value="tag"
-      label
-      :theme="selected.includes(tag) ? 'primary' : 'dark'"
       class="chip"
     >
       {{ tag }}

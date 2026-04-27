@@ -1,0 +1,24 @@
+date: '2025-03-04'
+country: FRA
+city: nice
+places:
+  - id: promenade-des-anglais
+    name: Promenade des Anglais
+    lon: 7.268
+    lat: 43.695
+  - id: villa-massena
+    name: Villa Masséna
+    lon: 7.263
+    lat: 43.695
+  - id: vieux-nice
+    name: Vieux-Nice
+    lon: 7.278
+    lat: 43.696
+  - id: nice-port
+    name: Nice Port (Port Lympia)
+    lon: 7.287
+    lat: 43.697
+  - id: place-massena
+    name: Place Masséna
+    lon: 7.271
+    lat: 43.697

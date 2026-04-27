@@ -1,0 +1,21 @@
+date: '2024-02-21'
+country: TWN
+city: kaohsiung
+places:
+  - id: tainan-train-station
+    name: Tainan Train Station
+    lon: 120.212
+    lat: 22.997
+    city: tainan
+  - id: kaohsiung-main-station
+    name: Kaohsiung Main Station
+    lon: 120.302
+    lat: 22.639
+  - id: pier-2-art-center
+    name: Pier-2 Art Center
+    lon: 120.282
+    lat: 22.620
+  - id: 85-sky-tower
+    name: 85 Sky Tower
+    lon: 120.302
+    lat: 22.613

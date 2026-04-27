@@ -1,0 +1,20 @@
+date: '2024-03-24'
+country: JPN
+city: kanazawa
+places:
+  - id: higashi-chaya-district
+    name: Higashi Chaya District
+    lon: 136.667
+    lat: 36.573
+  - id: omicho-market
+    name: Omicho Market
+    lon: 136.656
+    lat: 36.573
+  - id: nagamachi-samurai-district
+    name: Nagamachi Samurai District
+    lon: 136.652
+    lat: 36.564
+  - id: kanazawa-castle
+    name: Kanazawa Castle
+    lon: 136.661
+    lat: 36.564

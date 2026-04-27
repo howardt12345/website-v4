@@ -7,46 +7,25 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const emit = defineEmits<{ select: [] }>();
 const selected = computed<string[]>(() => props.selectedTags ?? []);
-const dialogOpen = ref(false);
-const openDialog = () => (dialogOpen.value = true);
-const closeDialog = () => (dialogOpen.value = false);
 </script>
 
 <template>
-  <v-card variant="flat" class="photo-card" @click="openDialog">
-    <v-img
-      :src="photo.url"
-      cover
-      :aspect-ratio="photo.width / photo.height"
-      class="align-end"
-    >
-      <v-card-actions v-if="selected.length" class="chip-group">
-        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
-      </v-card-actions>
-    </v-img>
-  </v-card>
-
-  <v-dialog
-    v-model="dialogOpen"
-    :max-width="(photo.width / photo.height) * 1000"
+  <v-card
+    variant="flat"
+    class="photo-card d-flex flex-column"
+    :style="{ aspectRatio: photo.aspectRatio }"
+    @click="emit('select')"
   >
-    <v-card>
-      <v-img :src="photo.url" :aspect-ratio="photo.width / photo.height" />
-      <v-card-actions class="dialog-actions">
-        <PhotosTagChips :tags="photo.tags" :selected-tags="selected" />
-        <v-spacer />
-        <v-btn
-          color="primary"
-          variant="outlined"
-          size="small"
-          @click="closeDialog"
-          >{{ $t('Close') }}</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #image>
+      <v-img :src="photo.url" cover />
+    </template>
+    <v-spacer />
+    <v-card-actions v-if="photo.tags.length" class="chip-group">
+      <CommonTagChips :tags="photo.tags" :selected-tags="selected"/>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <style scoped lang="scss">
@@ -54,20 +33,14 @@ const closeDialog = () => (dialogOpen.value = false);
   cursor: pointer;
   overflow: hidden;
   transition: opacity 0.2s ease;
-
+  
   &:hover {
     opacity: 0.9;
   }
 }
 
 .chip-group {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
-  padding: rem(8);
-}
-
-.dialog-actions {
-  padding: rem(8) rem(12);
-  flex-wrap: wrap;
-  gap: rem(8);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.65));
+  padding: rem(8) rem(8) rem(6);
 }
 </style>

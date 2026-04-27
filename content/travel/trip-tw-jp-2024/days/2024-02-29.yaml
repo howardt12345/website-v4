@@ -1,0 +1,20 @@
+date: '2024-02-29'
+country: TWN
+city: taipei
+places:
+  - id: gongguan-ntu
+    name: Gongguan / NTU
+    lon: 121.534
+    lat: 25.015
+  - id: yongkang-street
+    name: Yongkang Street
+    lon: 121.530
+    lat: 25.031
+  - id: ximending
+    name: Ximending
+    lon: 121.508
+    lat: 25.042
+  - id: elephant-mountain
+    name: Elephant Mountain
+    lon: 121.572
+    lat: 25.027

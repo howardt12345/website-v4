@@ -1,0 +1,12 @@
+date: '2024-03-31'
+country: JPN
+city: tokyo
+places:
+  - id: shinjuku
+    name: Shinjuku
+    lon: 139.700
+    lat: 35.690
+  - id: kichijoji-inokashira-park
+    name: Kichijoji / Inokashira Park
+    lon: 139.580
+    lat: 35.700

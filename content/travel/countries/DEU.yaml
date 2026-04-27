@@ -1,0 +1,11 @@
+iso3: DEU
+iso2: DE
+name: Germany
+hue: 42
+regions: [DE-HE]
+cities:
+  - id: frankfurt
+    name: Frankfurt
+    lon: 8.682
+    lat: 50.111
+    region: DE-HE
