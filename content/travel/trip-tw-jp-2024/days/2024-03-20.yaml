@@ -6,6 +6,10 @@ places:
     name: Tenryu-ji
     lon: 135.674
     lat: 35.016
+  - id: sagano-scenic-railway
+    name: Sagano Scenic Railway
+    lon: 135.651
+    lat: 35.021
   - id: kyoto-station
     name: Kyoto Station
     lon: 135.759

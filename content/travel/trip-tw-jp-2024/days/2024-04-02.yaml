@@ -6,6 +6,10 @@ places:
     name: Tsukiji Outer Market
     lon: 139.770
     lat: 35.665
+  - id: azabudai-hills
+    name: Azabudai Hills
+    lon: 139.740
+    lat: 35.657
   - id: tokyo-tower
     name: Tokyo Tower
     lon: 139.745

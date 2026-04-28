@@ -2,6 +2,10 @@ date: '2024-02-27'
 country: TWN
 city: taipei
 places:
+  - id: national-palace-museum
+    name: National Palace Museum
+    lon: 121.548
+    lat: 25.102
   - id: dadaocheng-dihua-street
     name: Dadaocheng / Dihua Street
     lon: 121.510
