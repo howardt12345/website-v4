@@ -12,8 +12,12 @@ places:
     lat: 32.774
   - id: meganebashi-bridge
     name: Meganebashi Bridge
-    lon: 129.877
-    lat: 32.750
+    lon: 129.874
+    lat: 32.746
+  - id: glover-garden
+    name: Glover Garden
+    lon: 129.873
+    lat: 32.739
   - id: dejima
     name: Dejima
     lon: 129.874
