@@ -168,7 +168,6 @@ useSeoMeta({
     color: $text-secondary;
     font-style: italic;
     margin-bottom: rem(28);
-    font-weight: 400;
   }
 
   &__meta {

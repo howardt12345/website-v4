@@ -1,0 +1,35 @@
+date: '2025-03-06'
+country: ITA
+city: genova
+places:
+  - id: nice-port
+    name: Nice Port (Port Lympia)
+    lon: 7.287
+    lat: 43.697
+    country: FRA
+    city: nice
+  - id: castle-hill
+    name: Castle Hill (Colline du Château)
+    lon: 7.286
+    lat: 43.697
+    country: FRA
+    city: nice
+  - id: nice-ville-station
+    name: Nice-Ville Train Station
+    lon: 7.262
+    lat: 43.704
+    country: FRA
+    city: nice
+  - id: ventimiglia
+    name: Ventimiglia
+    lon: 7.608
+    lat: 43.791
+    city: ventimiglia
+  - id: genova-piazza-principe
+    name: Genova Piazza Principe Station
+    lon: 8.920
+    lat: 44.417
+  - id: genoa-centro-storico
+    name: Genoa Centro Storico
+    lon: 8.934
+    lat: 44.408

@@ -1,0 +1,24 @@
+date: '2024-03-20'
+country: JPN
+city: kyoto
+places:
+  - id: tenryuji
+    name: Tenryu-ji
+    lon: 135.674
+    lat: 35.016
+  - id: sagano-scenic-railway
+    name: Sagano Scenic Railway
+    lon: 135.651
+    lat: 35.021
+  - id: kyoto-station
+    name: Kyoto Station
+    lon: 135.759
+    lat: 34.986
+  - id: toji-temple
+    name: Toji Temple
+    lon: 135.748
+    lat: 34.981
+  - id: nishi-honganji
+    name: Nishi Hongan-ji
+    lon: 135.752
+    lat: 34.991

@@ -1,0 +1,16 @@
+date: '2024-03-14'
+country: JPN
+city: matsuyama
+places:
+  - id: shimonada-station
+    name: Shimonada Station
+    lon: 132.589
+    lat: 33.655
+  - id: tobe-pottery-town
+    name: Tobe Pottery Town
+    lon: 132.752
+    lat: 33.840
+  - id: matsuyama-castle
+    name: Matsuyama Castle
+    lon: 132.766
+    lat: 33.846

@@ -1,0 +1,20 @@
+date: '2024-03-30'
+country: JPN
+city: tokyo
+places:
+  - id: yasukuni-shrine
+    name: Yasukuni Shrine
+    lon: 139.741
+    lat: 35.694
+  - id: jimbocho
+    name: Jimbocho
+    lon: 139.757
+    lat: 35.696
+  - id: tokyo-station
+    name: Tokyo Station
+    lon: 139.767
+    lat: 35.681
+  - id: nippon-budokan
+    name: Nippon Budokan
+    lon: 139.752
+    lat: 35.693

@@ -1,0 +1,16 @@
+date: '2024-03-21'
+country: JPN
+city: kyoto
+places:
+  - id: kodaiji
+    name: Kodai-ji
+    lon: 135.781
+    lat: 34.999
+  - id: fushimi-sake-district
+    name: Fushimi Sake District
+    lon: 135.762
+    lat: 34.930
+  - id: fushimi-inari
+    name: Fushimi Inari
+    lon: 135.773
+    lat: 34.967

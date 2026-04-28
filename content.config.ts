@@ -23,6 +23,85 @@ export default defineContentConfig({
         pinned: z.boolean().optional(),
       }),
     }),
+    travelTrips: defineCollection({
+      type: 'data',
+      source: 'travel/*/index.yaml',
+      schema: z.object({
+        // Note: `id` is reserved by Nuxt Content — use `stem` for stable trip identification
+        title: z.string(),
+        countries: z.array(z.string()),
+        start: z.string(),
+        end: z.string(),
+        excerpt: z.string(),
+        blogSlug: z.string().optional(),
+      }),
+    }),
+    travelCountries: defineCollection({
+      type: 'data',
+      source: 'travel/countries/*.yaml',
+      schema: z.object({
+        iso3: z.string(),
+        iso2: z.string(),
+        name: z.string(),
+        hue: z.number(),
+        regions: z.array(z.string()).default([]),
+        cities: z.array(z.object({
+          id: z.string(),
+          name: z.string(),
+          lon: z.number(),
+          lat: z.number(),
+          region: z.string(),
+        })).default([]),
+      }),
+    }),
+    travelDays: defineCollection({
+      type: 'data',
+      source: 'travel/*/days/*.yaml',
+      schema: z.object({
+        date: z.string(),
+        // Day-level defaults. Individual places may override these.
+        country: z.string(),
+        city: z.string(),
+        places: z.array(
+          z.object({
+            id: z.string().optional(),
+            name: z.string(),
+            lon: z.number(),
+            lat: z.number(),
+            blogSlug: z.string().optional(),
+            // Optional overrides for cross-country or cross-city stops within a day.
+            country: z.string().optional(),
+            city: z.string().optional(),
+          }),
+        ),
+      }),
+    }),
+    photos: defineCollection({
+      type: 'data',
+      source: { include: 'photos/**/*.yaml', exclude: ['photos/**/index.yaml'] },
+      schema: z.object({
+        title: z.string().optional(),
+        caption: z.string().optional(),
+        alt: z.string().optional(),
+        featured: z.boolean().optional(),
+        date: z.string().optional(),
+        tags: z.array(z.string()).optional(),
+        aspectRatio: z.number().optional(),
+        ext: z.string().optional(),
+      }),
+    }),
+    photoFolders: defineCollection({
+      type: 'data',
+      source: 'photos/**/index.yaml',
+      schema: z.object({
+        tripId: z.string().optional(),
+        placeSlug: z.string().optional(),
+        date: z.string().optional(),
+        category: z.string().optional(),
+        subcategory: z.string().optional(),
+        tags: z.array(z.string()).optional(),
+      }),
+    }),
     projects: defineCollection({
       type: 'page',
       source: 'projects/**/*.md',

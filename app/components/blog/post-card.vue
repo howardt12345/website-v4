@@ -53,10 +53,7 @@ defineProps<Props>();
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgb(var(--v-border-opacity));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    text-decoration: none;
-    color: inherit;
   }
 
   &__cover {

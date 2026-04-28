@@ -1,17 +1,42 @@
 <script setup lang="ts">
-import { usePhotosStore } from '~/store/photos.store';
+import type { PhotoCategory, PhotoItem } from '~/types/photos';
+import { usePhotoItems } from '~/composables/photos';
 
-const { photos, categories } = storeToRefs(usePhotosStore());
+definePageMeta({ layout: 'default' });
+
+useSeoMeta({
+  title: 'Photography · Howard Tseng',
+  description: 'A gallery of travel and street photography.',
+});
+
+const { allPhotos, pending } = usePhotoItems();
+
+const categories = computed<PhotoCategory[]>(() => {
+  const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
+  for (const photo of allPhotos.value) {
+    if (!photo.category) continue;
+    if (!categoryMap.has(photo.category)) categoryMap.set(photo.category, { items: [] });
+    const entry = categoryMap.get(photo.category)!;
+    entry.items.push(photo);
+    if (photo.featured && !entry.cover) entry.cover = photo.url;
+  }
+  return Array.from(categoryMap.entries())
+    .map(([cat, { items, cover }]) => ({
+      category: cat,
+      count: items.length,
+      coverUrl: cover ?? items[0]?.url ?? '',
+    }))
+    .sort((a, b) => a.category.localeCompare(b.category));
+});
 
 const router = useRouter();
 const route = useRoute();
 
 const category = computed<string>(() => route.params.category?.toString() ?? '');
+
 const categoryPhotos = computed(() =>
-  photos.value.filter(
-    (photo) =>
-      !category.value ||
-      photo.category.toLowerCase() === category.value.toLowerCase(),
+  allPhotos.value.filter(
+    (photo) => !category.value || photo.category?.toLowerCase() === category.value.toLowerCase(),
   ),
 );
 
@@ -21,61 +46,39 @@ onMounted(() => {
   selectedTags.value = Array.isArray(route.query.tags)
     ? (route.query.tags as string[])
     : route.query.tags
-    ? [route.query.tags]
+    ? [route.query.tags as string]
     : [];
 });
 
-watch(
-  () => category.value,
-  () => {
-    selectedTags.value = [];
-  },
-);
+watch(category, () => {
+  selectedTags.value = [];
+});
 
-watch(
-  () => selectedTags.value,
-  () => {
-    const query = {
-      tags: selectedTags.value,
-    };
-    router.push({
-      query,
-    });
-  },
-);
+watch(selectedTags, () => {
+  router.push({ query: { tags: selectedTags.value } });
+});
 
 const visiblePhotos = computed(() =>
   categoryPhotos.value.filter(
     (photo) =>
       !selectedTags.value.length ||
-      selectedTags.value.every((tag: string) => photo.tags.includes(tag)),
+      selectedTags.value.every((tag) => photo.tags.includes(tag)),
   ),
 );
+
 const availableTags = computed(() => {
   const tags = new Set<string>();
-  visiblePhotos.value.forEach((photo) => {
-    photo.tags.forEach((tag) => tags.add(tag));
-  });
+  visiblePhotos.value.forEach((photo) => photo.tags.forEach((tag) => tags.add(tag)));
   return Array.from(tags).sort();
 });
 
-const breadcrumbItems = computed(() => {
-  const items = [
-    {
-      title: 'Photos',
-      to: '/photography',
-    },
-    {
-      title: category.value,
-      to: `/photography/${category.value}`,
-    },
-  ];
-  return items;
-});
+const breadcrumbItems = computed(() => [
+  { title: 'Photos', to: '/photography' },
+  { title: category.value, to: `/photography/${category.value}` },
+]);
 
-const showCategoriesView = ref<boolean>(false);
-const toggleCategoriesView = () =>
-  (showCategoriesView.value = !showCategoriesView.value);
+const showCategoriesView = ref(false);
+const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesView.value);
 </script>
 
 <template>
@@ -86,9 +89,7 @@ const toggleCategoriesView = () =>
       </h1>
       <v-btn
         :text="!showCategoriesView ? $t('Show Categories') : $t('Show Photos')"
-        :prepend-icon="
-          !showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'
-        "
+        :prepend-icon="!showCategoriesView ? 'fas fa-layer-group' : 'fas fa-image'"
         class="categories-button"
         @click="toggleCategoriesView"
       />
@@ -108,11 +109,11 @@ const toggleCategoriesView = () =>
   </div>
   <div class="photos-container">
     <PhotosGallery
-      v-if="!showCategoriesView"
+      v-if="!pending && !showCategoriesView"
       :photos="visiblePhotos"
       :selected-tags="selectedTags"
     />
-    <PhotosCategories v-else :categories="categories" />
+    <PhotosCategories v-else-if="!pending" :categories="categories" />
   </div>
 </template>
 

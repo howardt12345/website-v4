@@ -1,0 +1,12 @@
+date: '2024-03-02'
+country: TWN
+city: nantou
+places:
+  - id: caotun
+    name: Caotun
+    lon: 120.684
+    lat: 23.977
+  - id: zhongxing-new-village
+    name: Zhongxing New Village
+    lon: 120.698
+    lat: 23.948

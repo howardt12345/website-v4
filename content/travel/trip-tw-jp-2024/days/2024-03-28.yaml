@@ -1,0 +1,21 @@
+date: '2024-03-28'
+country: JPN
+city: shimoyoshida
+places:
+  - id: nagoya-station
+    name: Nagoya Station
+    lon: 136.881
+    lat: 35.171
+    city: nagoya
+  - id: fujinomiya-sengen-taisha
+    name: Fujinomiya Sengen Taisha
+    lon: 138.912
+    lat: 35.126
+  - id: kawaguchiko-music-forest
+    name: Kawaguchiko Music Forest
+    lon: 138.762
+    lat: 35.498
+  - id: chureito-pagoda
+    name: Chureito Pagoda
+    lon: 138.804
+    lat: 35.492
