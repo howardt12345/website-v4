@@ -6,10 +6,6 @@ places:
     name: Guohua Street
     lon: 120.198
     lat: 22.990
-  - id: sicao-green-tunnel
-    name: Sicao Green Tunnel
-    lon: 120.228
-    lat: 22.983
   - id: anping-old-street
     name: Anping Old Street
     lon: 120.163

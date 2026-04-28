@@ -2,6 +2,10 @@ date: '2024-03-30'
 country: JPN
 city: tokyo
 places:
+  - id: yasukuni-shrine
+    name: Yasukuni Shrine
+    lon: 139.741
+    lat: 35.694
   - id: jimbocho
     name: Jimbocho
     lon: 139.757

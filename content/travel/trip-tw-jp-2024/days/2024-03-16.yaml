@@ -2,6 +2,10 @@ date: '2024-03-16'
 country: JPN
 city: osaka
 places:
+  - id: umeda-sky-building
+    name: Umeda Sky Building
+    lon: 135.490
+    lat: 34.705
   - id: shinsekai-tsutenkaku
     name: Shinsekai / Tsutenkaku
     lon: 135.506

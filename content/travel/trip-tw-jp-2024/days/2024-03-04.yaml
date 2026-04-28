@@ -6,10 +6,10 @@ places:
     name: Kushida Shrine
     lon: 130.410
     lat: 33.591
-  - id: teamlab-forest
-    name: TeamLab Forest
-    lon: 130.412
-    lat: 33.590
+  - id: canal-city-hakata
+    name: Canal City Hakata
+    lon: 130.411
+    lat: 33.589
   - id: tenjin-district
     name: Tenjin District
     lon: 130.400

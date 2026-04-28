@@ -2,10 +2,14 @@ date: '2024-03-31'
 country: JPN
 city: tokyo
 places:
-  - id: shinjuku
-    name: Shinjuku
-    lon: 139.700
-    lat: 35.690
+  - id: shinjuku-gyoen
+    name: Shinjuku Gyoen
+    lon: 139.710
+    lat: 35.685
+  - id: ghibli-museum
+    name: Ghibli Museum
+    lon: 139.576
+    lat: 35.696
   - id: kichijoji-inokashira-park
     name: Kichijoji / Inokashira Park
     lon: 139.580

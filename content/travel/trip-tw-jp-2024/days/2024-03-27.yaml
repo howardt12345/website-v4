@@ -2,10 +2,10 @@ date: '2024-03-27'
 country: JPN
 city: nagoya
 places:
-  - id: meiji-mura
-    name: Meiji Mura
-    lon: 137.090
-    lat: 35.176
+  - id: ghibli-park
+    name: Ghibli Park
+    lon: 137.089
+    lat: 35.173
   - id: nagoya-station
     name: Nagoya Station
     lon: 136.881
