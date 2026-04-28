@@ -6,10 +6,10 @@ places:
     name: Ginza
     lon: 139.764
     lat: 35.672
-  - id: akihabara
-    name: Akihabara
-    lon: 139.771
-    lat: 35.699
+  - id: kanda
+    name: Kanda
+    lon: 139.773
+    lat: 35.691
   - id: shimokitazawa
     name: Shimokitazawa
     lon: 139.668
