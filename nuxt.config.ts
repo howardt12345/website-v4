@@ -48,8 +48,15 @@ export default defineNuxtConfig({
       const yamlFiles = allFiles.filter(f => f.endsWith('.yaml') && !f.endsWith('index.yaml'));
 
       await Promise.all(yamlFiles.map(async (relPath) => {
-        const raw = await readFile(join(contentPhotosDir, relPath), 'utf8');
-        const parsed = parseYaml(raw) as Record<string, unknown>;
+        let parsed: Record<string, unknown>;
+        try {
+          const raw = await readFile(join(contentPhotosDir, relPath), 'utf8');
+          parsed = parseYaml(raw) as Record<string, unknown>;
+        } catch (err) {
+          console.warn(`[photos] Skipping ${relPath}: could not read or parse YAML —`, err);
+          return;
+        }
+
         if (!parsed?.hide) return;
 
         const stem = relPath.replace(/\.yaml$/, '');
@@ -58,8 +65,12 @@ export default defineNuxtConfig({
         const existsInOutput = await access(assetPath).then(() => true, () => false);
 
         if (existsInOutput) {
-          await rm(assetPath);
-          console.log(`[photos] Removed hidden asset from output: photos/${stem}.${ext}`);
+          try {
+            await rm(assetPath);
+            console.log(`[photos] Removed hidden asset from output: photos/${stem}.${ext}`);
+          } catch (err) {
+            console.warn(`[photos] Failed to remove photos/${stem}.${ext} —`, err);
+          }
         }
       }));
     },

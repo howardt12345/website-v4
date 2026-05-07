@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, relatedPosts as getRelatedPosts } from '~/composables/blog';
 import { usei18n } from '~/store/i18n.store';
 
@@ -20,40 +19,21 @@ if (!postData.value) throw createError({ statusCode: 404, statusMessage: 'Post n
 
 const { currentLanguage } = storeToRefs(usei18n());
 
-const post = computed(() => postData.value as unknown as BlogPost | null);
-const allPosts = computed(() => (allPostsData.value ?? []) as unknown as BlogPost[]);
+const post = computed(() => postData.value!);
+const allPosts = computed(() => allPostsData.value ?? []);
 
-const relatedPosts = computed(() =>
-  post.value ? getRelatedPosts(post.value, allPosts.value) : [],
-);
+const relatedPosts = computed(() => getRelatedPosts(post.value, allPosts.value));
 
-interface NuxtContentTocLink {
-  id: string;
-  text: string;
-  depth: number;
-  children?: NuxtContentTocLink[];
-}
-
-interface NuxtContentBody {
-  toc?: { links?: NuxtContentTocLink[] };
-}
-
-const tocLinks = computed(() =>
-  (postData.value as { body?: NuxtContentBody } | null)?.body?.toc?.links ?? [],
-);
-
-const renderedContent = computed(() => postData.value as Record<string, unknown> | null);
+const tocLinks = computed(() => postData.value?.body.toc?.links ?? []);
 
 useSeoMeta({
-  title: computed(() =>
-    post.value ? `${post.value.title} · Howard Tseng` : 'Blog · Howard Tseng',
-  ),
-  description: computed(() => post.value?.summary ?? ''),
+  title: computed(() => `${post.value.title} · Howard Tseng`),
+  description: computed(() => post.value.summary),
 });
 </script>
 
 <template>
-  <div v-if="post">
+  <div>
     <BlogReadingProgress />
     <BlogToc :links="tocLinks" />
 
@@ -92,7 +72,7 @@ useSeoMeta({
         class="blog-article__cover"
       />
 
-      <ContentRenderer v-if="renderedContent" class="blog-article__body" :value="renderedContent" />
+      <ContentRenderer class="blog-article__body" :value="post" />
 
       <div class="blog-article__tags">
         <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
@@ -105,19 +85,6 @@ useSeoMeta({
         <BlogPostCard v-for="p in relatedPosts" :key="p.path" :post="p" />
       </div>
     </section>
-  </div>
-
-  <div v-else class="blog-not-found content-container">
-    <h1>Post not found</h1>
-    <v-btn
-      to="/blog"
-      variant="text"
-      size="small"
-      prepend-icon="fas fa-chevron-left"
-      class="blog-not-found__back"
-    >
-      Back to blog
-    </v-btn>
   </div>
 </template>
 
@@ -306,22 +273,6 @@ useSeoMeta({
     @media (max-width: 960px) {
       grid-template-columns: 1fr;
     }
-  }
-}
-
-.blog-not-found {
-  padding: rem(96) 0;
-  text-align: center;
-
-  h1 {
-    margin-bottom: rem(16);
-    font-weight: 300;
-  }
-
-  &__back {
-    color: $accent;
-    letter-spacing: normal;
-    text-transform: none;
   }
 }
 </style>

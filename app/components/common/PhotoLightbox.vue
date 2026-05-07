@@ -27,12 +27,18 @@ const next = () => { if (hasNext.value) currentIndex.value++; };
 const close = () => emit('update:modelValue', false);
 
 const onKeydown = (e: KeyboardEvent) => {
-  if (!props.modelValue) return;
   if (e.key === 'ArrowLeft') prev();
   if (e.key === 'ArrowRight') next();
 };
 
-onMounted(() => window.addEventListener('keydown', onKeydown));
+watch(() => props.modelValue, (isOpen) => {
+  if (isOpen) {
+    window.addEventListener('keydown', onKeydown);
+  } else {
+    window.removeEventListener('keydown', onKeydown);
+  }
+});
+
 onUnmounted(() => window.removeEventListener('keydown', onKeydown));
 </script>
 

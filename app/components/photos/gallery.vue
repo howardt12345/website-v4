@@ -29,6 +29,10 @@ function openLightbox(index: number) {
 
 const redrawMasonry = inject<(id?: string) => void>('redrawVueMasonry');
 
+if (import.meta.dev && !redrawMasonry) {
+  console.warn('[PhotosGallery] "redrawVueMasonry" inject not found — masonry will not reflow on photo changes.');
+}
+
 watch(
   () => props.photos,
   async () => {

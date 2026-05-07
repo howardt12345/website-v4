@@ -1,18 +1,6 @@
-import type { PageCollectionItemBase } from '@nuxt/content';
+import type { Collections } from '@nuxt/content';
 
-export interface BlogPost extends PageCollectionItemBase {
-  summary: string;
-  date: string;
-  readMins: number;
-  category: string;
-  subcategory: string;
-  tags: string[];
-  cover: { hue: number; pattern: string };
-  image?: string;
-  author?: string;
-  featured?: boolean;
-  pinned?: boolean;
-}
+export type BlogPost = Collections['blog'];
 
 export interface BlogCategory {
   slug: string;
