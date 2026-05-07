@@ -75,7 +75,7 @@ export default defineNuxtConfig({
 
       for (const relPath of yamlFiles) {
         const yamlContent = readFileSync(join(contentPhotosDir, relPath), 'utf8');
-        if (!/^hide:\s*true\s*$/m.test(yamlContent)) continue;
+        if (!/^hide:\s+true(?:\s*#.*)?$/m.test(yamlContent)) continue;
 
         const stem = relPath.replace(/\.yaml$/, '');
         const extMatch = yamlContent.match(/^ext:\s*["']?(\w+)["']?\s*$/m);

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, slugFromPath } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 interface Props {
   post: BlogPost;
 }
 
 defineProps<Props>();
+
+const { currentLanguage } = storeToRefs(usei18n());
 </script>
 
 <template>
@@ -23,7 +26,7 @@ defineProps<Props>();
       <h2 class="featured-card__title">{{ post.title }}</h2>
 
       <div class="featured-card__meta">
-        <span>{{ formatPostDate(post.date) }}</span>
+        <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
         <span>{{ post.readMins }} min read</span>
         <span>{{ subName(post.category, post.subcategory) }}</span>
       </div>

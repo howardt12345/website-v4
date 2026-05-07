@@ -8,8 +8,8 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'navWorld'): void;
-  (e: 'navCountry', iso3: string): void;
+  (e: 'nav-world'): void;
+  (e: 'nav-country', iso3: string): void;
 }
 
 interface BreadcrumbItem {
@@ -26,13 +26,13 @@ const breadcrumbItems = computed((): BreadcrumbItem[] => [
   {
     title: t('All trips'),
     disabled: !props.country && !props.trip,
-    onClick: () => emit('navWorld'),
+    onClick: () => emit('nav-world'),
   },
   ...(props.country
     ? [{
         title: props.country.name,
         disabled: !props.trip,
-        onClick: () => emit('navCountry', props.country!.iso3),
+        onClick: () => emit('nav-country', props.country!.iso3),
       }]
     : []),
   ...(props.trip

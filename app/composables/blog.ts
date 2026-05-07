@@ -1,5 +1,4 @@
 import type { PageCollectionItemBase } from '@nuxt/content';
-import { usei18n } from '~/store/i18n.store';
 
 export interface BlogPost extends PageCollectionItemBase {
   summary: string;
@@ -67,15 +66,13 @@ export const subName = (catSlug: string, subSlug: string): string => {
   return cat?.subcategories.find((s) => s.slug === subSlug)?.name ?? subSlug;
 };
 
-export const formatPostDate = (iso: string): string => {
-  const { currentLanguage } = storeToRefs(usei18n());
-  return new Date(iso).toLocaleDateString(currentLanguage.value, {
+export const formatPostDate = (iso: string, locale: string): string =>
+  new Date(iso).toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
   });
-};
 
 export const slugFromPath = (path: string): string => path.split('/').pop() ?? path;
 

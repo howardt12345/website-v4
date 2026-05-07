@@ -61,24 +61,47 @@ const parseHash = (hash: string): ParsedHash => {
 };
 
 export const useTravelStore = defineStore('travel', () => {
-  const countries = ref<TravelCountry[]>([]);
-  const trips = ref<TravelTrip[]>([]);
-  const days = ref<TravelDay[]>([]);
-  const hydrated = ref(false);
-
   const { allPhotos } = usePhotoItems();
 
-  const hydrate = async (): Promise<void> => {
-    if (hydrated.value) return;
-    const [c, t, d] = await Promise.all([
-      useAsyncData('travel-countries', () => queryCollection('travelCountries').all()),
-      useAsyncData('travel-trips', () => queryCollection('travelTrips').order('start', 'DESC').all()),
-      useAsyncData('travel-days', () => queryCollection('travelDays').order('date', 'ASC').all()),
-    ]);
-    countries.value = (c.data.value ?? []) as unknown as TravelCountry[];
-    trips.value = (t.data.value ?? []) as unknown as TravelTrip[];
-    days.value = (d.data.value ?? []) as unknown as TravelDay[];
-    hydrated.value = true;
+  const { data: rawCountries, pending: countriesPending } = useAsyncData(
+    'travel-countries',
+    () => queryCollection('travelCountries').all(),
+  );
+  const { data: rawTrips, pending: tripsPending } = useAsyncData(
+    'travel-trips',
+    () => queryCollection('travelTrips').order('start', 'DESC').all(),
+  );
+  const { data: rawDays, pending: daysPending } = useAsyncData(
+    'travel-days',
+    () => queryCollection('travelDays').order('date', 'ASC').all(),
+  );
+
+  const countries = computed<TravelCountry[]>(
+    () => (rawCountries.value ?? []) as unknown as TravelCountry[],
+  );
+  const trips = computed<TravelTrip[]>(
+    () => (rawTrips.value ?? []) as unknown as TravelTrip[],
+  );
+  const days = computed<TravelDay[]>(
+    () => (rawDays.value ?? []) as unknown as TravelDay[],
+  );
+
+  const hydrate = (): Promise<void> => {
+    if (!countriesPending.value && !tripsPending.value && !daysPending.value) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      const stop = watch(
+        [countriesPending, tripsPending, daysPending],
+        ([cp, tp, dp]) => {
+          if (!cp && !tp && !dp) {
+            stop();
+            resolve();
+          }
+        },
+        { immediate: true },
+      );
+    });
   };
 
   const iso2ToIso3 = computed<Record<string, string>>(() =>
@@ -243,8 +266,8 @@ export const useTravelStore = defineStore('travel', () => {
         for (const place of day.places) {
           if ((place.country ?? day.country) !== iso3) continue;
           if ((place.city ?? day.city) !== cityId) continue;
-          const allPhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
-          const photos = allPhotos.filter((p) => !p.date || p.date === day.date);
+          const placePhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
+          const photos = placePhotos.filter((p) => !p.date || p.date === day.date);
           result.push({ place, tripTitle: trip.title, dayDate: day.date, hue, photos });
         }
       }
@@ -300,7 +323,7 @@ export const useTravelStore = defineStore('travel', () => {
           seen.add(key);
           return true;
         })
-        .map((item, i) => ({
+        .map((item) => ({
           lon: item.place.lon,
           lat: item.place.lat,
           label: item.place.name,

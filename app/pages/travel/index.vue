@@ -53,8 +53,8 @@ const stageClass = computed(() => ({
     <TravelBreadcrumb
       :country="focusCountry"
       :trip="focusTrip"
-      @navWorld="navWorld"
-      @navCountry="navCountry"
+      @nav-world="navWorld"
+      @nav-country="navCountry"
     />
 
     <div class="travel-page__header">

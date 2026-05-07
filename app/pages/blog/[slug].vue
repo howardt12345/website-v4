@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, relatedPosts as getRelatedPosts } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
 
@@ -11,9 +12,11 @@ const { data: postData } = await useAsyncData(`blog-${slug}`, () =>
   queryCollection('blog').where('path', '=', `/blog/${slug}`).first(),
 );
 
-const { data: allPostsData } = await useAsyncData('blog-posts-related', () =>
+const { data: allPostsData } = await useAsyncData('blog-posts', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 );
+
+const { currentLanguage } = storeToRefs(usei18n());
 
 const post = computed(() => postData.value as unknown as BlogPost | null);
 const allPosts = computed(() => (allPostsData.value ?? []) as unknown as BlogPost[]);
@@ -70,7 +73,7 @@ useSeoMeta({
       <p class="blog-article__excerpt">{{ post.summary }}</p>
 
       <div class="blog-article__meta">
-        <span>{{ formatPostDate(post.date) }}</span>
+        <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
         <span>·</span>
         <span>{{ post.readMins }} min read</span>
         <template v-if="post.author">
