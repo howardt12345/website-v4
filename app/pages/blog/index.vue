@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
-import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
-
-const { t } = usei18n();
 
 useSeoMeta({
   title: 'Blog · Howard Tseng',
@@ -74,9 +71,6 @@ const clearFilters = () => {
   filterArchive.value = null;
 };
 
-const resultCountText = computed(() =>
-  t('{{n}} of {{m}} posts', { n: filteredPosts.value.length, m: allPosts.value.length }),
-);
 </script>
 
 <template>
@@ -106,7 +100,7 @@ const resultCountText = computed(() =>
           class="blog-search__input"
         >
       </div>
-      <span class="blog-result-count">{{ resultCountText }}</span>
+      <span class="blog-result-count" v-text="$t('{{n}} of {{m}} posts', { n: filteredPosts.length, m: allPosts.length })" />
     </div>
 
     <div class="blog-layout">

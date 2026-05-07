@@ -17,15 +17,12 @@ const { data: allPostsData } = await useAsyncData('blog-posts', () =>
 
 if (!postData.value) throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true });
 
-const i18n = usei18n();
-const { currentLanguage } = storeToRefs(i18n);
-const { t } = i18n;
+const { currentLanguage } = storeToRefs(usei18n());
 
 const post = computed(() => postData.value!);
 const allPosts = computed(() => allPostsData.value ?? []);
 
 const relatedPosts = computed(() => getRelatedPosts(post.value, allPosts.value));
-const minReadText = computed(() => t('{{n}} min read', { n: post.value.readMins }));
 
 const tocLinks = computed(() => postData.value?.body.toc?.links ?? []);
 
@@ -62,7 +59,7 @@ useSeoMeta({
       <div class="blog-article__meta">
         <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
         <span>·</span>
-        <span>{{ minReadText }}</span>
+        <span v-text="$t('{{n}} min read', { n: post.readMins })" />
         <template v-if="post.author">
           <span>·</span>
           <span>{{ post.author }}</span>

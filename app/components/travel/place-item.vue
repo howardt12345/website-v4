@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TravelPlace } from '~/types/travel';
-import { usei18n } from '~/store/i18n.store';
 
 interface Props {
   place: TravelPlace;
@@ -11,9 +10,6 @@ interface Props {
 
 defineProps<Props>();
 defineEmits<{ pick: [index: number] }>();
-
-const { t } = usei18n();
-const nPhotos = (n: number) => t('{{n}} photos', { n });
 </script>
 
 <template>
@@ -38,7 +34,7 @@ const nPhotos = (n: number) => t('{{n}} photos', { n });
     <v-list-item-title class="place-item__name">{{ place.name }}</v-list-item-title>
 
     <template v-if="photoCount > 0" #append>
-      <span class="place-item__count">{{ nPhotos(photoCount) }}</span>
+      <span class="place-item__count" v-text="$t('{{n}} photos', { n: photoCount })" />
     </template>
   </v-list-item>
 </template>

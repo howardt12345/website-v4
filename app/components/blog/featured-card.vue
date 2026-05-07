@@ -9,10 +9,7 @@ interface Props {
 
 defineProps<Props>();
 
-const i18n = usei18n();
-const { currentLanguage } = storeToRefs(i18n);
-const { t } = i18n;
-const nMinRead = (n: number) => t('{{n}} min read', { n });
+const { currentLanguage } = storeToRefs(usei18n());
 </script>
 
 <template>
@@ -30,7 +27,7 @@ const nMinRead = (n: number) => t('{{n}} min read', { n });
 
       <div class="featured-card__meta">
         <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
-        <span>{{ nMinRead(post.readMins) }}</span>
+        <span v-text="$t('{{n}} min read', { n: post.readMins })" />
         <span>{{ subName(post.category, post.subcategory) }}</span>
       </div>
 
