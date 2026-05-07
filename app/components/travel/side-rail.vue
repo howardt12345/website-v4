@@ -29,7 +29,7 @@ const emit = defineEmits<{
 const collapsed = defineModel<boolean>('collapsed', { default: false });
 
 const travelStore = useTravelStore();
-const { cityById } = travelStore;
+const { cityById, countryByIso3 } = travelStore;
 const { travelPhotosByPlace, tripOverviewProps } = storeToRefs(travelStore);
 const { currentLanguage } = storeToRefs(usei18n());
 
@@ -172,7 +172,7 @@ watch(
               >
                 <div class="rail-trip">
                   <span class="rail-trip__countries">
-                    {{ tripCountryNames(item.trip).join(' · ') }}
+                    {{ tripCountryNames(item.trip, countryByIso3).join(' · ') }}
                   </span>
                   <span class="rail-trip__title">{{ item.trip.title }}</span>
                   <span class="rail-trip__meta">

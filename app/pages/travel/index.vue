@@ -29,7 +29,7 @@ const {
   cityViewProps,
 } = storeToRefs(travelStore);
 
-const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay } = travelStore;
+const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, countryByIso3 } = travelStore;
 
 const handleCityClick = (loc: { country: string; city: string }) => {
   if (view.value === 'trip' && activeDay.value) {
@@ -61,7 +61,7 @@ const stageClass = computed(() => ({
       <template v-if="view === 'trip' && focusTrip">
         <h1 class="travel-page__title">{{ focusTrip.title }}</h1>
         <div class="travel-page__eyebrow">
-          {{ tripCountryNames(focusTrip).join(' → ') }}
+          {{ tripCountryNames(focusTrip, countryByIso3).join(' → ') }}
           · {{ daySpan(focusTrip) }} {{ $t('days') }}
           · {{ formatTripRange(focusTrip, currentLanguage) }}
         </div>
@@ -79,9 +79,9 @@ const stageClass = computed(() => ({
       <div class="travel-stage__map">
         <TravelMap
           v-bind="mapProps"
-          @countryClick="navCountry"
-          @placeClick="activePlaceIndex = $event"
-          @cityClick="handleCityClick"
+          @country-click="navCountry"
+          @place-click="activePlaceIndex = $event"
+          @city-click="handleCityClick"
         />
 
         <div class="travel-stage__overlay">
@@ -119,10 +119,10 @@ const stageClass = computed(() => ({
     </div>
 
     <TravelDayView
-      v-if="view === 'trip' && activeDay"
+      v-if="dayViewProps"
       v-bind="dayViewProps"
       @update:activePlace="activePlaceIndex = $event"
-      @cityClick="handleCityClick"
+      @city-click="handleCityClick"
     />
     <TravelTripOverview
       v-else-if="view === 'trip' && focusTrip"

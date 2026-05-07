@@ -1,13 +1,12 @@
-import type { TravelDay, TravelTrip } from '~/types/travel';
-import { useTravelStore } from '~/store/travel.store';
+import type { TravelCountry, TravelDay, TravelTrip } from '~/types/travel';
 
 export const tripSlug = (trip: TravelTrip): string =>
   trip.stem.replace(/\/index$/, '');
 
-export const tripCountryNames = (trip: TravelTrip): string[] => {
-  const { countryByIso3 } = useTravelStore();
-  return trip.countries.map((iso3) => countryByIso3(iso3)?.name ?? iso3);
-};
+export const tripCountryNames = (
+  trip: TravelTrip,
+  countryByIso3: (iso3: string) => TravelCountry | undefined,
+): string[] => trip.countries.map((iso3) => countryByIso3(iso3)?.name ?? iso3);
 
 const MS_PER_DAY = 86_400_000;
 

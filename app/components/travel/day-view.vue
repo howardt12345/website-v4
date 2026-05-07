@@ -15,7 +15,7 @@ interface Props {
 const props = defineProps<Props>();
 defineEmits<{
   'update:activePlace': [index: number];
-  cityClick: [loc: { country: string; city: string }];
+  'city-click': [loc: { country: string; city: string }];
 }>();
 
 const { cityById, countryByIso3 } = useTravelStore();
@@ -53,14 +53,14 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
               <span v-if="idx > 0" class="day-view__city-sep"> → </span>
               <span
                 class="day-view__city-link"
-                @click="$emit('cityClick', { country: loc.country, city: loc.city })"
+                @click="$emit('city-click', { country: loc.country, city: loc.city })"
               >{{ cityById(loc.country, loc.city)?.name ?? loc.city }}</span>
             </span>
           </template>
           <template v-else>
             <span
               class="day-view__city-link"
-              @click="$emit('cityClick', { country: day.country, city: day.city })"
+              @click="$emit('city-click', { country: day.country, city: day.city })"
             >{{ cityById(day.country, day.city)?.name }}</span>
           </template>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
@@ -74,7 +74,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
       <div class="day-view__places">
         <TravelPlaceItem
           v-for="(place, i) in day.places"
-          :key="place.name"
+          :key="place.id ?? place.name"
           :place
           :index="i"
           :active="i === activePlace"
@@ -84,7 +84,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
       </div>
 
       <div class="day-view__sections">
-        <template v-for="(place, i) in day.places" :key="place.name">
+        <template v-for="(place, i) in day.places" :key="place.id ?? place.name">
           <TravelPhotoSection
             v-show="i === activePlace"
             :place

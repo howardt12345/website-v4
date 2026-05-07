@@ -102,9 +102,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  countryClick: [iso3: string];
-  placeClick: [index: number];
-  cityClick: [loc: { country: string; city: string }];
+  'country-click': [iso3: string];
+  'place-click': [index: number];
+  'city-click': [loc: { country: string; city: string }];
 }>();
 
 const { isDark } = storeToRefs(useTheme());
@@ -160,7 +160,7 @@ const colorizeVisitedCountries = (
       polygon.set('fill', am5.color(visitedCountryFill(hue)));
       polygon.states.create('hover', { fill: am5.color(visitedCountryHover(hue)) });
       polygon.set('cursorOverStyle', 'pointer');
-      polygon.events.on('click', () => emit('countryClick', iso3));
+      polygon.events.on('click', () => emit('country-click', iso3));
     }
   });
 };
@@ -320,7 +320,7 @@ const addCityPins = () => {
 
     container.set('cursorOverStyle', 'pointer');
     container.events.on('click', () => {
-      emit('cityClick', { country: ctx.country, city: ctx.id });
+      emit('city-click', { country: ctx.country, city: ctx.id });
     });
 
     return am5.Bullet.new(root!, { sprite: container });
@@ -404,7 +404,7 @@ const createInactivePinSprite = (idx: number): am5.Container => {
   }));
 
   container.set('cursorOverStyle', 'pointer');
-  container.events.on('click', () => emit('placeClick', idx));
+  container.events.on('click', () => emit('place-click', idx));
 
   return container;
 };

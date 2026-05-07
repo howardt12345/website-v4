@@ -402,12 +402,16 @@ export const useTravelStore = defineStore('travel', () => {
     tripCityCount: tripCityCount.value,
   }));
 
-  const dayViewProps = computed(() => ({
-    day: activeDay.value!,
-    activePlace: activePlaceIndex.value,
-    multiCountry: multiCountry.value,
-    photosMap: tripPhotosMap.value,
-  }));
+  const dayViewProps = computed(() =>
+    activeDay.value
+      ? {
+          day: activeDay.value,
+          activePlace: activePlaceIndex.value,
+          multiCountry: multiCountry.value,
+          photosMap: tripPhotosMap.value,
+        }
+      : null,
+  );
 
   const tripOverviewProps = computed(() => ({
     trip: focusTrip.value,
