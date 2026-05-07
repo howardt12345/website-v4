@@ -10,6 +10,7 @@ interface RawPhoto {
   tags?: string[];
   aspectRatio?: number;
   ext?: string;
+  hide?: boolean;
 }
 
 interface RawPhotoFolder {
@@ -45,7 +46,9 @@ export function usePhotoItems() {
   );
 
   const allPhotos = computed<PhotoItem[]>(() =>
-    (rawPhotos.value as unknown as RawPhoto[] ?? []).map((raw) => {
+    (rawPhotos.value as unknown as RawPhoto[] ?? [])
+    .filter((raw) => !raw.hide)
+    .map((raw) => {
       const folderPath = raw.stem.split('/').slice(0, -1).join('/');
       const folder = folderMap.value.get(folderPath);
       return {

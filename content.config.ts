@@ -88,6 +88,7 @@ export default defineContentConfig({
         tags: z.array(z.string()).optional(),
         aspectRatio: z.number().optional(),
         ext: z.string().optional(),
+        hide: z.boolean().optional(),
       }),
     }),
     photoFolders: defineCollection({
