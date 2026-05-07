@@ -33,7 +33,7 @@ const selected = computed<string[]>(() => props.selectedTags ?? []);
   cursor: pointer;
   overflow: hidden;
   transition: opacity 0.2s ease;
-  
+
   &:hover {
     opacity: 0.9;
   }

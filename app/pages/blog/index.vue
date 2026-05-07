@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
+
+const { t } = usei18n();
 
 useSeoMeta({
   title: 'Blog · Howard Tseng',
@@ -70,15 +73,19 @@ const clearFilters = () => {
   filterQuery.value = '';
   filterArchive.value = null;
 };
+
+const resultCountText = computed(() =>
+  t('{{n}} of {{m}} posts', { n: filteredPosts.value.length, m: allPosts.value.length }),
+);
 </script>
 
 <template>
   <div class="blog-page content-container">
     <div class="blog-page__header">
       <div>
-        <h1 class="blog-page__title">Blog</h1>
+        <h1 class="blog-page__title">{{ $t('Blog') }}</h1>
         <p class="blog-page__subtitle">
-          Field notes on engineering, hardware and photography. Mostly things I wanted to write down before I forgot them.
+          {{ $t('Field notes on engineering, hardware and photography. Mostly things I wanted to write down before I forgot them.') }}
         </p>
       </div>
     </div>
@@ -94,12 +101,12 @@ const clearFilters = () => {
         <input
           v-model="filterQuery"
           type="search"
-          placeholder="Search posts, tags…"
-          aria-label="Search posts"
+          :placeholder="$t('Search posts, tags…')"
+          :aria-label="$t('Search posts')"
           class="blog-search__input"
         >
       </div>
-      <span class="blog-result-count">{{ filteredPosts.length }} of {{ allPosts.length }} posts</span>
+      <span class="blog-result-count">{{ resultCountText }}</span>
     </div>
 
     <div class="blog-layout">
@@ -120,10 +127,10 @@ const clearFilters = () => {
           <BlogPostCard v-for="post in displayedPosts" :key="post.path" :post="post" />
         </template>
         <div v-else class="blog-empty">
-          <h3>No posts match those filters</h3>
-          <p>Try removing a tag or widening the category.</p>
+          <h3>{{ $t('No posts match those filters') }}</h3>
+          <p>{{ $t('Try removing a tag or widening the category.') }}</p>
           <v-btn variant="outlined" size="small" class="blog-empty__reset" @click="clearFilters">
-            Clear all filters
+            {{ $t('Clear all filters') }}
           </v-btn>
         </div>
       </div>

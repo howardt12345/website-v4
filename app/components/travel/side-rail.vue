@@ -107,7 +107,7 @@ watch(
         <span class="side-rail__label">
           <template v-if="view === 'trip'">{{ $t('Day by day') }}</template>
           <template v-else-if="view === 'country' && focusCountryName">
-            {{ $t('Trips to') }} {{ focusCountryName }}
+            {{ $t('Trips to {{name}}', { name: focusCountryName }) }}
           </template>
           <template v-else>{{ $t('Timeline of trips') }}</template>
         </span>
@@ -135,8 +135,8 @@ watch(
                 <span class="rail-day__date">{{ $t('Overview') }}</span>
                 <span class="rail-day__city">{{ $t('Full trip') }}</span>
                 <span class="rail-day__meta">
-                  {{ tripDays.length }} {{ $t('days') }}
-                  <template v-if="tripTotalPhotoCount"> · {{ tripTotalPhotoCount }} {{ $t('photos') }}</template>
+                  {{ $t('{{n}} days', { n: tripDays.length }) }}
+                  <template v-if="tripTotalPhotoCount"> · {{ $t('{{n}} photos', { n: tripTotalPhotoCount }) }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -154,8 +154,8 @@ watch(
                 <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
-                  {{ day.places.length }} {{ $t('stops') }}
-                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ dayPhotoCountMap.get(day.date) }} {{ $t('photos') }}</template>
+                  {{ $t('{{n}} stops', { n: day.places.length }) }}
+                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ $t('{{n}} photos', { n: dayPhotoCountMap.get(day.date) }) }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -181,8 +181,8 @@ watch(
                   </span>
                   <span class="rail-trip__title">{{ item.trip.title }}</span>
                   <span class="rail-trip__meta">
-                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ daySpan(item.trip) }} {{ $t('days') }}
-                    <template v-if="photoCountForTrip(item.trip)"> · {{ photoCountForTrip(item.trip) }} {{ $t('photos') }}</template>
+                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ $t('{{n}} days', { n: daySpan(item.trip) }) }}
+                    <template v-if="photoCountForTrip(item.trip)"> · {{ $t('{{n}} photos', { n: photoCountForTrip(item.trip) }) }}</template>
                   </span>
                 </div>
               </v-timeline-item>

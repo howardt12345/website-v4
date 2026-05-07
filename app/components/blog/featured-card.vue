@@ -27,7 +27,7 @@ const { currentLanguage } = storeToRefs(usei18n());
 
       <div class="featured-card__meta">
         <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
-        <span>{{ post.readMins }} min read</span>
+        <span>{{ $t('{{n}} min read', { n: post.readMins }) }}</span>
         <span>{{ subName(post.category, post.subcategory) }}</span>
       </div>
 

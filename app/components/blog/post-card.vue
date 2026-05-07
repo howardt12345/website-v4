@@ -27,7 +27,7 @@ const { currentLanguage } = storeToRefs(usei18n());
       <span class="post-card__dot" />
       <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
       <span class="post-card__dot" />
-      <span>{{ post.readMins }} min read</span>
+      <span>{{ $t('{{n}} min read', { n: post.readMins }) }}</span>
     </div>
 
     <h3 class="post-card__title">{{ post.title }}</h3>

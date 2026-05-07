@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PhotoCategory, PhotoItem } from '~/types/photos';
 import { usePhotoItems } from '~/composables/photos';
+import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
 
@@ -10,6 +11,7 @@ useSeoMeta({
 });
 
 const { allPhotos, pending } = usePhotoItems();
+const { t } = usei18n();
 
 const categories = computed<PhotoCategory[]>(() => {
   const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
@@ -73,7 +75,7 @@ const availableTags = computed(() => {
 });
 
 const breadcrumbItems = computed(() => [
-  { title: 'Photos', to: '/photography' },
+  { title: t('Photos'), to: '/photography' },
   { title: category.value, to: `/photography/${category.value}` },
 ]);
 

@@ -34,7 +34,7 @@ defineEmits<{ pick: [index: number] }>();
     <v-list-item-title class="place-item__name">{{ place.name }}</v-list-item-title>
 
     <template v-if="photoCount > 0" #append>
-      <span class="place-item__count">{{ photoCount }} {{ $t('photos') }}</span>
+      <span class="place-item__count">{{ $t('{{n}} photos', { n: photoCount }) }}</span>
     </template>
   </v-list-item>
 </template>

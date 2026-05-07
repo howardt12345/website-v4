@@ -45,7 +45,7 @@ useSeoMeta({
         prepend-icon="fas fa-chevron-left"
         class="blog-article__back"
       >
-        All posts
+        {{ $t('All posts') }}
       </v-btn>
 
       <div class="blog-article__eyebrow">
@@ -59,7 +59,7 @@ useSeoMeta({
       <div class="blog-article__meta">
         <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
         <span>·</span>
-        <span>{{ post.readMins }} min read</span>
+        <span>{{ $t('{{n}} min read', { n: post.readMins }) }}</span>
         <template v-if="post.author">
           <span>·</span>
           <span>{{ post.author }}</span>
@@ -80,7 +80,7 @@ useSeoMeta({
     </article>
 
     <section v-if="relatedPosts.length" class="blog-related content-container">
-      <div class="blog-related__label">Related reading</div>
+      <div class="blog-related__label">{{ $t('Related reading') }}</div>
       <div class="blog-related__grid">
         <BlogPostCard v-for="p in relatedPosts" :key="p.path" :post="p" />
       </div>
