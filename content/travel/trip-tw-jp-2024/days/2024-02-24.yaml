@@ -1,0 +1,12 @@
+date: '2024-02-24'
+country: TWN
+city: tainan
+places:
+  - id: chimei-museum
+    name: Chimei Museum
+    lon: 120.227
+    lat: 22.935
+  - id: taiwan-lantern-festival
+    name: Taiwan Lantern Festival
+    lon: 120.286
+    lat: 22.922

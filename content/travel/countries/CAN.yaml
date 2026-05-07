@@ -1,0 +1,16 @@
+iso3: CAN
+iso2: CA
+name: Canada
+hue: 200
+regions: [CA-ON]
+cities:
+  - id: toronto
+    name: Toronto
+    lon: -79.383
+    lat: 43.653
+    region: CA-ON
+  - id: ottawa
+    name: Ottawa
+    lon: -75.697
+    lat: 45.421
+    region: CA-ON

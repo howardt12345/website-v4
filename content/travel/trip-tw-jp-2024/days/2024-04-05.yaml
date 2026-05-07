@@ -1,0 +1,8 @@
+date: '2024-04-05'
+country: JPN
+city: tokyo
+places:
+  - id: narita-airport
+    name: Narita Airport
+    lon: 140.385
+    lat: 35.764

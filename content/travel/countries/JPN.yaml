@@ -1,0 +1,96 @@
+iso3: JPN
+iso2: JP
+name: Japan
+hue: 340
+regions: [JP-13, JP-17, JP-19, JP-23, JP-26, JP-27, JP-28, JP-29, JP-33, JP-34, JP-35, JP-38, JP-40, JP-42, JP-43]
+cities:
+  - id: tokyo
+    name: Tokyo
+    lon: 139.691
+    lat: 35.689
+    region: JP-13
+  - id: kanazawa
+    name: Kanazawa
+    lon: 136.656
+    lat: 36.561
+    region: JP-17
+  - id: shimoyoshida
+    name: Shimoyoshida
+    lon: 138.803
+    lat: 35.490
+    region: JP-19
+  - id: nagoya
+    name: Nagoya
+    lon: 136.906
+    lat: 35.181
+    region: JP-23
+  - id: kyoto
+    name: Kyoto
+    lon: 135.768
+    lat: 35.011
+    region: JP-26
+  - id: osaka
+    name: Osaka
+    lon: 135.502
+    lat: 34.694
+    region: JP-27
+  - id: kobe
+    name: Kobe
+    lon: 135.192
+    lat: 34.690
+    region: JP-28
+  - id: himeji
+    name: Himeji
+    lon: 134.694
+    lat: 34.839
+    region: JP-28
+  - id: nara
+    name: Nara
+    lon: 135.833
+    lat: 34.685
+    region: JP-29
+  - id: okayama
+    name: Okayama
+    lon: 133.919
+    lat: 34.666
+    region: JP-33
+  - id: hiroshima
+    name: Hiroshima
+    lon: 132.459
+    lat: 34.396
+    region: JP-34
+  - id: onomichi
+    name: Onomichi
+    lon: 133.195
+    lat: 34.407
+    region: JP-34
+  - id: shimonoseki
+    name: Shimonoseki
+    lon: 130.945
+    lat: 33.957
+    region: JP-35
+  - id: matsuyama
+    name: Matsuyama
+    lon: 132.766
+    lat: 33.839
+    region: JP-38
+  - id: fukuoka
+    name: Fukuoka
+    lon: 130.402
+    lat: 33.590
+    region: JP-40
+  - id: kitakyushu
+    name: Kitakyushu
+    lon: 130.876
+    lat: 33.883
+    region: JP-40
+  - id: nagasaki
+    name: Nagasaki
+    lon: 129.877
+    lat: 32.750
+    region: JP-42
+  - id: kumamoto
+    name: Kumamoto
+    lon: 130.706
+    lat: 32.803
+    region: JP-43

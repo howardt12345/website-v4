@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, relatedPosts as getRelatedPosts } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
 
@@ -11,42 +11,29 @@ const { data: postData } = await useAsyncData(`blog-${slug}`, () =>
   queryCollection('blog').where('path', '=', `/blog/${slug}`).first(),
 );
 
-const { data: allPostsData } = await useAsyncData('blog-posts-related', () =>
+const { data: allPostsData } = await useAsyncData('blog-posts', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 );
 
-const post = computed(() => postData.value as unknown as BlogPost | null);
-const allPosts = computed(() => (allPostsData.value ?? []) as unknown as BlogPost[]);
+if (!postData.value) throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true });
 
-const relatedPosts = computed(() =>
-  post.value ? getRelatedPosts(post.value, allPosts.value) : [],
-);
+const { currentLanguage } = storeToRefs(usei18n());
 
-interface NuxtContentTocLink {
-  id: string;
-  text: string;
-  depth: number;
-  children?: NuxtContentTocLink[];
-}
+const post = computed(() => postData.value!);
+const allPosts = computed(() => allPostsData.value ?? []);
 
-interface NuxtContentBody {
-  toc?: { links?: NuxtContentTocLink[] };
-}
+const relatedPosts = computed(() => getRelatedPosts(post.value, allPosts.value));
 
-const tocLinks = computed(() =>
-  ((postData.value as any)?.body as NuxtContentBody | undefined)?.toc?.links ?? [],
-);
+const tocLinks = computed(() => postData.value?.body.toc?.links ?? []);
 
 useSeoMeta({
-  title: computed(() =>
-    post.value ? `${post.value.title} · Howard Tseng` : 'Blog · Howard Tseng',
-  ),
-  description: computed(() => post.value?.summary ?? ''),
+  title: computed(() => `${post.value.title} · Howard Tseng`),
+  description: computed(() => post.value.summary),
 });
 </script>
 
 <template>
-  <div v-if="post">
+  <div>
     <BlogReadingProgress />
     <BlogToc :links="tocLinks" />
 
@@ -58,7 +45,7 @@ useSeoMeta({
         prepend-icon="fas fa-chevron-left"
         class="blog-article__back"
       >
-        All posts
+        {{ $t('All posts') }}
       </v-btn>
 
       <div class="blog-article__eyebrow">
@@ -70,9 +57,9 @@ useSeoMeta({
       <p class="blog-article__excerpt">{{ post.summary }}</p>
 
       <div class="blog-article__meta">
-        <span>{{ formatPostDate(post.date) }}</span>
+        <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
         <span>·</span>
-        <span>{{ post.readMins }} min read</span>
+        <span v-text="$t('{{n}} min read', { n: post.readMins })" />
         <template v-if="post.author">
           <span>·</span>
           <span>{{ post.author }}</span>
@@ -85,7 +72,7 @@ useSeoMeta({
         class="blog-article__cover"
       />
 
-      <ContentRenderer class="blog-article__body" :value="postData as any" />
+      <ContentRenderer class="blog-article__body" :value="post" />
 
       <div class="blog-article__tags">
         <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
@@ -93,24 +80,11 @@ useSeoMeta({
     </article>
 
     <section v-if="relatedPosts.length" class="blog-related content-container">
-      <div class="blog-related__label">Related reading</div>
+      <div class="blog-related__label">{{ $t('Related reading') }}</div>
       <div class="blog-related__grid">
         <BlogPostCard v-for="p in relatedPosts" :key="p.path" :post="p" />
       </div>
     </section>
-  </div>
-
-  <div v-else class="blog-not-found content-container">
-    <h1>Post not found</h1>
-    <v-btn
-      to="/blog"
-      variant="text"
-      size="small"
-      prepend-icon="fas fa-chevron-left"
-      class="blog-not-found__back"
-    >
-      Back to blog
-    </v-btn>
   </div>
 </template>
 
@@ -168,7 +142,6 @@ useSeoMeta({
     color: $text-secondary;
     font-style: italic;
     margin-bottom: rem(28);
-    font-weight: 400;
   }
 
   &__meta {
@@ -300,22 +273,6 @@ useSeoMeta({
     @media (max-width: 960px) {
       grid-template-columns: 1fr;
     }
-  }
-}
-
-.blog-not-found {
-  padding: rem(96) 0;
-  text-align: center;
-
-  h1 {
-    margin-bottom: rem(16);
-    font-weight: 300;
-  }
-
-  &__back {
-    color: $accent;
-    letter-spacing: normal;
-    text-transform: none;
   }
 }
 </style>

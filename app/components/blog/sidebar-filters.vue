@@ -65,7 +65,7 @@ const toggleArchive = (yr: string) => {
 <template>
   <aside class="blog-sidebar">
     <div class="blog-sidebar__group">
-      <div class="blog-sidebar__label">Categories</div>
+      <div class="blog-sidebar__label">{{ $t('Categories') }}</div>
 
       <v-btn
         variant="text"
@@ -74,7 +74,7 @@ const toggleArchive = (yr: string) => {
         class="blog-sidebar__item"
         @click="setCat('all')"
       >
-        <span>All posts</span>
+        <span>{{ $t('All posts') }}</span>
         <span class="blog-sidebar__count">{{ catCount('all') }}</span>
       </v-btn>
 
@@ -108,7 +108,7 @@ const toggleArchive = (yr: string) => {
     </div>
 
     <div class="blog-sidebar__group">
-      <div class="blog-sidebar__label">Tags</div>
+      <div class="blog-sidebar__label">{{ $t('Tags') }}</div>
       <div class="blog-sidebar__tags">
         <v-chip
           v-for="[tag, count] in allTags"
@@ -125,7 +125,7 @@ const toggleArchive = (yr: string) => {
     </div>
 
     <div class="blog-sidebar__group">
-      <div class="blog-sidebar__label">Archive</div>
+      <div class="blog-sidebar__label">{{ $t('Archive') }}</div>
       <div class="blog-sidebar__archive">
         <v-btn
           v-for="[yr, count] in archiveYears"

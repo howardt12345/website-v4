@@ -1,0 +1,31 @@
+iso3: TWN
+iso2: TW
+name: Taiwan
+hue: 180
+regions: [TW-TPE, TW-TNN, TW-KHH, TW-NWT, TW-NAN, TW-TXG]
+cities:
+  - id: taipei
+    name: Taipei
+    lon: 121.565
+    lat: 25.033
+    region: TW-TPE
+  - id: tainan
+    name: Tainan
+    lon: 120.227
+    lat: 22.999
+    region: TW-TNN
+  - id: kaohsiung
+    name: Kaohsiung
+    lon: 120.308
+    lat: 22.633
+    region: TW-KHH
+  - id: taichung
+    name: Taichung
+    lon: 120.673
+    lat: 24.148
+    region: TW-TXG
+  - id: nantou
+    name: Nantou
+    lon: 120.668
+    lat: 23.989
+    region: TW-NAN

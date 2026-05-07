@@ -2,8 +2,7 @@
 import { SUPPORTED_LANGUAGES } from '~/plugins/03.i18n';
 import { usei18n } from '~/store/i18n.store';
 
-const languages = SUPPORTED_LANGUAGES;
-const languageKeys = Object.keys(SUPPORTED_LANGUAGES);
+const languageEntries = Object.entries(SUPPORTED_LANGUAGES);
 
 const { currentLanguage } = storeToRefs(usei18n());
 const { changeLanguage } = usei18n();
@@ -12,15 +11,15 @@ const { changeLanguage } = usei18n();
 <template>
   <div>
     <div>
-      <div v-if="languages">
-        <span v-for="(lng, index) in languageKeys" :key="lng">
+      <div>
+        <span v-for="([lng, language], index) in languageEntries" :key="lng">
           <strong v-if="currentLanguage === lng">
-            {{ languages[lng].nativeName }}
+            {{ language.nativeName }}
           </strong>
           <a v-else class="language-link" @click="changeLanguage(lng)">
-            {{ languages[lng].nativeName }}
+            {{ language.nativeName }}
           </a>
-          <span v-if="index < languageKeys.length - 1">&nbsp;|&nbsp;</span>
+          <span v-if="index < languageEntries.length - 1">&nbsp;|&nbsp;</span>
         </span>
       </div>
     </div>

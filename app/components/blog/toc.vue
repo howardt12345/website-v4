@@ -62,7 +62,7 @@ const scrollToHeading = (id: string) => {
 
 <template>
   <nav v-if="flatLinks.length" class="blog-toc" aria-label="On this page">
-    <div class="blog-toc__label">On this page</div>
+    <div class="blog-toc__label">{{ $t('On this page') }}</div>
     <a
       v-for="link in flatLinks"
       :key="link.id"
@@ -118,7 +118,6 @@ const scrollToHeading = (id: string) => {
     &:hover {
       color: $text;
       opacity: 1;
-      text-decoration: none;
     }
 
     &--h3 {

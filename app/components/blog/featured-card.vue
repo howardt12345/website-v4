@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, slugFromPath } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 interface Props {
   post: BlogPost;
 }
 
 defineProps<Props>();
+
+const { currentLanguage } = storeToRefs(usei18n());
 </script>
 
 <template>
@@ -18,13 +21,13 @@ defineProps<Props>();
     />
 
     <div class="featured-card__body">
-      <div class="featured-card__eyebrow">Featured · {{ catName(post.category) }}</div>
+      <div class="featured-card__eyebrow">{{ $t('Featured') }} · {{ catName(post.category) }}</div>
 
       <h2 class="featured-card__title">{{ post.title }}</h2>
 
       <div class="featured-card__meta">
-        <span>{{ formatPostDate(post.date) }}</span>
-        <span>{{ post.readMins }} min read</span>
+        <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
+        <span v-text="$t('{{n}} min read', { n: post.readMins })" />
         <span>{{ subName(post.category, post.subcategory) }}</span>
       </div>
 
@@ -34,7 +37,7 @@ defineProps<Props>();
         <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
       </div>
 
-      <span class="featured-card__link">Read article →</span>
+      <span class="featured-card__link">{{ $t('Read article') }} →</span>
     </div>
   </NuxtLink>
 </template>

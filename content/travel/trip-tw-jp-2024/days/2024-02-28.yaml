@@ -1,0 +1,16 @@
+date: '2024-02-28'
+country: TWN
+city: taipei
+places:
+  - id: jiufen
+    name: Jiufen
+    lon: 121.845
+    lat: 25.109
+  - id: jinguashih
+    name: Jinguashih
+    lon: 121.862
+    lat: 25.108
+  - id: raohe-night-market
+    name: Raohe Night Market
+    lon: 121.577
+    lat: 25.050

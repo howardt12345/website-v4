@@ -1,0 +1,19 @@
+date: '2024-03-10'
+country: JPN
+city: hiroshima
+places:
+  - id: fukuyama-castle
+    name: Fukuyama Castle
+    lon: 133.362
+    lat: 34.486
+    city: onomichi
+  - id: onomichi-temple-walk
+    name: Onomichi Temple Walk
+    lon: 133.194
+    lat: 34.405
+    city: onomichi
+  - id: senkoji-temple
+    name: Senko-ji Temple / Park
+    lon: 133.200
+    lat: 34.412
+    city: onomichi

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
 import { catName, subName, formatPostDate, slugFromPath } from '~/composables/blog';
+import { usei18n } from '~/store/i18n.store';
 
 interface Props {
   post: BlogPost;
 }
 
 defineProps<Props>();
+
+const { currentLanguage } = storeToRefs(usei18n());
 </script>
 
 <template>
@@ -22,9 +25,9 @@ defineProps<Props>();
       <span class="post-card__dot" />
       <span>{{ subName(post.category, post.subcategory) }}</span>
       <span class="post-card__dot" />
-      <span>{{ formatPostDate(post.date) }}</span>
+      <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
       <span class="post-card__dot" />
-      <span>{{ post.readMins }} min read</span>
+      <span v-text="$t('{{n}} min read', { n: post.readMins })" />
     </div>
 
     <h3 class="post-card__title">{{ post.title }}</h3>
@@ -53,10 +56,7 @@ defineProps<Props>();
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgb(var(--v-border-opacity));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    text-decoration: none;
-    color: inherit;
   }
 
   &__cover {

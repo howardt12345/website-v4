@@ -1,0 +1,26 @@
+date: '2025-03-07'
+country: ITA
+city: sorrento
+places:
+  - id: napoli-centrale
+    name: Napoli Centrale
+    lon: 14.272
+    lat: 40.853
+    city: naples
+  - id: san-gregorio-armeno
+    name: San Gregorio Armeno
+    lon: 14.258
+    lat: 40.851
+    city: naples
+  - id: sorrento-centro
+    name: Sorrento Centro
+    lon: 14.376
+    lat: 40.626
+  - id: vallone-dei-mulini
+    name: Vallone dei Mulini
+    lon: 14.374
+    lat: 40.625
+  - id: marina-grande-sorrento
+    name: Marina Grande di Sorrento
+    lon: 14.370
+    lat: 40.630

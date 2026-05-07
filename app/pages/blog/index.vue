@@ -37,8 +37,11 @@ const filteredPosts = computed(() =>
     if (filterArchive.value && !p.date.startsWith(filterArchive.value)) return false;
     if (filterQuery.value) {
       const q = filterQuery.value.toLowerCase();
-      const hay = (p.title + ' ' + p.summary + ' ' + p.tags.join(' ')).toLowerCase();
-      if (!hay.includes(q)) return false;
+      const matches =
+        p.title.toLowerCase().includes(q) ||
+        p.summary.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q));
+      if (!matches) return false;
     }
     return true;
   }),
@@ -54,6 +57,12 @@ const displayedPosts = computed(() =>
     : filteredPosts.value,
 );
 
+const onCatChange = (cat: string) => {
+  filterCat.value = cat;
+  filterSub.value = null;
+  filterTags.value = [];
+};
+
 const clearFilters = () => {
   filterCat.value = 'all';
   filterSub.value = null;
@@ -61,15 +70,16 @@ const clearFilters = () => {
   filterQuery.value = '';
   filterArchive.value = null;
 };
+
 </script>
 
 <template>
   <div class="blog-page content-container">
     <div class="blog-page__header">
       <div>
-        <h1 class="blog-page__title">Blog</h1>
+        <h1 class="blog-page__title">{{ $t('Blog') }}</h1>
         <p class="blog-page__subtitle">
-          Field notes on engineering, hardware and photography. Mostly things I wanted to write down before I forgot them.
+          {{ $t('Field notes on engineering, hardware and photography. Mostly things I wanted to write down before I forgot them.') }}
         </p>
       </div>
     </div>
@@ -85,12 +95,12 @@ const clearFilters = () => {
         <input
           v-model="filterQuery"
           type="search"
-          placeholder="Search posts, tags…"
-          aria-label="Search posts"
+          :placeholder="$t('Search posts, tags…')"
+          :aria-label="$t('Search posts')"
           class="blog-search__input"
-        />
+        >
       </div>
-      <span class="blog-result-count">{{ filteredPosts.length }} of {{ allPosts.length }} posts</span>
+      <span class="blog-result-count" v-text="$t('{{n}} of {{m}} posts', { n: filteredPosts.length, m: allPosts.length })" />
     </div>
 
     <div class="blog-layout">
@@ -100,7 +110,7 @@ const clearFilters = () => {
         :sub="filterSub"
         :tags="filterTags"
         :archive="filterArchive"
-        @update:cat="filterCat = $event"
+        @update:cat="onCatChange"
         @update:sub="filterSub = $event"
         @update:tags="filterTags = $event"
         @update:archive="filterArchive = $event"
@@ -111,10 +121,10 @@ const clearFilters = () => {
           <BlogPostCard v-for="post in displayedPosts" :key="post.path" :post="post" />
         </template>
         <div v-else class="blog-empty">
-          <h3>No posts match those filters</h3>
-          <p>Try removing a tag or widening the category.</p>
+          <h3>{{ $t('No posts match those filters') }}</h3>
+          <p>{{ $t('Try removing a tag or widening the category.') }}</p>
           <v-btn variant="outlined" size="small" class="blog-empty__reset" @click="clearFilters">
-            Clear all filters
+            {{ $t('Clear all filters') }}
           </v-btn>
         </div>
       </div>
@@ -128,16 +138,7 @@ const clearFilters = () => {
   padding-bottom: rem(96);
 
   &__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: rem(32);
     margin-bottom: rem(24);
-
-    @media (max-width: 960px) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
   }
 
   &__title {
@@ -156,12 +157,6 @@ const clearFilters = () => {
     line-height: 1.6;
   }
 
-  &__meta {
-    color: $text-secondary;
-    font-size: rem(13);
-    white-space: nowrap;
-    opacity: 0.6;
-  }
 }
 
 .blog-filter-bar {

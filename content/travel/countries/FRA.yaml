@@ -1,0 +1,16 @@
+iso3: FRA
+iso2: FR
+name: France
+hue: 220
+regions: [FR-IDF, FR-PAC]
+cities:
+  - id: paris
+    name: Paris
+    lon: 2.352
+    lat: 48.857
+    region: FR-IDF
+  - id: nice
+    name: Nice
+    lon: 7.262
+    lat: 43.710
+    region: FR-PAC

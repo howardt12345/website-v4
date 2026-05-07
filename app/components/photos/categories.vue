@@ -24,7 +24,7 @@ const { isMobile } = useMediaQueries();
         class="category-item"
       >
         <v-img
-          :src="category.url"
+          :src="category.coverUrl"
           :aspect-ratio="!isMobile ? 2 : 1.5"
           cover
           class="align-end"

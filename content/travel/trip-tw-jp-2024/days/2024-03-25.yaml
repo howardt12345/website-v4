@@ -1,0 +1,23 @@
+date: '2024-03-25'
+country: JPN
+city: nagoya
+places:
+  - id: omicho-market
+    name: Omicho Market
+    lon: 136.656
+    lat: 36.573
+    city: kanazawa
+  - id: kenrokuen-garden
+    name: Kenroku-en Garden
+    lon: 136.663
+    lat: 36.562
+    city: kanazawa
+  - id: kanazawa-station
+    name: Kanazawa Station
+    lon: 136.648
+    lat: 36.578
+    city: kanazawa
+  - id: nagoya-station
+    name: Nagoya Station
+    lon: 136.881
+    lat: 35.171

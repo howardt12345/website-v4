@@ -1,0 +1,28 @@
+date: '2024-03-05'
+country: JPN
+city: kitakyushu
+places:
+  - id: mojiko-retro
+    name: Mojiko Retro
+    lon: 130.962
+    lat: 33.947
+  - id: shimonoseki-karato-market
+    name: Shimonoseki / Karato Market
+    lon: 130.945
+    lat: 33.957
+    city: shimonoseki
+  - id: tsunoshima-bridge
+    name: Tsunoshima Bridge
+    lon: 130.878
+    lat: 34.358
+    city: shimonoseki
+  - id: motonosumi-inari-shrine
+    name: Motonosumi Inari Shrine
+    lon: 131.089
+    lat: 34.437
+    city: shimonoseki
+  - id: kushida-shrine
+    name: Kushida Shrine
+    lon: 130.410
+    lat: 33.591
+    city: fukuoka

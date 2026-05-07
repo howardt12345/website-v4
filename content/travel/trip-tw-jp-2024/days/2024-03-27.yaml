@@ -1,0 +1,12 @@
+date: '2024-03-27'
+country: JPN
+city: nagoya
+places:
+  - id: ghibli-park
+    name: Ghibli Park
+    lon: 137.089
+    lat: 35.173
+  - id: nagoya-station
+    name: Nagoya Station
+    lon: 136.881
+    lat: 35.171

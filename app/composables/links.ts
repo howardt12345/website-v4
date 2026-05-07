@@ -12,7 +12,9 @@ export const useNavLinks = (): NavLink[] => [
   { name: 'Experience', path: '/#experience', icon: 'briefcase' },
   { name: 'Projects', path: '/#projects', icon: 'code' },
   { name: 'Photography', path: '/photography', icon: 'camera' },
+  // TODO: Add blog to nav once the blog section is ready to launch publicly.
   // { name: 'Blog', path: '/blog', icon: 'pen' },
+  { name: 'Travel', path: '/travel', icon: 'earth-asia' },
   { name: 'Contact', path: '/#contact', icon: 'at' },
 ];
 
