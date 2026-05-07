@@ -41,6 +41,7 @@ export default defineNuxtConfig({
     'nitro:build:public-assets': async (nitro) => {
       const { existsSync, readdirSync, readFileSync, rmSync } = await import('node:fs');
       const { join, resolve } = await import('node:path');
+      const { parse: parseYaml } = await import('yaml');
 
       const contentPhotosDir = resolve(process.cwd(), 'content/photos');
       const outputPublicDir = nitro.options.output.publicDir;
@@ -49,12 +50,12 @@ export default defineNuxtConfig({
         .filter(f => f.endsWith('.yaml') && !f.endsWith('index.yaml'));
 
       for (const relPath of yamlFiles) {
-        const yamlContent = readFileSync(join(contentPhotosDir, relPath), 'utf8');
-        if (!/^hide:\s+true(?:\s*#.*)?$/m.test(yamlContent)) continue;
+        const raw = readFileSync(join(contentPhotosDir, relPath), 'utf8');
+        const parsed = parseYaml(raw) as Record<string, unknown>;
+        if (!parsed?.hide) continue;
 
         const stem = relPath.replace(/\.yaml$/, '');
-        const extMatch = yamlContent.match(/^ext:\s*["']?(\w+)["']?\s*$/m);
-        const ext = extMatch?.[1] ?? 'jpg';
+        const ext = (parsed.ext as string | undefined) ?? 'jpg';
         const assetPath = join(outputPublicDir, 'photos', `${stem}.${ext}`);
 
         if (existsSync(assetPath)) {

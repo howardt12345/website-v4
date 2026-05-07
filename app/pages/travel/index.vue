@@ -2,6 +2,7 @@
 import { tripCountryNames, daySpan, formatTripRange } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
+import { usePhotoItems } from '~/composables/photos';
 
 definePageMeta({ layout: 'default' });
 
@@ -11,6 +12,10 @@ useSeoMeta({
 });
 
 const travelStore = useTravelStore();
+
+const { allPhotos } = usePhotoItems();
+watchEffect(() => travelStore.setPhotos(allPhotos.value));
+
 await travelStore.hydrate();
 
 const {

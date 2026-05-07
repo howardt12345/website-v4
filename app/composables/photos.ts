@@ -38,7 +38,7 @@ export function usePhotoItems() {
   const folderMap = computed(
     () =>
       new Map(
-        (rawPhotoFolders.value as unknown as RawPhotoFolder[] ?? []).map((f) => [
+        ((rawPhotoFolders.value ?? []) as unknown as RawPhotoFolder[]).map((f) => [
           f.stem.replace(/\/index$/, ''),
           f,
         ]),
@@ -46,7 +46,7 @@ export function usePhotoItems() {
   );
 
   const allPhotos = computed<PhotoItem[]>(() =>
-    (rawPhotos.value as unknown as RawPhoto[] ?? [])
+    ((rawPhotos.value ?? []) as unknown as RawPhoto[])
     .filter((raw) => !raw.hide)
     .map((raw) => {
       const folderPath = raw.stem.split('/').slice(0, -1).join('/');

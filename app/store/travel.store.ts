@@ -11,7 +11,6 @@ import type {
 } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
 import { tripSlug, tripsForCountry } from '~/composables/travel';
-import { usePhotoItems } from '~/composables/photos';
 
 interface ParsedHash {
   countryIso3: string | null;
@@ -61,7 +60,11 @@ const parseHash = (hash: string): ParsedHash => {
 };
 
 export const useTravelStore = defineStore('travel', () => {
-  const { allPhotos } = usePhotoItems();
+  const allPhotos = shallowRef<PhotoItem[]>([]);
+
+  const setPhotos = (photos: PhotoItem[]): void => {
+    allPhotos.value = photos;
+  };
 
   const { data: rawCountries, pending: countriesPending } = useAsyncData(
     'travel-countries',
@@ -259,7 +262,6 @@ export const useTravelStore = defineStore('travel', () => {
     const result: CityViewPlace[] = [];
     for (const trip of trips.value) {
       const slug = tripSlug(trip);
-      
       const tId = slug.split('/').at(-1) ?? slug;
       const photosForTrip = travelPhotosByPlace.value[tId] ?? {};
       for (const day of daysForTripSlug(slug)) {
@@ -419,6 +421,7 @@ export const useTravelStore = defineStore('travel', () => {
   }));
 
   return {
+    setPhotos,
     countries,
     trips,
     days,
