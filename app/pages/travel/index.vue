@@ -126,7 +126,7 @@ const stageClass = computed(() => ({
     <TravelDayView
       v-if="dayViewProps"
       v-bind="dayViewProps"
-      @update:activePlace="activePlaceIndex = $event"
+      @update:active-place="activePlaceIndex = $event"
       @city-click="handleCityClick"
     />
     <TravelTripOverview

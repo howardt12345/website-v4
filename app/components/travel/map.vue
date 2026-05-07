@@ -204,7 +204,9 @@ const zoomToPathBounds = (
         top: Math.min(maxLat + latPad, MAX_LATITUDE),
         bottom: Math.max(minLat - latPad, -MAX_LATITUDE),
       }, 500);
-    } catch { /* malformed bounds */ }
+    } catch (err) {
+      if (import.meta.dev) console.warn('[TravelMap] zoomToGeoBounds failed (malformed bounds):', err);
+    }
   }
 };
 
@@ -273,7 +275,9 @@ const animateToCountry = (iso3: string) => {
         bottom: Math.max(bounds.bottom - latPad, -MAX_LATITUDE),
       }, 500);
     }
-  } catch { /* malformed geometry */ }
+  } catch (err) {
+    if (import.meta.dev) console.warn('[TravelMap] animateToCountry failed (malformed geometry):', err);
+  }
 };
 
 const addTripPath = () => {

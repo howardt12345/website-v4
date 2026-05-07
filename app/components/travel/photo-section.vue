@@ -37,7 +37,7 @@ function openLightbox(index: number) {
   <div class="photo-section">
     <div class="photo-section__head">
       <div>
-        <div class="photo-section__eyebrow">{{ $t('Stop') }} {{ placeIndex + 1 }} · {{ totalPlaces }}</div>
+        <div class="photo-section__eyebrow" v-text="$t('Stop {{n}} of {{m}}', { n: placeIndex + 1, m: totalPlaces })" />
         <div class="photo-section__name">{{ place.name }}</div>
       </div>
       <v-btn

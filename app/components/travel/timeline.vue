@@ -70,9 +70,11 @@ function openLightbox(entryIdx: number, photoIdx: number) {
               {{ entry.title }}<span v-if="entry.titleSub" class="timeline-entry__title-sub"> · {{ entry.titleSub }}</span>
             </span>
           </span>
-          <span v-if="entry.photos.length" class="timeline-entry__count">
-            {{ entry.photos.length }} {{ $t('photos') }}
-          </span>
+          <span
+            v-if="entry.photos.length"
+            class="timeline-entry__count"
+            v-text="$t('{{n}} photos', { n: entry.photos.length })"
+          />
         </component>
 
         <ul v-if="!entry.photos.length && entry.noPhotoPlaces?.length" class="timeline-entry__places">

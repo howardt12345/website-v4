@@ -32,6 +32,7 @@ const onKeydown = (e: KeyboardEvent) => {
 };
 
 watch(() => props.modelValue, (isOpen) => {
+  if (!import.meta.client) return;
   if (isOpen) {
     window.addEventListener('keydown', onKeydown);
   } else {
@@ -39,7 +40,9 @@ watch(() => props.modelValue, (isOpen) => {
   }
 });
 
-onUnmounted(() => window.removeEventListener('keydown', onKeydown));
+onUnmounted(() => {
+  if (import.meta.client) window.removeEventListener('keydown', onKeydown);
+});
 </script>
 
 <template>

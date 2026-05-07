@@ -11,6 +11,7 @@ export const hslToHex = (h: number, s: number, l: number): string => {
 };
 
 export const vuetifyColorToHex = (cssVar: string): string => {
+  if (!import.meta.client) return '#000000';
   const raw = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
   if (!raw) return '#000000';
   const rgb = raw.split(',').map(Number);

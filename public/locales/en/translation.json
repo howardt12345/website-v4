@@ -67,6 +67,7 @@
   "photos": "photos",
   "stops": "stops",
   "Stop": "Stop",
+  "Stop {{n}} of {{m}}": "Stop {{n}} of {{m}}",
   "{{n}} days": "{{n}} days",
   "{{n}} photos": "{{n}} photos",
   "{{n}} stops": "{{n}} stops",
