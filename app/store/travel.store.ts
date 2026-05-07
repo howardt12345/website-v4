@@ -22,13 +22,16 @@ interface ParsedHash {
 const parseHash = (hash: string): ParsedHash => {
   const raw = hash.replace(/^#/, '');
 
-  // country/ISO3/city/CITY_ID
   const countryWithCity = raw.match(/^country\/([A-Z]{3})\/city\/([^/]+)$/);
   if (countryWithCity) {
-    return { countryIso3: countryWithCity[1]!, tripId: null, dayDate: null, cityFocus: { country: countryWithCity[1]!, city: countryWithCity[2]! } };
+    return {
+      countryIso3: countryWithCity[1]!,
+      tripId: null,
+      dayDate: null,
+      cityFocus: { country: countryWithCity[1]!, city: countryWithCity[2]! },
+    };
   }
 
-  // country/ISO3
   const countryOnly = raw.match(/^country\/([A-Z]{3})$/);
   if (countryOnly) return { countryIso3: countryOnly[1]!, tripId: null, dayDate: null, cityFocus: null };
 
@@ -37,19 +40,21 @@ const parseHash = (hash: string): ParsedHash => {
 
   const tripTail = tripPrefix[1]!;
 
-  // trip/slug/day/DATE/country/ISO3/city/CITY_ID
   const tripDayCountryCity = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/country\/([A-Z]{3})\/city\/([^/]+)$/);
   if (tripDayCountryCity) {
-    return { countryIso3: tripDayCountryCity[3]!, tripId: tripDayCountryCity[1]!, dayDate: tripDayCountryCity[2]!, cityFocus: { country: tripDayCountryCity[3]!, city: tripDayCountryCity[4]! } };
+    return {
+      countryIso3: tripDayCountryCity[3]!,
+      tripId: tripDayCountryCity[1]!,
+      dayDate: tripDayCountryCity[2]!,
+      cityFocus: { country: tripDayCountryCity[3]!, city: tripDayCountryCity[4]! },
+    };
   }
 
-  // trip/slug/day/DATE/country/ISO3
   const tripDayCountry = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/country\/([A-Z]{3})$/);
   if (tripDayCountry) {
     return { countryIso3: tripDayCountry[3]!, tripId: tripDayCountry[1]!, dayDate: tripDayCountry[2]!, cityFocus: null };
   }
 
-  // trip/slug/day/DATE
   const tripDay = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})$/);
   if (tripDay) return { countryIso3: null, tripId: tripDay[1]!, dayDate: tripDay[2]!, cityFocus: null };
 

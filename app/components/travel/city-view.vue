@@ -37,6 +37,7 @@ const dateGroups = computed<DateGroup[]>(() => {
       photos: item.photos.map((p) => ({
         url: p.url,
         alt: p.alt ?? p.title ?? item.place.name,
+        label: item.place.name,
         title: p.title,
         caption: p.caption,
         tags: p.tags,

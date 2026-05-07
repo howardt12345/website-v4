@@ -36,33 +36,32 @@ export default defineNuxtConfig({
     experimental: { sqliteConnector: 'native' }
   },
   hooks: {
-    // After Nitro copies public assets to the output directory, remove any photo
-    // files whose YAML has `hide: true` so they are unreachable in production.
     'nitro:build:public-assets': async (nitro) => {
-      const { existsSync, readdirSync, readFileSync, rmSync } = await import('node:fs');
+      const { readdir, readFile, rm, access } = await import('node:fs/promises');
       const { join, resolve } = await import('node:path');
       const { parse: parseYaml } = await import('yaml');
 
       const contentPhotosDir = resolve(process.cwd(), 'content/photos');
       const outputPublicDir = nitro.options.output.publicDir;
 
-      const yamlFiles = (readdirSync(contentPhotosDir, { recursive: true, encoding: 'utf8' }) as string[])
-        .filter(f => f.endsWith('.yaml') && !f.endsWith('index.yaml'));
+      const allFiles = await readdir(contentPhotosDir, { recursive: true, encoding: 'utf8' });
+      const yamlFiles = allFiles.filter(f => f.endsWith('.yaml') && !f.endsWith('index.yaml'));
 
-      for (const relPath of yamlFiles) {
-        const raw = readFileSync(join(contentPhotosDir, relPath), 'utf8');
+      await Promise.all(yamlFiles.map(async (relPath) => {
+        const raw = await readFile(join(contentPhotosDir, relPath), 'utf8');
         const parsed = parseYaml(raw) as Record<string, unknown>;
-        if (!parsed?.hide) continue;
+        if (!parsed?.hide) return;
 
         const stem = relPath.replace(/\.yaml$/, '');
         const ext = (parsed.ext as string | undefined) ?? 'jpg';
         const assetPath = join(outputPublicDir, 'photos', `${stem}.${ext}`);
+        const existsInOutput = await access(assetPath).then(() => true, () => false);
 
-        if (existsSync(assetPath)) {
-          rmSync(assetPath);
+        if (existsInOutput) {
+          await rm(assetPath);
           console.log(`[photos] Removed hidden asset from output: photos/${stem}.${ext}`);
         }
-      }
+      }));
     },
   },
   compatibilityDate: '2024-11-01',

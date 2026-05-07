@@ -38,12 +38,17 @@ const photoCountForTrip = (trip: TravelTrip): number => {
   return Object.values(travelPhotosByPlace.value[tId] ?? {}).reduce((sum, arr) => sum + arr.length, 0);
 };
 
-const photoCountForDay = (day: TravelDay): number =>
-  tripOverviewProps.value.days.find((d) => d.day.date === day.date)?.photos.length ?? 0;
+const dayPhotoCountMap = computed<Map<string, number>>(() => {
+  const map = new Map<string, number>();
+  for (const d of tripOverviewProps.value.days) map.set(d.day.date, d.photos.length);
+  return map;
+});
 
-const tripTotalPhotoCount = computed<number>(() =>
-  tripOverviewProps.value.days.reduce((sum, d) => sum + d.photos.length, 0),
-);
+const tripTotalPhotoCount = computed<number>(() => {
+  let total = 0;
+  for (const count of dayPhotoCountMap.value.values()) total += count;
+  return total;
+});
 
 const railBodyRef = ref<HTMLElement | null>(null);
 
@@ -89,8 +94,8 @@ watch(
     <template v-if="collapsed">
       <button
         class="side-rail__expand-btn"
-        @click="collapsed = false"
         :aria-label="$t('Timeline of trips')"
+        @click="collapsed = false"
       >
         <v-icon size="16">fas fa-chevron-left</v-icon>
       </button>
@@ -108,8 +113,8 @@ watch(
         </span>
         <button
           class="side-rail__collapse-btn"
-          @click="collapsed = true"
           :aria-label="$t('Close')"
+          @click="collapsed = true"
         >
           <v-icon size="16">fas fa-chevron-right</v-icon>
         </button>
@@ -150,7 +155,7 @@ watch(
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
                   {{ day.places.length }} {{ $t('stops') }}
-                  <template v-if="photoCountForDay(day)"> · {{ photoCountForDay(day) }} {{ $t('photos') }}</template>
+                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ dayPhotoCountMap.get(day.date) }} {{ $t('photos') }}</template>
                 </span>
               </div>
             </v-timeline-item>

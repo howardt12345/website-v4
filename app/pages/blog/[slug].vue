@@ -16,6 +16,8 @@ const { data: allPostsData } = await useAsyncData('blog-posts', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 );
 
+if (!postData.value) throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true });
+
 const { currentLanguage } = storeToRefs(usei18n());
 
 const post = computed(() => postData.value as unknown as BlogPost | null);

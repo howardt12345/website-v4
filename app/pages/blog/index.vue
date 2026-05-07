@@ -37,8 +37,11 @@ const filteredPosts = computed(() =>
     if (filterArchive.value && !p.date.startsWith(filterArchive.value)) return false;
     if (filterQuery.value) {
       const q = filterQuery.value.toLowerCase();
-      const hay = (p.title + ' ' + p.summary + ' ' + p.tags.join(' ')).toLowerCase();
-      if (!hay.includes(q)) return false;
+      const matches =
+        p.title.toLowerCase().includes(q) ||
+        p.summary.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q));
+      if (!matches) return false;
     }
     return true;
   }),
@@ -94,7 +97,7 @@ const clearFilters = () => {
           placeholder="Search posts, tags…"
           aria-label="Search posts"
           class="blog-search__input"
-        />
+        >
       </div>
       <span class="blog-result-count">{{ filteredPosts.length }} of {{ allPosts.length }} posts</span>
     </div>
