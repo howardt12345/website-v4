@@ -31,7 +31,13 @@ const collapsed = defineModel<boolean>('collapsed', { default: false });
 const travelStore = useTravelStore();
 const { cityById, countryByIso3 } = travelStore;
 const { travelPhotosByPlace, tripOverviewProps } = storeToRefs(travelStore);
-const { currentLanguage } = storeToRefs(usei18n());
+const i18n = usei18n();
+const { currentLanguage } = storeToRefs(i18n);
+const { t } = i18n;
+const nDays = (n: number) => t('{{n}} days', { n });
+const nPhotos = (n: number | undefined) => t('{{n}} photos', { n: n ?? 0 });
+const nStops = (n: number) => t('{{n}} stops', { n });
+const tripsToName = (name: string) => t('Trips to {{name}}', { name });
 
 const photoCountForTrip = (trip: TravelTrip): number => {
   const tId = tripSlug(trip).split('/').at(-1) ?? tripSlug(trip);
@@ -107,7 +113,7 @@ watch(
         <span class="side-rail__label">
           <template v-if="view === 'trip'">{{ $t('Day by day') }}</template>
           <template v-else-if="view === 'country' && focusCountryName">
-            {{ $t('Trips to {{name}}', { name: focusCountryName }) }}
+            {{ tripsToName(focusCountryName) }}
           </template>
           <template v-else>{{ $t('Timeline of trips') }}</template>
         </span>
@@ -135,8 +141,8 @@ watch(
                 <span class="rail-day__date">{{ $t('Overview') }}</span>
                 <span class="rail-day__city">{{ $t('Full trip') }}</span>
                 <span class="rail-day__meta">
-                  {{ $t('{{n}} days', { n: tripDays.length }) }}
-                  <template v-if="tripTotalPhotoCount"> · {{ $t('{{n}} photos', { n: tripTotalPhotoCount }) }}</template>
+                  {{ nDays(tripDays.length) }}
+                  <template v-if="tripTotalPhotoCount"> · {{ nPhotos(tripTotalPhotoCount) }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -154,8 +160,8 @@ watch(
                 <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
-                  {{ $t('{{n}} stops', { n: day.places.length }) }}
-                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ $t('{{n}} photos', { n: dayPhotoCountMap.get(day.date) }) }}</template>
+                  {{ nStops(day.places.length) }}
+                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ nPhotos(dayPhotoCountMap.get(day.date)) }}</template>
                 </span>
               </div>
             </v-timeline-item>
@@ -181,8 +187,8 @@ watch(
                   </span>
                   <span class="rail-trip__title">{{ item.trip.title }}</span>
                   <span class="rail-trip__meta">
-                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ $t('{{n}} days', { n: daySpan(item.trip) }) }}
-                    <template v-if="photoCountForTrip(item.trip)"> · {{ $t('{{n}} photos', { n: photoCountForTrip(item.trip) }) }}</template>
+                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ nDays(daySpan(item.trip)) }}
+                    <template v-if="photoCountForTrip(item.trip)"> · {{ nPhotos(photoCountForTrip(item.trip)) }}</template>
                   </span>
                 </div>
               </v-timeline-item>

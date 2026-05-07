@@ -9,7 +9,10 @@ interface Props {
 
 defineProps<Props>();
 
-const { currentLanguage } = storeToRefs(usei18n());
+const i18n = usei18n();
+const { currentLanguage } = storeToRefs(i18n);
+const { t } = i18n;
+const nMinRead = (n: number) => t('{{n}} min read', { n });
 </script>
 
 <template>
@@ -27,7 +30,7 @@ const { currentLanguage } = storeToRefs(usei18n());
       <span class="post-card__dot" />
       <span>{{ formatPostDate(post.date, currentLanguage) }}</span>
       <span class="post-card__dot" />
-      <span>{{ $t('{{n}} min read', { n: post.readMins }) }}</span>
+      <span>{{ nMinRead(post.readMins) }}</span>
     </div>
 
     <h3 class="post-card__title">{{ post.title }}</h3>
