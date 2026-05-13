@@ -588,6 +588,19 @@ watch(
 );
 watch(() => props.zoomCountry, applyZoom);
 
+watch(
+  () => props.focusCityPin,
+  (newPin, oldPin) => {
+    if (oldPin && !newPin && props.focusCountries.length === 1 && !props.tripPath?.length) {
+      if (zoomTimer !== null) clearTimeout(zoomTimer);
+      zoomTimer = setTimeout(() => {
+        if (!chart || chart.isDisposed()) return;
+        animateToCountry(props.focusCountries[0]!);
+      }, 300);
+    }
+  },
+);
+
 onMounted(buildChart);
 onUnmounted(() => {
   if (zoomTimer !== null) clearTimeout(zoomTimer);
