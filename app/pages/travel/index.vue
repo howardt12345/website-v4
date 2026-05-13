@@ -58,6 +58,7 @@ const stageClass = computed(() => ({
     <TravelBreadcrumb
       :country="focusCountry"
       :trip="focusTrip"
+      :city-name="cityViewProps?.city.name"
       @nav-world="navWorld"
       @nav-country="navCountry"
     />

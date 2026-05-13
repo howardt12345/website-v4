@@ -5,6 +5,7 @@ import { usei18n } from '~/store/i18n.store';
 interface Props {
   country?: TravelCountry;
   trip?: TravelTrip;
+  cityName?: string;
 }
 
 interface Emits {
@@ -31,9 +32,12 @@ const breadcrumbItems = computed((): BreadcrumbItem[] => [
   ...(props.country
     ? [{
         title: props.country.name,
-        disabled: !props.trip,
+        disabled: !props.trip && !props.cityName,
         onClick: () => emit('nav-country', props.country!.iso3),
       }]
+    : []),
+  ...(props.cityName && !props.trip
+    ? [{ title: props.cityName, disabled: true }]
     : []),
   ...(props.trip
     ? [{ title: props.trip.title, disabled: true }]
