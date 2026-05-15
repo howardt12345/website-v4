@@ -1,64 +1,11 @@
-<script lang="ts">
-import type { FeatureCollection } from 'geojson';
-
-const PROVINCE_LOADERS: Record<string, () => Promise<{ default: FeatureCollection }>> = {
-  TWN: () => import('@amcharts/amcharts5-geodata/taiwanLow'),
-  JPN: () => import('@amcharts/amcharts5-geodata/japanLow'),
-  KOR: () => import('@amcharts/amcharts5-geodata/southKoreaLow'),
-  CHN: () => import('@amcharts/amcharts5-geodata/chinaLow'),
-  SGP: () => import('@amcharts/amcharts5-geodata/singaporeLow'),
-  THA: () => import('@amcharts/amcharts5-geodata/thailandLow'),
-  VNM: () => import('@amcharts/amcharts5-geodata/vietnamLow'),
-  MYS: () => import('@amcharts/amcharts5-geodata/malaysiaLow'),
-  IDN: () => import('@amcharts/amcharts5-geodata/indonesiaLow'),
-  PHL: () => import('@amcharts/amcharts5-geodata/philippinesLow'),
-  IND: () => import('@amcharts/amcharts5-geodata/indiaLow'),
-  AUS: () => import('@amcharts/amcharts5-geodata/australiaLow'),
-  NZL: () => import('@amcharts/amcharts5-geodata/newZealandLow'),
-  USA: () => import('@amcharts/amcharts5-geodata/usaLow'),
-  CAN: () => import('@amcharts/amcharts5-geodata/canadaLow'),
-  MEX: () => import('@amcharts/amcharts5-geodata/mexicoLow'),
-  BRA: () => import('@amcharts/amcharts5-geodata/brazilLow'),
-  ARG: () => import('@amcharts/amcharts5-geodata/argentinaLow'),
-  GBR: () => import('@amcharts/amcharts5-geodata/ukLow'),
-  FRA: () => import('@amcharts/amcharts5-geodata/franceLow'),
-  ITA: () => import('@amcharts/amcharts5-geodata/italyLow'),
-  DEU: () => import('@amcharts/amcharts5-geodata/germanyLow'),
-  ESP: () => import('@amcharts/amcharts5-geodata/spainLow'),
-  PRT: () => import('@amcharts/amcharts5-geodata/portugalLow'),
-  NLD: () => import('@amcharts/amcharts5-geodata/netherlandsLow'),
-  CHE: () => import('@amcharts/amcharts5-geodata/switzerlandLow'),
-  AUT: () => import('@amcharts/amcharts5-geodata/austriaLow'),
-  GRC: () => import('@amcharts/amcharts5-geodata/greeceLow'),
-  BEL: () => import('@amcharts/amcharts5-geodata/belgiumLow'),
-  IRL: () => import('@amcharts/amcharts5-geodata/irelandLow'),
-  POL: () => import('@amcharts/amcharts5-geodata/polandLow'),
-  HUN: () => import('@amcharts/amcharts5-geodata/hungaryLow'),
-  NOR: () => import('@amcharts/amcharts5-geodata/norwayLow'),
-  SWE: () => import('@amcharts/amcharts5-geodata/swedenLow'),
-  DNK: () => import('@amcharts/amcharts5-geodata/denmarkLow'),
-  FIN: () => import('@amcharts/amcharts5-geodata/finlandLow'),
-};
-
-const provinceGeoCache: Record<string, FeatureCollection> = {};
-
-async function loadProvinceGeo(iso3: string): Promise<FeatureCollection | null> {
-  const loader = PROVINCE_LOADERS[iso3];
-  if (!loader) return null;
-  if (provinceGeoCache[iso3]) return provinceGeoCache[iso3]!;
-  const mod = await loader();
-  provinceGeoCache[iso3] = mod.default;
-  return mod.default;
-}
-</script>
-
 <script setup lang="ts">
 import * as am5 from '@amcharts/amcharts5';
 import * as am5map from '@amcharts/amcharts5/map';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import am5geodata_worldHigh from '@amcharts/amcharts5-geodata/worldHigh';
-import type { GeometryObject } from 'geojson';
+import type { FeatureCollection, GeometryObject } from 'geojson';
 import { hslToHex, vuetifyColorToHex } from '~/utils/color';
+import { loadProvinceGeo } from '~/utils/province-geo';
 import { useTheme } from '~/store/theme.store';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -113,6 +60,23 @@ const { iso2ToIso3, iso3ToIso2 } = storeToRefs(useTravelStore());
 const MAX_LATITUDE = 85;
 const MAX_LONGITUDE = 180;
 const MAX_ZOOM_LEVEL = 1024;
+const ZOOM_DEBOUNCE_MS = 300;
+const ANIM_DURATION_MS = 600;
+const ZOOM_ANIM_DURATION_MS = 500;
+const HALO_ANIM_DURATION_MS = 1600;
+const HALO_STAGGER_DELAY_MS = 800;
+const GRATICULE_STEP_DEG = 20;
+const GLOBE_ZOOM_PATH_MIN = 1.5;
+const GLOBE_ZOOM_PATH_MAX = 64;
+const GLOBE_ZOOM_COUNTRY_MIN = 1.8;
+const GLOBE_ZOOM_COUNTRY_MAX = 8;
+const GLOBE_ZOOM_ANGULAR_DIVISOR = 120;
+const PATH_PAD_RATIO = 0.15;
+const COUNTRY_PAD_RATIO = 0.1;
+const COUNTRY_PAD_MIN_DEG = 2;
+const CITY_PIN_MIN_PAD_DEG = 1.0;
+const CITY_PIN_MIN_SPAN_DEG = 0.18;
+const PLACE_PIN_MIN_PAD_DEG = 0.1;
 
 const landFill = () => vuetifyColorToHex('--v-theme-map-land');
 const landStroke = () => vuetifyColorToHex('--v-theme-map-land-stroke');
@@ -133,11 +97,16 @@ const visitedRegionFill = (hue: number) =>
 const provinceStrokeColor = (hue: number) =>
   isDark.value ? hslToHex(hue, 40, 33) : hslToHex(hue, 48, 42);
 
+function isIdContext(v: unknown): v is { id: string } {
+  return typeof v === 'object' && v !== null && 'id' in v && typeof (v as { id: unknown }).id === 'string';
+}
+
 const mapEl = ref<HTMLElement | null>(null);
 let root: am5.Root | null = null;
 let chart: am5map.MapChart | null = null;
 let loadId = 0;
 let loadsInFlight = 0;
+let pendingOverlayRebuild = false;
 let overlaySeriesStart = 0;
 let zoomTimer: ReturnType<typeof setTimeout> | null = null;
 const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
@@ -146,21 +115,22 @@ const colorizeVisitedCountries = (
   worldSeries: am5map.MapPolygonSeries,
   provinceLoaded: Set<string>,
 ) => {
+  const focusSet = new Set(props.focusCountries);
   worldSeries.mapPolygons.each((polygon) => {
-    const ctx = polygon.dataItem?.dataContext as { id: string } | undefined;
-    if (!ctx) return;
+    const ctx = polygon.dataItem?.dataContext;
+    if (!isIdContext(ctx)) return;
 
     const iso3 = iso2ToIso3.value[ctx.id];
     const hue = iso3 ? props.visitedHues[iso3] : undefined;
     if (!iso3 || hue === undefined) return;
 
-    if (props.focusCountries.includes(iso3) && provinceLoaded.has(iso3)) {
+    if (focusSet.has(iso3) && provinceLoaded.has(iso3)) {
       polygon.setAll({ forceHidden: true });
     } else {
       polygon.set('fill', am5.color(visitedCountryFill(hue)));
       polygon.states.create('hover', { fill: am5.color(visitedCountryHover(hue)) });
       polygon.set('cursorOverStyle', 'pointer');
-      polygon.events.on('click', () => emit('country-click', iso3));
+      polygon.events.once('click', () => emit('country-click', iso3));
     }
   });
 };
@@ -171,12 +141,15 @@ const zoomToPathBounds = (
   minSpanDeg = 0,
 ) => {
   if (!chart || path.length === 0) return;
-  const lons = path.map((p) => p.lon);
-  const lats = path.map((p) => p.lat);
-  const rawMinLon = Math.min(...lons);
-  const rawMaxLon = Math.max(...lons);
-  const rawMinLat = Math.min(...lats);
-  const rawMaxLat = Math.max(...lats);
+
+  let rawMinLon = Infinity, rawMaxLon = -Infinity;
+  let rawMinLat = Infinity, rawMaxLat = -Infinity;
+  for (const p of path) {
+    if (p.lon < rawMinLon) rawMinLon = p.lon;
+    if (p.lon > rawMaxLon) rawMaxLon = p.lon;
+    if (p.lat < rawMinLat) rawMinLat = p.lat;
+    if (p.lat > rawMaxLat) rawMaxLat = p.lat;
+  }
 
   const centLon = (rawMinLon + rawMaxLon) / 2;
   const centLat = (rawMinLat + rawMaxLat) / 2;
@@ -189,23 +162,23 @@ const zoomToPathBounds = (
     const centroidLon = (minLon + maxLon) / 2;
     const centroidLat = (minLat + maxLat) / 2;
     const effectiveSpan = Math.max(maxLon - minLon, maxLat - minLat, minSpanDeg, minPadDeg * 2);
-    const zoomLevel = Math.max(1.5, Math.min(64, 120 / effectiveSpan));
+    const zoomLevel = Math.max(GLOBE_ZOOM_PATH_MIN, Math.min(GLOBE_ZOOM_PATH_MAX, GLOBE_ZOOM_ANGULAR_DIVISOR / effectiveSpan));
     const easing = am5.ease.out(am5.ease.cubic);
-    chart.animate({ key: 'rotationX', to: -centroidLon, duration: 600, easing });
-    chart.animate({ key: 'rotationY', to: -centroidLat, duration: 600, easing });
-    chart.animate({ key: 'zoomLevel', to: zoomLevel, duration: 600, easing });
+    chart.animate({ key: 'rotationX', to: -centroidLon, duration: ANIM_DURATION_MS, easing });
+    chart.animate({ key: 'rotationY', to: -centroidLat, duration: ANIM_DURATION_MS, easing });
+    chart.animate({ key: 'zoomLevel', to: zoomLevel, duration: ANIM_DURATION_MS, easing });
   } else {
-    const lonPad = Math.max((maxLon - minLon) * 0.15, minPadDeg);
-    const latPad = Math.max((maxLat - minLat) * 0.15, minPadDeg);
+    const lonPad = Math.max((maxLon - minLon) * PATH_PAD_RATIO, minPadDeg);
+    const latPad = Math.max((maxLat - minLat) * PATH_PAD_RATIO, minPadDeg);
     try {
       chart.zoomToGeoBounds({
         left: Math.max(minLon - lonPad, -MAX_LONGITUDE),
         right: Math.min(maxLon + lonPad, MAX_LONGITUDE),
         top: Math.min(maxLat + latPad, MAX_LATITUDE),
         bottom: Math.max(minLat - latPad, -MAX_LATITUDE),
-      }, 500);
+      }, ZOOM_ANIM_DURATION_MS);
     } catch (err) {
-      if (import.meta.dev) console.warn('[TravelMap] zoomToGeoBounds failed (malformed bounds):', err);
+      if (import.meta.dev) console.warn('[TravelMap] zoomToGeoBounds failed:', err);
     }
   }
 };
@@ -215,28 +188,33 @@ const applyZoom = () => {
   if (props.focusCityPin) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed() || !props.focusCityPin) return;
-      zoomToPathBounds([props.focusCityPin], 0, 0.18);
-    }, 300);
+      zoomToPathBounds([props.focusCityPin], CITY_PIN_MIN_PAD_DEG, CITY_PIN_MIN_SPAN_DEG);
+    }, ZOOM_DEBOUNCE_MS);
   } else if (props.zoomCountry) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed() || !props.zoomCountry) return;
       animateToCountry(props.zoomCountry);
-    }, 300);
+    }, ZOOM_DEBOUNCE_MS);
   } else if (props.placePins.length) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
-      zoomToPathBounds(props.placePins, 0.1);
-    }, 300);
+      zoomToPathBounds(props.placePins, PLACE_PIN_MIN_PAD_DEG);
+    }, ZOOM_DEBOUNCE_MS);
   } else if (props.tripPath?.length) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
       zoomToPathBounds(props.tripPath!);
-    }, 300);
-  } else if (!props.focusCountries.length) {
+    }, ZOOM_DEBOUNCE_MS);
+  } else if (props.focusCountries.length) {
     zoomTimer = setTimeout(() => {
       if (!chart || chart.isDisposed()) return;
-      chart.goHome(500);
-    }, 300);
+      animateToCountry(props.focusCountries[0]!);
+    }, ZOOM_DEBOUNCE_MS);
+  } else {
+    zoomTimer = setTimeout(() => {
+      if (!chart || chart.isDisposed()) return;
+      chart.goHome(ZOOM_ANIM_DURATION_MS);
+    }, ZOOM_DEBOUNCE_MS);
   }
 };
 
@@ -252,40 +230,47 @@ const animateToCountry = (iso3: string) => {
   );
   if (!feature?.geometry) return;
 
+  let bounds: ReturnType<typeof am5map.getGeoBounds>;
   try {
-    const bounds = am5map.getGeoBounds(feature.geometry as GeometryObject);
+    bounds = am5map.getGeoBounds(feature.geometry as GeometryObject);
+  } catch (err) {
+    if (import.meta.dev) console.warn('[TravelMap] getGeoBounds failed (malformed geometry):', err);
+    return;
+  }
 
+  try {
     if (props.mode === 'globe') {
       const centroidLon = (bounds.left + bounds.right) / 2;
       const centroidLat = (bounds.top + bounds.bottom) / 2;
       const angularSpan = Math.max(bounds.right - bounds.left, bounds.top - bounds.bottom);
-      const zoomLevel = Math.max(1.8, Math.min(8, 120 / angularSpan));
+      const zoomLevel = Math.max(GLOBE_ZOOM_COUNTRY_MIN, Math.min(GLOBE_ZOOM_COUNTRY_MAX, GLOBE_ZOOM_ANGULAR_DIVISOR / angularSpan));
       const easing = am5.ease.out(am5.ease.cubic);
 
-      chart.animate({ key: 'rotationX', to: -centroidLon, duration: 600, easing });
-      chart.animate({ key: 'rotationY', to: -centroidLat, duration: 600, easing });
-      chart.animate({ key: 'zoomLevel', to: zoomLevel, duration: 600, easing });
+      chart.animate({ key: 'rotationX', to: -centroidLon, duration: ANIM_DURATION_MS, easing });
+      chart.animate({ key: 'rotationY', to: -centroidLat, duration: ANIM_DURATION_MS, easing });
+      chart.animate({ key: 'zoomLevel', to: zoomLevel, duration: ANIM_DURATION_MS, easing });
     } else {
-      const lonPad = Math.max((bounds.right - bounds.left) * 0.1, 2);
-      const latPad = Math.max((bounds.top - bounds.bottom) * 0.1, 2);
+      const lonPad = Math.max((bounds.right - bounds.left) * COUNTRY_PAD_RATIO, COUNTRY_PAD_MIN_DEG);
+      const latPad = Math.max((bounds.top - bounds.bottom) * COUNTRY_PAD_RATIO, COUNTRY_PAD_MIN_DEG);
       chart.zoomToGeoBounds({
         left: Math.max(bounds.left - lonPad, -MAX_LONGITUDE),
         right: Math.min(bounds.right + lonPad, MAX_LONGITUDE),
         top: Math.min(bounds.top + latPad, MAX_LATITUDE),
         bottom: Math.max(bounds.bottom - latPad, -MAX_LATITUDE),
-      }, 500);
+      }, ZOOM_ANIM_DURATION_MS);
     }
   } catch (err) {
-    if (import.meta.dev) console.warn('[TravelMap] animateToCountry failed (malformed geometry):', err);
+    if (import.meta.dev) console.warn('[TravelMap] zoomToGeoBounds failed (malformed bounds):', err);
   }
 };
 
-const addTripPath = () => {
-  if (!root || !chart || !props.tripPath || props.tripPath.length < 2) return;
+const addTripPath = (r: am5.Root, c: am5map.MapChart) => {
+  if (!props.tripPath || props.tripPath.length < 2) return;
+  const accent = accentHex();
 
-  const series = chart.series.push(am5map.MapLineSeries.new(root, {}));
+  const series = c.series.push(am5map.MapLineSeries.new(r, {}));
   series.mapLines.template.setAll({
-    stroke: am5.color(accentHex()),
+    stroke: am5.color(accent),
     strokeWidth: 2,
     strokeDasharray: [3, 5],
     strokeOpacity: 0.9,
@@ -298,24 +283,29 @@ const addTripPath = () => {
   });
 };
 
-const addCityPins = () => {
-  if (!root || !chart || !props.cityPins.length) return;
+const addCityPins = (r: am5.Root, c: am5map.MapChart) => {
+  if (!props.cityPins.length) return;
+  const accent = accentHex();
+  const bg = backgroundHex();
+  const label = labelFill();
 
-  const series = chart.series.push(am5map.MapPointSeries.new(root, {}));
+  const series = c.series.push(am5map.MapPointSeries.new(r, {}));
   series.bullets.push((_r, _s, dataItem) => {
-    const ctx = dataItem.dataContext as { name: string; id: string; country: string };
-    const container = am5.Container.new(root!, {});
+    const ctx = dataItem.dataContext;
+    if (!ctx || typeof ctx !== 'object') return undefined;
+    const { id, country } = ctx as { name: string; id: string; country: string };
+    const container = am5.Container.new(r, {});
 
-    container.children.push(am5.Circle.new(root!, {
+    container.children.push(am5.Circle.new(r, {
       radius: 5,
-      fill: am5.color(accentHex()),
-      stroke: am5.color(backgroundHex()),
+      fill: am5.color(accent),
+      stroke: am5.color(bg),
       strokeWidth: 2,
     }));
-    container.children.push(am5.Label.new(root!, {
+    container.children.push(am5.Label.new(r, {
       text: '{name}',
       fontSize: 11,
-      fill: am5.color(labelFill()),
+      fill: am5.color(label),
       centerX: am5.p50,
       centerY: am5.p100,
       y: -10,
@@ -323,11 +313,9 @@ const addCityPins = () => {
     }));
 
     container.set('cursorOverStyle', 'pointer');
-    container.events.on('click', () => {
-      emit('city-click', { country: ctx.country, city: ctx.id });
-    });
+    container.events.on('click', () => emit('city-click', { country, city: id }));
 
-    return am5.Bullet.new(root!, { sprite: container });
+    return am5.Bullet.new(r, { sprite: container });
   });
 
   for (const pin of props.cityPins) {
@@ -340,27 +328,27 @@ const addCityPins = () => {
   }
 };
 
-const createActivePinSprite = (label: string): am5.Container => {
-  const container = am5.Container.new(root!, {});
+const createActivePinSprite = (r: am5.Root, label: string | undefined): am5.Container => {
+  const container = am5.Container.new(r, {});
   const accent = accentHex();
   const bg = backgroundHex();
 
-  const halo1 = am5.Circle.new(root!, { radius: 8, fill: am5.color(accent), fillOpacity: 0.35 });
+  const halo1 = am5.Circle.new(r, { radius: 8, fill: am5.color(accent), fillOpacity: 0.35 });
   container.children.push(halo1);
-  halo1.animate({ key: 'radius', from: 7, to: 22, duration: 1600, loops: Infinity });
-  halo1.animate({ key: 'fillOpacity', from: 0.45, to: 0, duration: 1600, loops: Infinity });
+  halo1.animate({ key: 'radius', from: 7, to: 22, duration: HALO_ANIM_DURATION_MS, loops: Infinity });
+  halo1.animate({ key: 'fillOpacity', from: 0.45, to: 0, duration: HALO_ANIM_DURATION_MS, loops: Infinity });
 
-  const halo2 = am5.Circle.new(root!, { radius: 8, fill: am5.color(accent), fillOpacity: 0.2 });
+  const halo2 = am5.Circle.new(r, { radius: 8, fill: am5.color(accent), fillOpacity: 0.2 });
   container.children.push(halo2);
-  // amCharts5 types omit the `delay` field; stagger via setTimeout instead.
+  // amCharts5 types omit the animation `delay` field; stagger via setTimeout instead.
   pinHaloTimers.push(setTimeout(() => {
     if (!halo2.isDisposed()) {
-      halo2.animate({ key: 'radius', from: 7, to: 28, duration: 1600, loops: Infinity });
-      halo2.animate({ key: 'fillOpacity', from: 0.3, to: 0, duration: 1600, loops: Infinity });
+      halo2.animate({ key: 'radius', from: 7, to: 28, duration: HALO_ANIM_DURATION_MS, loops: Infinity });
+      halo2.animate({ key: 'fillOpacity', from: 0.3, to: 0, duration: HALO_ANIM_DURATION_MS, loops: Infinity });
     }
-  }, 800));
+  }, HALO_STAGGER_DELAY_MS));
 
-  container.children.push(am5.Circle.new(root!, {
+  container.children.push(am5.Circle.new(r, {
     radius: 7,
     fill: am5.color(accent),
     stroke: am5.color(bg),
@@ -368,7 +356,7 @@ const createActivePinSprite = (label: string): am5.Container => {
   }));
 
   if (label) {
-    container.children.push(am5.Label.new(root!, {
+    container.children.push(am5.Label.new(r, {
       text: label,
       fontSize: 11,
       fontWeight: '600',
@@ -376,7 +364,7 @@ const createActivePinSprite = (label: string): am5.Container => {
       centerX: am5.p50,
       centerY: 0,
       y: 14,
-      background: am5.RoundedRectangle.new(root!, {
+      background: am5.RoundedRectangle.new(r, {
         fill: am5.color(bg),
         fillOpacity: 0.85,
         cornerRadiusTL: 4, cornerRadiusTR: 4, cornerRadiusBL: 4, cornerRadiusBR: 4,
@@ -388,21 +376,23 @@ const createActivePinSprite = (label: string): am5.Container => {
   return container;
 };
 
-const createInactivePinSprite = (idx: number): am5.Container => {
-  const container = am5.Container.new(root!, {});
+const createInactivePinSprite = (r: am5.Root, idx: number): am5.Container => {
+  const container = am5.Container.new(r, {});
+  const accent = accentHex();
+  const bg = backgroundHex();
 
-  container.children.push(am5.Circle.new(root!, {
+  container.children.push(am5.Circle.new(r, {
     radius: 9,
-    fill: am5.color(backgroundHex()),
-    stroke: am5.color(accentHex()),
+    fill: am5.color(bg),
+    stroke: am5.color(accent),
     strokeWidth: 1.5,
     fillOpacity: 0.9,
   }));
-  container.children.push(am5.Label.new(root!, {
+  container.children.push(am5.Label.new(r, {
     text: String(idx + 1),
     fontSize: 10,
     fontWeight: '600',
-    fill: am5.color(accentHex()),
+    fill: am5.color(accent),
     centerX: am5.p50,
     centerY: am5.p50,
   }));
@@ -413,16 +403,16 @@ const createInactivePinSprite = (idx: number): am5.Container => {
   return container;
 };
 
-const addPlacePins = () => {
-  if (!root || !chart || !props.placePins.length) return;
+const addPlacePins = (r: am5.Root, c: am5map.MapChart) => {
+  if (!props.placePins.length) return;
 
-  const series = chart.series.push(am5map.MapPointSeries.new(root, {}));
+  const series = c.series.push(am5map.MapPointSeries.new(r, {}));
   series.bullets.push((_r, _s, dataItem) => {
-    const ctx = dataItem.dataContext as { active: boolean; idx: number; label: string };
+    const ctx = dataItem.dataContext as { active: boolean; idx: number; label: string | undefined };
     const sprite = ctx.active
-      ? createActivePinSprite(ctx.label)
-      : createInactivePinSprite(ctx.idx);
-    return am5.Bullet.new(root!, { sprite });
+      ? createActivePinSprite(r, ctx.label)
+      : createInactivePinSprite(r, ctx.idx);
+    return am5.Bullet.new(r, { sprite });
   });
 
   for (const [i, pin] of props.placePins.entries()) {
@@ -444,16 +434,20 @@ const clearOverlays = () => {
   }
 };
 
-const addOverlays = () => {
-  addTripPath();
-  addCityPins();
-  addPlacePins();
+const addOverlays = (r: am5.Root, c: am5map.MapChart) => {
+  addTripPath(r, c);
+  addCityPins(r, c);
+  addPlacePins(r, c);
 };
 
 const rebuildOverlays = () => {
-  if (loadsInFlight > 0) return;
+  if (loadsInFlight > 0) {
+    pendingOverlayRebuild = true;
+    return;
+  }
+  if (!root || !chart) return;
   clearOverlays();
-  addOverlays();
+  addOverlays(root, chart);
   applyZoom();
 };
 
@@ -476,11 +470,15 @@ const loadPolygons = async () => {
       provinceGeos.filter((p) => p.geo).map((p) => p.iso3),
     );
 
+    const land = landFill();
+    const stroke = landStroke();
+    const hover = landHover();
+
     while (chart.series.length) chart.series.removeIndex(0);
 
     if (props.mode === 'globe') {
-      const graticule = chart.series.push(am5map.GraticuleSeries.new(root, { step: 20 }));
-      graticule.mapLines.template.setAll({ stroke: am5.color(landStroke()), strokeOpacity: 0.4 });
+      const graticule = chart.series.push(am5map.GraticuleSeries.new(root, { step: GRATICULE_STEP_DEG }));
+      graticule.mapLines.template.setAll({ stroke: am5.color(stroke), strokeOpacity: 0.4 });
     }
 
     const worldSeries = chart.series.push(
@@ -491,14 +489,14 @@ const loadPolygons = async () => {
     );
 
     worldSeries.mapPolygons.template.setAll({
-      fill: am5.color(landFill()),
-      stroke: am5.color(landStroke()),
+      fill: am5.color(land),
+      stroke: am5.color(stroke),
       strokeWidth: 0.5,
       interactive: true,
       tooltipText: '{name}',
     });
     worldSeries.mapPolygons.template.states.create('hover', {
-      fill: am5.color(landHover()),
+      fill: am5.color(hover),
     });
 
     let hasAnimated = false;
@@ -515,15 +513,14 @@ const loadPolygons = async () => {
     for (const { iso3, geo } of provinceGeos) {
       if (!geo) continue;
       const hue = props.visitedHues[iso3] ?? 200;
+      const visitedSet = new Set(props.visitedRegions);
 
       const provinceSeries = chart.series.push(
-        am5map.MapPolygonSeries.new(root, {
-          geoJSON: geo,
-        }),
+        am5map.MapPolygonSeries.new(root, { geoJSON: geo }),
       );
 
       provinceSeries.mapPolygons.template.setAll({
-        fill: am5.color(landFill()),
+        fill: am5.color(land),
         stroke: am5.color(provinceStrokeColor(hue)),
         strokeWidth: 1.5,
         strokeOpacity: 0.4,
@@ -531,14 +528,17 @@ const loadPolygons = async () => {
         tooltipText: '{name}',
       });
       provinceSeries.mapPolygons.template.states.create('hover', {
-        fill: am5.color(landHover()),
+        fill: am5.color(hover),
       });
 
+      let provinceColorized = false;
       provinceSeries.events.on('datavalidated', () => {
+        if (provinceColorized) return;
+        provinceColorized = true;
         provinceSeries.mapPolygons.each((polygon) => {
-          const ctx = polygon.dataItem?.dataContext as { id: string } | undefined;
-          if (!ctx) return;
-          if (props.visitedRegions.includes(ctx.id)) {
+          const ctx = polygon.dataItem?.dataContext;
+          if (!isIdContext(ctx)) return;
+          if (visitedSet.has(ctx.id)) {
             polygon.set('fill', am5.color(visitedRegionFill(hue)));
           }
         });
@@ -546,15 +546,23 @@ const loadPolygons = async () => {
     }
 
     overlaySeriesStart = chart.series.length;
-    addOverlays();
+    addOverlays(root, chart);
     applyZoom();
   } finally {
     loadsInFlight--;
+    if (pendingOverlayRebuild) {
+      pendingOverlayRebuild = false;
+      rebuildOverlays();
+    }
   }
 };
 
 const buildChart = () => {
   if (!mapEl.value) return;
+
+  clearOverlays();
+  loadsInFlight = 0;
+  loadId++;
 
   root?.dispose();
   root = am5.Root.new(mapEl.value);
@@ -584,22 +592,8 @@ watch(
 watch(
   [() => props.tripPath, () => props.placePins, () => props.cityPins, () => props.focusCityPin],
   rebuildOverlays,
-  { deep: true },
 );
 watch(() => props.zoomCountry, applyZoom);
-
-watch(
-  () => props.focusCityPin,
-  (newPin, oldPin) => {
-    if (oldPin && !newPin && props.focusCountries.length === 1 && !props.tripPath?.length) {
-      if (zoomTimer !== null) clearTimeout(zoomTimer);
-      zoomTimer = setTimeout(() => {
-        if (!chart || chart.isDisposed()) return;
-        animateToCountry(props.focusCountries[0]!);
-      }, 300);
-    }
-  },
-);
 
 onMounted(buildChart);
 onUnmounted(() => {
