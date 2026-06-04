@@ -8,6 +8,7 @@ import type {
   TripOverviewDay,
   TripOverviewPhoto,
   CityViewPlace,
+  CityVisitSummary,
 } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
 import { tripSlug, tripsForCountry } from '~/composables/travel';
@@ -290,6 +291,71 @@ export const useTravelStore = defineStore('travel', () => {
     return { city, countryName: countryByIso3(iso3)?.name, places: activeCityPlaces.value };
   });
 
+  const visitedCitySummaries = computed<CityVisitSummary[]>(() => {
+    const stats = new Map<string, {
+      country: TravelCountry;
+      city: TravelCity;
+      visitCount: number;
+      tripSlugs: Set<string>;
+      placeKeys: Set<string>;
+      lastVisited: string;
+    }>();
+
+    for (const day of days.value) {
+      const tripSlugFromDay = day.stem.replace(/\/days\/[^/]+$/, '');
+      const citiesSeenToday = new Set<string>();
+
+      for (const place of day.places) {
+        const iso3 = place.country ?? day.country;
+        const cityId = place.city ?? day.city;
+        const country = countryByIso3(iso3);
+        const city = country?.cities.find((c) => c.id === cityId);
+        if (!country || !city) continue;
+
+        const cityKey = `${iso3}/${cityId}`;
+        if (!stats.has(cityKey)) {
+          stats.set(cityKey, {
+            country,
+            city,
+            visitCount: 0,
+            tripSlugs: new Set(),
+            placeKeys: new Set(),
+            lastVisited: day.date,
+          });
+        }
+        const entry = stats.get(cityKey)!;
+
+        entry.placeKeys.add(place.id ?? place.name);
+
+        if (!citiesSeenToday.has(cityKey)) {
+          citiesSeenToday.add(cityKey);
+          entry.visitCount++;
+          entry.tripSlugs.add(tripSlugFromDay);
+          if (day.date > entry.lastVisited) entry.lastVisited = day.date;
+        }
+      }
+    }
+
+    return [...stats.values()]
+      .map(({ tripSlugs, placeKeys, ...rest }) => ({
+        ...rest,
+        tripCount: tripSlugs.size,
+        placeCount: placeKeys.size,
+      }))
+      .sort((a, b) => b.visitCount - a.visitCount || a.city.name.localeCompare(b.city.name));
+  });
+
+  const citiesOverviewProps = computed(() => {
+    if (view.value === 'world') {
+      return { summaries: visitedCitySummaries.value };
+    }
+    if (view.value === 'country' && focusCountry.value && !activeCityFocus.value) {
+      const iso3 = focusCountry.value.iso3;
+      return { summaries: visitedCitySummaries.value.filter((s) => s.country.iso3 === iso3) };
+    }
+    return null;
+  });
+
   const railTrips = computed<TravelTrip[]>(() =>
     view.value === 'country' ? countryTrips.value : trips.value,
   );
@@ -456,6 +522,8 @@ export const useTravelStore = defineStore('travel', () => {
     dayViewProps,
     tripOverviewProps,
     cityViewProps,
+    visitedCitySummaries,
+    citiesOverviewProps,
     hydrate,
   };
 });

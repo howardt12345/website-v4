@@ -100,5 +100,8 @@
   "autonomous communities": "autonomous communities",
   "districts": "districts",
   "cantons": "cantons",
-  "voivodeships": "voivodeships"
+  "voivodeships": "voivodeships",
+  "Visited Cities": "Visited Cities",
+  "{{n}} trips": "{{n}} trips",
+  "{{n}} places": "{{n}} places"
 }

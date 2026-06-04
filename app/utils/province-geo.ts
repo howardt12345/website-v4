@@ -47,7 +47,6 @@ const PROVINCE_LOADERS: Record<keyof typeof COUNTRY_SUBDIVISION_META, ProvinceLo
   FIN: () => import('@amcharts/amcharts5-geodata/finlandLow'),
 };
 
-// Stores in-flight Promises so concurrent requests for the same iso3 coalesce into one fetch.
 const provinceGeoCache: Record<string, Promise<FeatureCollection | null>> = {};
 
 export function loadProvinceGeo(iso3: string): Promise<FeatureCollection | null> {
@@ -55,4 +54,14 @@ export function loadProvinceGeo(iso3: string): Promise<FeatureCollection | null>
   if (!loader) return Promise.resolve(null);
   provinceGeoCache[iso3] ??= loader().then((mod) => mod.default);
   return provinceGeoCache[iso3]!;
+}
+
+export async function loadRegionNames(iso3: string): Promise<Record<string, string>> {
+  const geo = await loadProvinceGeo(iso3);
+  if (!geo) return {};
+  return Object.fromEntries(
+    geo.features
+      .filter((f) => f.id != null && f.properties?.['name'])
+      .map((f) => [String(f.id), f.properties!['name'] as string]),
+  );
 }

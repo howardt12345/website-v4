@@ -24,7 +24,6 @@ const {
   focusTrip,
   activeDay,
   activePlaceIndex,
-  activeCityFocus,
   mapMode,
   mapProps,
   railProps,
@@ -32,6 +31,7 @@ const {
   dayViewProps,
   tripOverviewProps,
   cityViewProps,
+  citiesOverviewProps,
 } = storeToRefs(travelStore);
 
 const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, countryByIso3 } = travelStore;
@@ -138,6 +138,11 @@ const stageClass = computed(() => ({
     <TravelCityView
       v-else-if="cityViewProps"
       v-bind="cityViewProps"
+    />
+    <TravelCitiesOverview
+      v-else-if="citiesOverviewProps"
+      v-bind="citiesOverviewProps"
+      @city-click="navCity"
     />
   </div>
 </template>

@@ -75,6 +75,15 @@ export interface TravelTimelinePhoto {
   tags?: string[];
 }
 
+export interface CityVisitSummary {
+  city: TravelCity;
+  country: TravelCountry;
+  visitCount: number;
+  tripCount: number;
+  placeCount: number;
+  lastVisited: string;
+}
+
 export interface TravelTimelineEntry {
   key: string;
   eyebrow: string;
