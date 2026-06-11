@@ -439,7 +439,7 @@ export const useTravelStore = defineStore('travel', () => {
 
   const mapZoomCountry = computed<string | null>(() => {
     if (view.value !== 'trip') return null;
-    if (!activeDay.value) return null;
+    if (activeDay.value) return null;
     if (activeCityFocus.value) return null;
     return focusCountryIso3.value;
   });
