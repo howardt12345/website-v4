@@ -2,10 +2,6 @@ date: '2024-03-31'
 country: JPN
 city: tokyo
 places:
-  - id: shinjuku-gyoen
-    name: Shinjuku Gyoen
-    lon: 139.710
-    lat: 35.685
   - id: ghibli-museum
     name: Ghibli Museum
     lon: 139.576

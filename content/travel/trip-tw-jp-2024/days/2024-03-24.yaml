@@ -6,14 +6,22 @@ places:
     name: Higashi Chaya District
     lon: 136.667
     lat: 36.573
+  - id: sakuda-gold-leaf
+    name: Sakuda Gold & Silver Leaf
+    lon: 136.658
+    lat: 36.574
   - id: omicho-market
     name: Omicho Market
     lon: 136.656
     lat: 36.573
-  - id: nagamachi-samurai-district
-    name: Nagamachi Samurai District
-    lon: 136.652
+  - id: oyama-shrine-kanazawa
+    name: Oyama Shrine
+    lon: 136.654
     lat: 36.564
+  - id: ozaki-shrine-kanazawa
+    name: Ozaki Shrine
+    lon: 136.658
+    lat: 36.562
   - id: kanazawa-castle
     name: Kanazawa Castle
     lon: 136.661

@@ -6,11 +6,11 @@ places:
     name: Dazaifu Tenmangu
     lon: 130.535
     lat: 33.519
+  - id: dazaifu-omotesando
+    name: Dazaifu Omotesando
+    lon: 130.535
+    lat: 33.521
   - id: canal-city-hakata
     name: Canal City Hakata
     lon: 130.411
     lat: 33.589
-  - id: kushida-shrine
-    name: Kushida Shrine
-    lon: 130.410
-    lat: 33.591

@@ -14,3 +14,7 @@ places:
     name: Peace Memorial Park
     lon: 132.453
     lat: 34.394
+  - id: hondori-shopping-arcade
+    name: Hondori Shopping Arcade
+    lon: 132.460
+    lat: 34.394

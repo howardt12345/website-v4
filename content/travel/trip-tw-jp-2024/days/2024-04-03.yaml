@@ -14,3 +14,7 @@ places:
     name: Shimokitazawa
     lon: 139.668
     lat: 35.661
+  - id: chidorigafuchi
+    name: Chidorigafuchi
+    lon: 139.747
+    lat: 35.694

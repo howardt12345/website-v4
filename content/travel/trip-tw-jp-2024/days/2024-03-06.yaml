@@ -6,19 +6,19 @@ places:
     name: Nagasaki Station
     lon: 129.870
     lat: 32.753
+  - id: sanno-shrine-nagasaki
+    name: Sanno Shrine / One-Legged Torii
+    lon: 129.876
+    lat: 32.756
   - id: peace-park
     name: Peace Park / Atomic Bomb Museum
     lon: 129.864
     lat: 32.774
-  - id: meganebashi-bridge
-    name: Meganebashi Bridge
+  - id: suwa-shrine-nagasaki
+    name: Suwa Shrine
     lon: 129.874
-    lat: 32.746
-  - id: glover-garden
-    name: Glover Garden
-    lon: 129.873
+    lat: 32.751
+  - id: nagasaki-chinatown
+    name: Nagasaki Chinatown
+    lon: 129.869
     lat: 32.739
-  - id: dejima
-    name: Dejima
-    lon: 129.874
-    lat: 32.743

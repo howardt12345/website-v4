@@ -2,6 +2,14 @@ date: '2024-03-16'
 country: JPN
 city: osaka
 places:
+  - id: sakuranomiya-shrine
+    name: Sakuranomiya Shrine
+    lon: 135.527
+    lat: 34.698
+  - id: osaka-castle
+    name: Osaka Castle
+    lon: 135.526
+    lat: 34.687
   - id: umeda-sky-building
     name: Umeda Sky Building
     lon: 135.490

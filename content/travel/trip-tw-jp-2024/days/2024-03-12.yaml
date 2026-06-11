@@ -7,3 +7,11 @@ places:
     lon: 132.455
     lat: 34.353
     city: hiroshima
+  - id: botchan-train-matsuyama
+    name: Botchan Train / City Centre
+    lon: 132.769
+    lat: 33.839
+  - id: takahama-beach
+    name: Takahama Beach
+    lon: 132.722
+    lat: 33.907

@@ -7,13 +7,26 @@ places:
     lon: 138.804
     lat: 35.497
     city: shimoyoshida
+  - id: chureito-pagoda
+    name: Chureito Pagoda
+    lon: 138.804
+    lat: 35.492
+  - id: honcho-street-fujiyoshida
+    name: Honchō Street
+    lon: 138.795
+    lat: 35.490
+    city: shimoyoshida
   - id: shimoyoshida-station
     name: Shimoyoshida Station
     lon: 138.802
     lat: 35.490
     city: shimoyoshida
-  - id: kawaguchiko-music-forest
-    name: Kawaguchiko Music Forest
-    lon: 138.762
-    lat: 35.498
+  - id: kawaguchiko-lawson
+    name: Kawaguchiko Lawson (Mt. Fuji view)
+    lon: 138.751
+    lat: 35.517
     city: shimoyoshida
+  - id: akihabara
+    name: Akihabara
+    lon: 139.771
+    lat: 35.699

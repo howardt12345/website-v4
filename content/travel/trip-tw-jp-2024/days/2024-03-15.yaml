@@ -2,15 +2,14 @@ date: '2024-03-15'
 country: JPN
 city: okayama
 places:
-  - id: tobe-pottery-town
-    name: Tobe Pottery Town
-    lon: 132.752
-    lat: 33.840
-    city: matsuyama
   - id: okayama-station
     name: Okayama Station
     lon: 133.919
     lat: 34.666
+  - id: okayama-castle
+    name: Okayama Castle
+    lon: 133.934
+    lat: 34.665
   - id: korakuen-garden
     name: Korakuen Garden
     lon: 133.935

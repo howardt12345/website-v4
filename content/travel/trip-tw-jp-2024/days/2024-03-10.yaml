@@ -6,14 +6,24 @@ places:
     name: Fukuyama Castle
     lon: 133.362
     lat: 34.486
-    city: onomichi
+    city: fukuyama
   - id: onomichi-temple-walk
     name: Onomichi Temple Walk
     lon: 133.194
     lat: 34.405
     city: onomichi
+  - id: jodoji-onomichi
+    name: Jōdo-ji
+    lon: 133.214
+    lat: 34.417
+    city: onomichi
   - id: senkoji-temple
     name: Senko-ji Temple / Park
     lon: 133.200
     lat: 34.412
+    city: onomichi
+  - id: cat-alley-onomichi
+    name: Cat Alley
+    lon: 133.203
+    lat: 34.413
     city: onomichi

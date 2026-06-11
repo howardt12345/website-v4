@@ -21,8 +21,8 @@ places:
     lon: 131.089
     lat: 34.437
     city: shimonoseki
-  - id: kushida-shrine
-    name: Kushida Shrine
-    lon: 130.410
-    lat: 33.591
+  - id: kirby-cafe-fukuoka
+    name: Kirby Cafe Fukuoka
+    lon: 130.420
+    lat: 33.590
     city: fukuoka

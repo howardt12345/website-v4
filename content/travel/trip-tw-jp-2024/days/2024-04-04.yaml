@@ -2,14 +2,14 @@ date: '2024-04-04'
 country: JPN
 city: tokyo
 places:
-  - id: asakusa-sensoji
-    name: Asakusa / Senso-ji
-    lon: 139.797
+  - id: sumida-park
+    name: Sumida Park
+    lon: 139.796
     lat: 35.714
-  - id: jimbocho
-    name: Jimbocho
-    lon: 139.757
-    lat: 35.696
+  - id: ochanomizu
+    name: Ochanomizu
+    lon: 139.764
+    lat: 35.699
   - id: ikebukuro
     name: Ikebukuro
     lon: 139.710
@@ -18,7 +18,11 @@ places:
     name: Shibuya Crossing
     lon: 139.701
     lat: 35.659
-  - id: ueno-park
-    name: Ueno Park
-    lon: 139.774
-    lat: 35.713
+  - id: magnet-shibuya-rooftop
+    name: Magnet by Shibuya 109 Rooftop
+    lon: 139.699
+    lat: 35.659
+  - id: shibuya-parco
+    name: Shibuya Parco
+    lon: 139.698
+    lat: 35.661

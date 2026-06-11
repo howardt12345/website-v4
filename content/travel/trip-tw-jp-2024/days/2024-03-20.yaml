@@ -2,10 +2,30 @@ date: '2024-03-20'
 country: JPN
 city: kyoto
 places:
+  - id: arashiyama-bamboo-grove
+    name: Arashiyama Bamboo Grove
+    lon: 135.672
+    lat: 35.017
+  - id: nonomiya-shrine
+    name: Nonomiya Shrine
+    lon: 135.674
+    lat: 35.016
   - id: tenryuji
     name: Tenryu-ji
     lon: 135.674
     lat: 35.016
+  - id: hogon-in-garden
+    name: Hogon-in Garden
+    lon: 135.675
+    lat: 35.015
+  - id: kogenji
+    name: Kōgen-ji
+    lon: 135.673
+    lat: 35.014
+  - id: saga-sl-museum
+    name: SL Display at Saga Station
+    lon: 135.678
+    lat: 35.013
   - id: sagano-scenic-railway
     name: Sagano Scenic Railway
     lon: 135.651
@@ -18,7 +38,7 @@ places:
     name: Toji Temple
     lon: 135.748
     lat: 34.981
-  - id: nishi-honganji
-    name: Nishi Hongan-ji
-    lon: 135.752
-    lat: 34.991
+  - id: umekoji-park
+    name: Umekoji Park
+    lon: 135.738
+    lat: 34.988

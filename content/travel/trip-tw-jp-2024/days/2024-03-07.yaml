@@ -10,10 +10,18 @@ places:
     name: Kumamoto Castle
     lon: 130.706
     lat: 32.806
+  - id: kato-shrine-kumamoto
+    name: Katō Shrine
+    lon: 130.705
+    lat: 32.808
   - id: shimotori-shopping-street
     name: Shimotori Shopping Street
     lon: 130.706
     lat: 32.800
+  - id: kumamoto-city-museum
+    name: Kumamoto City Museum
+    lon: 130.707
+    lat: 32.798
   - id: canal-city-hakata
     name: Canal City Hakata
     lon: 130.411

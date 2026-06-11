@@ -2,10 +2,6 @@ date: '2024-03-13'
 country: JPN
 city: matsuyama
 places:
-  - id: tobe-pottery-town
-    name: Tobe Pottery Town
-    lon: 132.752
-    lat: 33.840
   - id: shimonada-station
     name: Shimonada Station
     lon: 132.589
@@ -14,3 +10,7 @@ places:
     name: Dogo Onsen
     lon: 132.786
     lat: 33.851
+  - id: isaniwa-shrine
+    name: Isaniwa Shrine
+    lon: 132.789
+    lat: 33.855

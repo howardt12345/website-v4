@@ -11,3 +11,13 @@ places:
     lon: 121.233
     lat: 25.080
     city: taipei
+  - id: fukuoka-airport
+    name: Fukuoka Airport
+    lon: 130.452
+    lat: 33.584
+    city: fukuoka
+  - id: hakata-station
+    name: Hakata Station
+    lon: 130.420
+    lat: 33.590
+    city: fukuoka

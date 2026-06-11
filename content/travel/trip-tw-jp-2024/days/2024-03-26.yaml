@@ -10,6 +10,10 @@ places:
     name: Toyota Commemorative Museum
     lon: 136.873
     lat: 35.179
+  - id: midland-square-sky-promenade
+    name: Midland Square Sky Promenade
+    lon: 136.884
+    lat: 35.170
   - id: nagoya-station
     name: Nagoya Station
     lon: 136.881

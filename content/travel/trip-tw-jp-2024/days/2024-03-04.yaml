@@ -14,10 +14,26 @@ places:
     name: Tenjin District
     lon: 130.400
     lat: 33.589
+  - id: kego-shrine
+    name: Kego Shrine
+    lon: 130.401
+    lat: 33.588
   - id: ohori-park
     name: Ohori Park
     lon: 130.378
     lat: 33.586
+  - id: tochoji-temple
+    name: Tochōji Temple
+    lon: 130.414
+    lat: 33.590
+  - id: fukuoka-castle-ruins
+    name: Fukuoka Castle Ruins
+    lon: 130.387
+    lat: 33.584
+  - id: gokoku-shrine-fukuoka
+    name: Fukuoka Gokoku Shrine
+    lon: 130.386
+    lat: 33.583
   - id: fukuoka-tower
     name: Fukuoka Tower
     lon: 130.351

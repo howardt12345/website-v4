@@ -10,7 +10,11 @@ places:
     name: Azabudai Hills
     lon: 139.740
     lat: 35.657
-  - id: tokyo-tower
-    name: Tokyo Tower
-    lon: 139.745
-    lat: 35.659
+  - id: mori-tower-roppongi
+    name: Mori Tower / Roppongi Hills
+    lon: 139.731
+    lat: 35.660
+  - id: nakameguro-river
+    name: Meguro River
+    lon: 139.698
+    lat: 35.644

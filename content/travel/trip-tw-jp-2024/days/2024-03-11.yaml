@@ -10,7 +10,11 @@ places:
     name: Miyajima Town
     lon: 132.322
     lat: 34.279
-  - id: hondori-shopping-street
-    name: Hondori Shopping Street
-    lon: 132.459
-    lat: 34.393
+  - id: mt-misen
+    name: Mt. Misen
+    lon: 132.318
+    lat: 34.277
+  - id: okonomimura
+    name: Okonomimura
+    lon: 132.455
+    lat: 34.395

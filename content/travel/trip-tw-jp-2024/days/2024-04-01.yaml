@@ -2,6 +2,10 @@ date: '2024-04-01'
 country: JPN
 city: tokyo
 places:
+  - id: ochanomizu
+    name: Ochanomizu
+    lon: 139.764
+    lat: 35.699
   - id: akihabara
     name: Akihabara
     lon: 139.771
@@ -10,10 +14,6 @@ places:
     name: Shinjuku
     lon: 139.700
     lat: 35.690
-  - id: roppongi
-    name: Roppongi
-    lon: 139.731
-    lat: 35.662
   - id: nakameguro
     name: Nakameguro
     lon: 139.699
