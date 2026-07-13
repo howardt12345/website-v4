@@ -31,6 +31,7 @@ interface Props {
   visitedRegions?: string[];
   dimmedRegions?: string[];
   tripPath?: { lon: number; lat: number }[] | null;
+  activeDayPath?: { lon: number; lat: number }[] | null;
   placePins?: MapPin[];
   cityPins?: CityPin[];
   focusCityPin?: { lon: number; lat: number } | null;
@@ -44,6 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   visitedRegions: () => [],
   dimmedRegions: () => [],
   tripPath: null,
+  activeDayPath: null,
   placePins: () => [],
   cityPins: () => [],
   focusCityPin: null,
@@ -273,18 +275,38 @@ const animateToCountry = (iso3: string) => {
 const addTripPath = (r: am5.Root, c: am5map.MapChart) => {
   if (!props.tripPath || props.tripPath.length < 2) return;
   const accent = accentHex();
+  const hasActiveDay = !!props.activeDayPath;
 
   const series = c.series.push(am5map.MapLineSeries.new(r, {}));
   series.mapLines.template.setAll({
     stroke: am5.color(accent),
     strokeWidth: 2,
     strokeDasharray: [3, 5],
-    strokeOpacity: 0.9,
+    strokeOpacity: hasActiveDay ? 0.35 : 0.9,
   });
   series.data.push({
     geometry: {
       type: 'LineString',
       coordinates: props.tripPath.map((p) => [p.lon, p.lat]),
+    },
+  });
+};
+
+// Drawn after (on top of) the full trip path so the active day reads as the solid, prominent one.
+const addActiveDayPath = (r: am5.Root, c: am5map.MapChart) => {
+  if (!props.activeDayPath || props.activeDayPath.length < 2) return;
+  const accent = accentHex();
+
+  const series = c.series.push(am5map.MapLineSeries.new(r, {}));
+  series.mapLines.template.setAll({
+    stroke: am5.color(accent),
+    strokeWidth: 3,
+    strokeOpacity: 1,
+  });
+  series.data.push({
+    geometry: {
+      type: 'LineString',
+      coordinates: props.activeDayPath.map((p) => [p.lon, p.lat]),
     },
   });
 };
@@ -442,6 +464,7 @@ const clearOverlays = () => {
 
 const addOverlays = (r: am5.Root, c: am5map.MapChart) => {
   addTripPath(r, c);
+  addActiveDayPath(r, c);
   addCityPins(r, c);
   addPlacePins(r, c);
 };
@@ -599,7 +622,7 @@ watch(
   { deep: true },
 );
 watch(
-  [() => props.tripPath, () => props.placePins, () => props.cityPins, () => props.focusCityPin],
+  [() => props.tripPath, () => props.activeDayPath, () => props.placePins, () => props.cityPins, () => props.focusCityPin],
   rebuildOverlays,
 );
 watch(() => props.zoomCountry, applyZoom);

@@ -381,6 +381,12 @@ export const useTravelStore = defineStore('travel', () => {
     if (view.value !== 'trip' || !tripDays.value.length) return null;
     return tripDays.value.flatMap((d) => d.places.map((p) => ({ lon: p.lon, lat: p.lat })));
   });
+  // Same place list as mapTripPath (includes path-only ghosts) so the highlighted
+  // segment lines up with the full-trip line it's drawn on top of.
+  const mapActiveDayPath = computed<{ lon: number; lat: number }[] | null>(() => {
+    if (view.value !== 'trip' || !activeDay.value) return null;
+    return activeDay.value.places.map((p) => ({ lon: p.lon, lat: p.lat }));
+  });
   const mapPlacePins = computed(() => {
     if (view.value === 'trip' && activeDay.value) {
       // Must index the same list day-view.vue renders, so i lines up with activePlaceIndex.
@@ -457,6 +463,7 @@ export const useTravelStore = defineStore('travel', () => {
     visitedRegions: mapVisitedRegions.value,
     dimmedRegions: mapDimmedRegions.value,
     tripPath: mapTripPath.value,
+    activeDayPath: mapActiveDayPath.value,
     placePins: mapPlacePins.value,
     cityPins: mapCityPins.value,
     focusCityPin: activeCityCoords.value,
