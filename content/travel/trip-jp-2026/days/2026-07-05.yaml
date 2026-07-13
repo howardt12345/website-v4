@@ -8,8 +8,8 @@ places:
     lat: 40.830
   - id: nebuta-wa-rasse
     name: Nebuta Museum WA RASSE
-    lon: 140.735
-    lat: 40.829
+    lon: 140.736
+    lat: 40.830
   - id: aomori-gyosai-center
     name: Aomori Gyosai Center
     lon: 140.736
@@ -21,7 +21,7 @@ places:
   - id: hirosaki-castle
     name: Hirosaki Castle
     lon: 140.464
-    lat: 40.607
+    lat: 40.608
     city: hirosaki
   - id: inakadate-rice-paddy-art
     name: Inakadate Rice Paddy Art Venue 2

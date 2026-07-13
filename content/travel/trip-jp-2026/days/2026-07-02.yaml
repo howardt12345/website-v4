@@ -4,7 +4,7 @@ city: morioka
 places:
   - id: morioka-castle-ruins
     name: Morioka Castle Ruins
-    lon: 141.151
+    lon: 141.150
     lat: 39.700
   - id: bank-of-iwate-red-brick
     name: Bank of Iwate Red Brick Building

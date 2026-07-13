@@ -101,7 +101,7 @@ cities:
     region: JP-14
   - id: fujinomiya
     name: Fujinomiya
-    lon: 138.621
+    lon: 138.622
     lat: 35.222
     region: JP-22
   - id: oyama
@@ -141,7 +141,7 @@ cities:
     region: JP-04
   - id: morioka
     name: Morioka
-    lon: 141.153
+    lon: 141.154
     lat: 39.702
     region: JP-03
   - id: kakunodate
@@ -156,8 +156,8 @@ cities:
     region: JP-05
   - id: odate
     name: Ōdate
-    lon: 140.564
-    lat: 40.271
+    lon: 140.565
+    lat: 40.272
     region: JP-05
   - id: hirosaki
     name: Hirosaki
@@ -176,7 +176,7 @@ cities:
     region: JP-02
   - id: fukushima
     name: Fukushima
-    lon: 140.474
+    lon: 140.475
     lat: 37.761
     region: JP-07
   - id: aizuwakamatsu
