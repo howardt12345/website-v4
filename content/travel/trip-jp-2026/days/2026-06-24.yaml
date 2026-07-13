@@ -1,0 +1,20 @@
+date: '2026-06-24'
+country: JPN
+city: tokyo
+places:
+  - id: ueno-park
+    name: Ueno Park
+    lon: 139.771
+    lat: 35.715
+  - id: akihabara
+    name: Akihabara
+    lon: 139.774
+    lat: 35.698
+  - id: ochanomizu
+    name: Ochanomizu
+    lon: 139.765
+    lat: 35.700
+  - id: tokyo-station
+    name: Tokyo Station
+    lon: 139.767
+    lat: 35.681

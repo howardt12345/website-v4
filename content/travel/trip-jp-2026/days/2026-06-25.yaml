@@ -1,0 +1,16 @@
+date: '2026-06-25'
+country: JPN
+city: tokyo
+places:
+  - id: ueno
+    name: Ueno
+    lon: 139.777
+    lat: 35.714
+  - id: nakano-broadway
+    name: Nakano Broadway
+    lon: 139.665
+    lat: 35.708
+  - id: ginza
+    name: Ginza
+    lon: 139.764
+    lat: 35.672

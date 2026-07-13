@@ -1,0 +1,37 @@
+date: '2026-07-09'
+country: JPN
+city: yokohama
+places:
+  - id: fujinomiya
+    name: Fujinomiya
+    lon: 138.621
+    lat: 35.222
+    city: fujinomiya
+  - id: fujisan-world-heritage-center
+    name: Fujisan World Heritage Centre
+    lon: 138.622
+    lat: 35.223
+    city: fujinomiya
+  - id: fujisan-hongu-sengen-taisha
+    name: Fujisan Hongū Sengen Taisha
+    lon: 138.610
+    lat: 35.226
+    city: fujinomiya
+  - id: shiraito-falls
+    name: Shiraito Falls
+    lon: 138.591
+    lat: 35.310
+    city: fujinomiya
+  - id: wasabi-farm
+    name: Wasabi Farm
+    lon: 138.955
+    lat: 35.365
+    city: oyama
+  - id: yokohama
+    name: Yokohama
+    lon: 139.638
+    lat: 35.444
+  - id: shin-yokohama-ramen-museum
+    name: Shin-Yokohama Ramen Museum
+    lon: 139.617
+    lat: 35.509

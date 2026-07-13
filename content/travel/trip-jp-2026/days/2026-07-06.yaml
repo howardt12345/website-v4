@@ -1,0 +1,18 @@
+date: '2026-07-06'
+country: JPN
+city: fukushima
+places:
+  - id: hirosaki
+    name: Hirosaki
+    lon: 140.464
+    lat: 40.603
+    city: hirosaki
+  - id: zao-fox-village
+    name: Zaō Fox Village
+    lon: 140.680
+    lat: 38.081
+    city: shiroishi
+  - id: fukushima
+    name: Fukushima
+    lon: 140.474
+    lat: 37.761

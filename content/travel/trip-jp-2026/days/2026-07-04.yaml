@@ -1,0 +1,23 @@
+date: '2026-07-04'
+country: JPN
+city: hirosaki
+places:
+  - id: kubota-castle
+    name: Kubota Castle
+    lon: 140.106
+    lat: 39.723
+    city: akita
+  - id: akita-dog-cafe
+    name: Akita Dog Café (秋田犬cafe)
+    lon: 140.568
+    lat: 40.269
+    city: odate
+  - id: akita-dog-center
+    name: Akita Dog Center
+    lon: 140.556
+    lat: 40.287
+    city: odate
+  - id: hirosaki
+    name: Hirosaki
+    lon: 140.464
+    lat: 40.603

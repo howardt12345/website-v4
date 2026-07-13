@@ -1,0 +1,30 @@
+date: '2026-07-05'
+country: JPN
+city: aomori
+places:
+  - id: aspam
+    name: ASPAM Tourism Center
+    lon: 140.734
+    lat: 40.831
+  - id: nebuta-wa-rasse
+    name: Nebuta Museum WA RASSE
+    lon: 140.735
+    lat: 40.829
+  - id: aomori-gyosai-center
+    name: Aomori Gyosai Center
+    lon: 140.738
+    lat: 40.827
+  - id: a-factory
+    name: A-Factory
+    lon: 140.732
+    lat: 40.830
+  - id: hirosaki-castle
+    name: Hirosaki Castle
+    lon: 140.464
+    lat: 40.607
+    city: hirosaki
+  - id: inakadate-rice-paddy-art
+    name: Inakadate Rice Paddy Art Venue 2
+    lon: 140.552
+    lat: 40.657
+    city: inakadate

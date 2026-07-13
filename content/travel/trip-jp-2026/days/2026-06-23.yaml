@@ -1,0 +1,24 @@
+date: '2026-06-23'
+country: JPN
+city: tokyo
+places:
+  - id: haneda-airport
+    name: Haneda Airport
+    lon: 139.780
+    lat: 35.549
+  - id: ueno
+    name: Ueno
+    lon: 139.777
+    lat: 35.714
+  - id: asakusa
+    name: Asakusa
+    lon: 139.796
+    lat: 35.711
+  - id: nishi-sando
+    name: Nishi-sandō
+    lon: 139.794
+    lat: 35.714
+  - id: senso-ji
+    name: Sensō-ji
+    lon: 139.797
+    lat: 35.715

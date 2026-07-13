@@ -1,0 +1,20 @@
+date: '2026-06-30'
+country: JPN
+city: sendai
+places:
+  - id: date-mausoleum
+    name: Date Mausoleum (Zuihōden)
+    lon: 140.866
+    lat: 38.245
+  - id: sendai-castle-ruins
+    name: Sendai Castle Ruins
+    lon: 140.856
+    lat: 38.252
+  - id: osaki-hachiman-shrine
+    name: Ōsaki Hachiman Shrine
+    lon: 140.848
+    lat: 38.281
+  - id: sendai-station
+    name: Sendai Station
+    lon: 140.882
+    lat: 38.260

@@ -1,0 +1,20 @@
+date: '2026-07-02'
+country: JPN
+city: morioka
+places:
+  - id: morioka-castle-ruins
+    name: Morioka Castle Ruins
+    lon: 141.151
+    lat: 39.700
+  - id: bank-of-iwate-red-brick
+    name: Bank of Iwate Red Brick Building
+    lon: 141.152
+    lat: 39.702
+  - id: morioka-hachimangu
+    name: Morioka Hachimangū
+    lon: 141.161
+    lat: 39.693
+  - id: nanshoso
+    name: Nanshōsō
+    lon: 141.146
+    lat: 39.690

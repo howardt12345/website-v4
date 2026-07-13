@@ -1,0 +1,21 @@
+date: '2026-07-07'
+country: JPN
+city: aizuwakamatsu
+places:
+  - id: aizu-wakamatsu
+    name: Aizu-Wakamatsu
+    lon: 139.930
+    lat: 37.495
+  - id: tsuruga-castle
+    name: Tsuruga Castle
+    lon: 139.930
+    lat: 37.488
+  - id: sazaedo
+    name: Sazae-dō
+    lon: 139.943
+    lat: 37.503
+  - id: shinjuku
+    name: Shinjuku
+    lon: 139.700
+    lat: 35.690
+    city: tokyo

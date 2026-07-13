@@ -1,0 +1,18 @@
+date: '2026-06-29'
+country: JPN
+city: sendai
+places:
+  - id: kaminoyama
+    name: Kaminoyama
+    lon: 140.267
+    lat: 38.150
+    city: kaminoyama
+  - id: yamadera
+    name: Yamadera (Risshaku-ji)
+    lon: 140.437
+    lat: 38.313
+    city: yamadera
+  - id: sendai
+    name: Sendai
+    lon: 140.882
+    lat: 38.260

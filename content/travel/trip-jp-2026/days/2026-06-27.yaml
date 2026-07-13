@@ -1,0 +1,16 @@
+date: '2026-06-27'
+country: JPN
+city: tokyo
+places:
+  - id: ueno-station
+    name: Ueno Station
+    lon: 139.777
+    lat: 35.714
+  - id: ginza
+    name: Ginza
+    lon: 139.764
+    lat: 35.672
+  - id: divercity-tokyo
+    name: DiverCity Tokyo Plaza
+    lon: 139.775
+    lat: 35.625

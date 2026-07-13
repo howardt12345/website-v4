@@ -2,7 +2,7 @@ iso3: JPN
 iso2: JP
 name: Japan
 hue: 340
-regions: [JP-13, JP-17, JP-19, JP-23, JP-26, JP-27, JP-28, JP-29, JP-33, JP-34, JP-35, JP-38, JP-40, JP-42, JP-43]
+regions: [JP-02, JP-03, JP-04, JP-05, JP-06, JP-07, JP-13, JP-14, JP-17, JP-19, JP-22, JP-23, JP-26, JP-27, JP-28, JP-29, JP-33, JP-34, JP-35, JP-38, JP-40, JP-42, JP-43]
 cities:
   - id: tokyo
     name: Tokyo
@@ -94,3 +94,93 @@ cities:
     lon: 130.706
     lat: 32.803
     region: JP-43
+  - id: yokohama
+    name: Yokohama
+    lon: 139.638
+    lat: 35.444
+    region: JP-14
+  - id: fujinomiya
+    name: Fujinomiya
+    lon: 138.621
+    lat: 35.222
+    region: JP-22
+  - id: oyama
+    name: Oyama
+    lon: 138.955
+    lat: 35.365
+    region: JP-22
+  - id: yonezawa
+    name: Yonezawa
+    lon: 140.117
+    lat: 37.912
+    region: JP-06
+  - id: kaminoyama
+    name: Kaminoyama
+    lon: 140.267
+    lat: 38.150
+    region: JP-06
+  - id: yamadera
+    name: Yamadera
+    lon: 140.437
+    lat: 38.313
+    region: JP-06
+  - id: sendai
+    name: Sendai
+    lon: 140.870
+    lat: 38.268
+    region: JP-04
+  - id: matsushima
+    name: Matsushima
+    lon: 141.060
+    lat: 38.368
+    region: JP-04
+  - id: shiroishi
+    name: Shiroishi
+    lon: 140.620
+    lat: 38.003
+    region: JP-04
+  - id: morioka
+    name: Morioka
+    lon: 141.153
+    lat: 39.702
+    region: JP-03
+  - id: kakunodate
+    name: Kakunodate
+    lon: 140.560
+    lat: 39.598
+    region: JP-05
+  - id: akita
+    name: Akita
+    lon: 140.103
+    lat: 39.720
+    region: JP-05
+  - id: odate
+    name: Ōdate
+    lon: 140.564
+    lat: 40.271
+    region: JP-05
+  - id: hirosaki
+    name: Hirosaki
+    lon: 140.464
+    lat: 40.603
+    region: JP-02
+  - id: aomori
+    name: Aomori
+    lon: 140.740
+    lat: 40.822
+    region: JP-02
+  - id: inakadate
+    name: Inakadate
+    lon: 140.552
+    lat: 40.657
+    region: JP-02
+  - id: fukushima
+    name: Fukushima
+    lon: 140.474
+    lat: 37.761
+    region: JP-07
+  - id: aizuwakamatsu
+    name: Aizu-Wakamatsu
+    lon: 139.930
+    lat: 37.495
+    region: JP-07

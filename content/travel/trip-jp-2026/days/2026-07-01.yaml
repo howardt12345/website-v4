@@ -1,0 +1,38 @@
+date: '2026-07-01'
+country: JPN
+city: sendai
+places:
+  - id: sendai
+    name: Sendai
+    lon: 140.882
+    lat: 38.260
+  - id: matsushima-bay
+    name: Matsushima Bay
+    lon: 141.060
+    lat: 38.368
+    city: matsushima
+  - id: matsushima-fish-market
+    name: Matsushima Fish Market
+    lon: 141.053
+    lat: 38.373
+    city: matsushima
+  - id: godaido
+    name: Godaidō
+    lon: 141.062
+    lat: 38.368
+    city: matsushima
+  - id: kanrantei
+    name: Kanrantei
+    lon: 141.059
+    lat: 38.366
+    city: matsushima
+  - id: fukuura-island
+    name: Fukuura Island
+    lon: 141.068
+    lat: 38.365
+    city: matsushima
+  - id: morioka
+    name: Morioka
+    lon: 141.153
+    lat: 39.702
+    city: morioka

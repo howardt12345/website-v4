@@ -1,0 +1,23 @@
+date: '2026-07-03'
+country: JPN
+city: akita
+places:
+  - id: morioka
+    name: Morioka
+    lon: 141.153
+    lat: 39.702
+    city: morioka
+  - id: kakunodate-samurai-street
+    name: Kakunodate Samurai Residence Street
+    lon: 140.559
+    lat: 39.601
+    city: kakunodate
+  - id: kawarada-ke
+    name: Kawarada-ke Samurai House
+    lon: 140.559
+    lat: 39.600
+    city: kakunodate
+  - id: akita
+    name: Akita
+    lon: 140.103
+    lat: 39.720
