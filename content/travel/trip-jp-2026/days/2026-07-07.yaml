@@ -1,5 +1,5 @@
 date: '2026-07-07'
-country: JPN
+countries: [JPN]
 city: aizuwakamatsu
 places:
   - name: Fukushima (transfer)

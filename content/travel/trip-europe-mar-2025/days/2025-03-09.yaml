@@ -1,5 +1,5 @@
 date: '2025-03-09'
-country: DEU
+countries: [DEU, ITA]
 city: frankfurt
 places:
   - id: bagni-della-regina-giovanna

@@ -1,5 +1,5 @@
 date: '2025-03-11'
-country: DEU
+countries: [DEU]
 city: frankfurt
 places:
   - id: kleinmarkthalle

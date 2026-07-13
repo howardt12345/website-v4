@@ -1,5 +1,5 @@
 date: '2024-02-27'
-country: TWN
+countries: [TWN]
 city: taipei
 places:
   - id: national-palace-museum

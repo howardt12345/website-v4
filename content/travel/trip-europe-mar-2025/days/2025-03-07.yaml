@@ -1,5 +1,5 @@
 date: '2025-03-07'
-country: ITA
+countries: [ITA]
 city: sorrento
 places:
   - id: napoli-centrale

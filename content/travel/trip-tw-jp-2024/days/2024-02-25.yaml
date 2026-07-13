@@ -1,5 +1,5 @@
 date: '2024-02-25'
-country: TWN
+countries: [TWN]
 city: nantou
 places:
   - id: taichung-hsr-station

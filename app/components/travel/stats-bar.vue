@@ -10,6 +10,7 @@ interface Props {
   trips: TravelTrip[];
   country?: TravelCountry;
   trip?: TravelTrip;
+  countryDayCount?: number;
   tripDayCount?: number;
   tripPhotoCount?: number;
   tripCityCount?: number;
@@ -41,7 +42,7 @@ const stats = computed((): StatItem[] => {
     const items: StatItem[] = [
       { value: countryTrips.length, label: t('trips') },
       { value: props.country.cities.length, label: t('cities') },
-      { value: countryTrips.reduce((sum, trip) => sum + daySpan(trip), 0), label: t('days logged') },
+      { value: props.countryDayCount ?? 0, label: t('days logged') },
     ];
     if (subdivisionMeta && props.country.regions.length > 0) {
       items.push({

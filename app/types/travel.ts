@@ -17,7 +17,7 @@ export interface TravelPlace {
 export interface TravelDay {
   stem: string;
   date: string;
-  country: string;
+  countries: string[];
   city: string;
   places: TravelPlace[];
 }

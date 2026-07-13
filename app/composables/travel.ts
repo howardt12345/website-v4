@@ -44,11 +44,16 @@ export const formatDayShort = (date: string, locale: string): string =>
     timeZone: 'UTC',
   });
 
+// A day can span more than one country (border-crossing days); `day.countries[0]`
+// is the day's primary/starting country and the default for places that don't say otherwise.
+export const placeCountry = (day: TravelDay, place: TravelPlace): string =>
+  place.country ?? day.countries[0]!;
+
 export const dayUniqueCities = (day: TravelDay): { country: string; city: string }[] => {
   const seen = new Set<string>();
   const result: { country: string; city: string }[] = [];
   for (const place of visiblePlaces(day)) {
-    const country = place.country ?? day.country;
+    const country = placeCountry(day, place);
     const city = place.city ?? day.city;
     const key = `${country}/${city}`;
     if (!seen.has(key)) {
@@ -78,12 +83,15 @@ export const dayTitle = (
 };
 
 export const dayUniqueIso3s = (day: TravelDay): string[] =>
-  [...new Set(visiblePlaces(day).map((p) => p.country ?? day.country))];
+  [...new Set(visiblePlaces(day).map((p) => placeCountry(day, p)))];
 
 export const tripVisitedCityKeys = (days: TravelDay[]): Set<string> =>
-  new Set(
-    days.flatMap((d) => visiblePlaces(d).map((p) => cityKey(p.country ?? d.country, p.city ?? d.city))),
-  );
+  new Set(days.flatMap((d) => visiblePlaces(d).map((p) => cityKey(placeCountry(d, p), p.city ?? d.city))));
+
+// Days a given country was actually visited on, not the trip's total date span —
+// a border-crossing day counts toward every country it touched.
+export const daysLoggedForCountry = (days: TravelDay[], iso3: string): number =>
+  days.filter((d) => d.countries.includes(iso3)).length;
 
 export const tripVisitedRegions = (
   days: TravelDay[],

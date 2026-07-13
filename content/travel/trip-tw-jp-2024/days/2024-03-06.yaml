@@ -1,5 +1,5 @@
 date: '2024-03-06'
-country: JPN
+countries: [JPN]
 city: nagasaki
 places:
   - id: nagasaki-station
@@ -22,3 +22,7 @@ places:
     name: Nagasaki Chinatown
     lon: 129.869
     lat: 32.739
+  - name: Hakata Station (transfer)
+    lon: 130.420
+    lat: 33.590
+    ghost: true

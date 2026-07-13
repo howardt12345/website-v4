@@ -1,5 +1,5 @@
 date: '2024-03-03'
-country: TWN
+countries: [TWN]
 city: nantou
 places:
   - id: taichung-hsr-station
@@ -16,8 +16,10 @@ places:
     lon: 130.452
     lat: 33.584
     city: fukuoka
+    country: JPN
   - id: hakata-station
     name: Hakata Station
     lon: 130.420
     lat: 33.590
     city: fukuoka
+    country: JPN

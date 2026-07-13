@@ -1,5 +1,5 @@
 date: '2024-04-05'
-country: JPN
+countries: [JPN]
 city: tokyo
 places:
   - id: narita-airport

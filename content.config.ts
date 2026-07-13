@@ -59,8 +59,8 @@ export default defineContentConfig({
       source: 'travel/*/days/*.yaml',
       schema: z.object({
         date: z.string(),
-        // Day-level defaults. Individual places may override these.
-        country: z.string(),
+        // Countries this day touched. Usually one, more for border-crossing days.
+        countries: z.array(z.string()),
         city: z.string(),
         places: z.array(
           z.object({
@@ -69,10 +69,9 @@ export default defineContentConfig({
             lon: z.number(),
             lat: z.number(),
             blogSlug: z.string().optional(),
-            // Optional overrides for cross-country or cross-city stops within a day.
+            // Overrides the day's country/city for this place.
             country: z.string().optional(),
             city: z.string().optional(),
-            // Groups places under a named area for the day title
             neighborhood: z.string().optional(),
             // Path-only stop: bends the route without a pin, list entry, or photo slot.
             ghost: z.boolean().optional(),

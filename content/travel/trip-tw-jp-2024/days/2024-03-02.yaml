@@ -1,5 +1,5 @@
 date: '2024-03-02'
-country: TWN
+countries: [TWN]
 city: nantou
 places:
   - id: caotun

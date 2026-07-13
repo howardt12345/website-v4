@@ -1,5 +1,5 @@
 date: '2024-03-18'
-country: JPN
+countries: [JPN]
 city: kobe
 places:
   - id: arima-onsen

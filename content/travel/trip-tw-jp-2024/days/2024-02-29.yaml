@@ -1,5 +1,5 @@
 date: '2024-02-29'
-country: TWN
+countries: [TWN]
 city: taipei
 places:
   - id: gongguan-ntu

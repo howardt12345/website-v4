@@ -1,5 +1,5 @@
 date: '2024-03-08'
-country: JPN
+countries: [JPN]
 city: fukuoka
 places:
   - id: dazaifu-tenmangu

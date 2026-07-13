@@ -1,5 +1,5 @@
 date: '2026-07-02'
-country: JPN
+countries: [JPN]
 city: morioka
 places:
   - id: morioka-castle-ruins

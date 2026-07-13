@@ -1,5 +1,5 @@
 date: '2026-06-26'
-country: JPN
+countries: [JPN]
 city: tokyo
 places:
   - id: akihabara

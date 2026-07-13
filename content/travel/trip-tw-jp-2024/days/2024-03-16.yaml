@@ -1,5 +1,5 @@
 date: '2024-03-16'
-country: JPN
+countries: [JPN]
 city: osaka
 places:
   - id: sakuranomiya-shrine

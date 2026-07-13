@@ -11,7 +11,15 @@ import type {
   CityVisitSummary,
 } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { tripSlug, tripsForCountry, tripVisitedCityKeys, tripVisitedRegions, visiblePlaces } from '~/composables/travel';
+import {
+  daysLoggedForCountry,
+  placeCountry,
+  tripSlug,
+  tripsForCountry,
+  tripVisitedCityKeys,
+  tripVisitedRegions,
+  visiblePlaces,
+} from '~/composables/travel';
 
 interface ParsedHash {
   countryIso3: string | null;
@@ -224,6 +232,9 @@ export const useTravelStore = defineStore('travel', () => {
   const countryTrips = computed<TravelTrip[]>(() =>
     focusCountry.value ? tripsForCountry(trips.value, focusCountry.value.iso3) : [],
   );
+  const countryDayCount = computed(() =>
+    focusCountry.value ? daysLoggedForCountry(days.value, focusCountry.value.iso3) : 0,
+  );
 
   const multiCountry = computed(() => (focusTrip.value?.countries.length ?? 0) > 1);
   const tripDayCount = computed(() => tripDays.value.length);
@@ -266,7 +277,7 @@ export const useTravelStore = defineStore('travel', () => {
       const photosForTrip = travelPhotosByPlace.value[tId] ?? {};
       for (const day of daysForTripSlug(slug)) {
         for (const place of visiblePlaces(day)) {
-          if ((place.country ?? day.country) !== iso3) continue;
+          if (placeCountry(day, place) !== iso3) continue;
           if ((place.city ?? day.city) !== cityId) continue;
           const placePhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
           const photos = placePhotos.filter((p) => !p.date || p.date === day.date);
@@ -300,7 +311,7 @@ export const useTravelStore = defineStore('travel', () => {
       const citiesSeenToday = new Set<string>();
 
       for (const place of visiblePlaces(day)) {
-        const iso3 = place.country ?? day.country;
+        const iso3 = placeCountry(day, place);
         const cityId = place.city ?? day.city;
         const country = countryByIso3(iso3);
         const city = country?.cities.find((c) => c.id === cityId);
@@ -484,6 +495,7 @@ export const useTravelStore = defineStore('travel', () => {
     trips: trips.value,
     country: focusCountry.value,
     trip: focusTrip.value,
+    countryDayCount: countryDayCount.value,
     tripDayCount: tripDayCount.value,
     tripPhotoCount: tripPhotoCount.value,
     tripCityCount: tripCityCount.value,

@@ -1,5 +1,5 @@
 date: '2024-03-24'
-country: JPN
+countries: [JPN]
 city: kanazawa
 places:
   - id: higashi-chaya-district

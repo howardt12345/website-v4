@@ -1,5 +1,5 @@
 date: '2024-02-26'
-country: TWN
+countries: [TWN]
 city: taipei
 places:
   - id: taichung-hsr-station

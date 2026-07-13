@@ -1,5 +1,5 @@
 date: '2024-03-29'
-country: JPN
+countries: [JPN]
 city: tokyo
 places:
   - id: arakurayama-sengen-park
@@ -27,6 +27,10 @@ places:
     lon: 138.751
     lat: 35.517
     city: shimoyoshida
+  - name: Otsuki (transfer)
+    lon: 138.766
+    lat: 35.605
+    ghost: true
   - id: akihabara
     name: Akihabara
     neighborhood: Akihabara

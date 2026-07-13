@@ -1,5 +1,5 @@
 date: '2024-03-17'
-country: JPN
+countries: [JPN]
 city: nara
 places:
   - id: todaiji

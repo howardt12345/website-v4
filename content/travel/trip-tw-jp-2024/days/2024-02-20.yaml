@@ -1,5 +1,5 @@
 date: '2024-02-20'
-country: TWN
+countries: [TWN]
 city: tainan
 places:
   - id: guohua-street

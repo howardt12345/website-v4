@@ -1,5 +1,5 @@
 date: '2024-02-21'
-country: TWN
+countries: [TWN]
 city: kaohsiung
 places:
   - id: tainan-train-station

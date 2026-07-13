@@ -1,5 +1,5 @@
 date: '2024-03-11'
-country: JPN
+countries: [JPN]
 city: hiroshima
 places:
   - id: itsukushima-shrine

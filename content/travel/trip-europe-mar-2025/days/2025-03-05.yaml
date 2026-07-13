@@ -1,5 +1,5 @@
 date: '2025-03-05'
-country: FRA
+countries: [FRA]
 city: nice
 places:
   - id: promenade-des-anglais

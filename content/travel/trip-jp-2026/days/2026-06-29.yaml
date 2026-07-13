@@ -1,5 +1,5 @@
 date: '2026-06-29'
-country: JPN
+countries: [JPN]
 city: sendai
 places:
   - id: kaminoyama

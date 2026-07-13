@@ -1,5 +1,5 @@
 date: '2024-03-26'
-country: JPN
+countries: [JPN]
 city: nagoya
 places:
   - id: nagoya-castle

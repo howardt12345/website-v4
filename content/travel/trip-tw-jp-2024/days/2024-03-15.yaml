@@ -1,7 +1,15 @@
 date: '2024-03-15'
-country: JPN
+countries: [JPN]
 city: okayama
 places:
+  - name: Imabari (transfer)
+    lon: 132.998
+    lat: 34.066
+    ghost: true
+  - name: Kojima (Seto-Ōhashi Bridge)
+    lon: 133.799
+    lat: 34.467
+    ghost: true
   - id: okayama-station
     name: Okayama Station
     lon: 133.919

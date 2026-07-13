@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TravelDay, TravelPlace } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { formatDayLabel, dayUniqueCities, dayUniqueIso3s, visiblePlaces } from '~/composables/travel';
+import { formatDayLabel, dayUniqueCities, dayUniqueIso3s, placeCountry, visiblePlaces } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -31,8 +31,10 @@ const dayCountryNames = computed(() =>
   dayUniqueIso3s(props.day).map((iso3) => countryByIso3(iso3)?.name ?? iso3),
 );
 
+const dayDefaultCountry = computed(() => props.day.countries[0]!);
+
 const placeHue = (place: TravelPlace): number =>
-  countryByIso3(place.country ?? props.day.country)?.hue ?? 200;
+  countryByIso3(placeCountry(props.day, place))?.hue ?? 200;
 
 const photosForPlace = (place: TravelPlace): PhotoItem[] => {
   const all = place.id ? (props.photosMap?.[place.id] ?? []) : [];
@@ -62,8 +64,8 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
           <template v-else>
             <span
               class="day-view__city-link"
-              @click="$emit('city-click', { country: day.country, city: day.city })"
-            >{{ cityById(day.country, day.city)?.name }}</span>
+              @click="$emit('city-click', { country: dayDefaultCountry, city: day.city })"
+            >{{ cityById(dayDefaultCountry, day.city)?.name }}</span>
           </template>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
             · {{ dayCountryNames.join(' → ') }}

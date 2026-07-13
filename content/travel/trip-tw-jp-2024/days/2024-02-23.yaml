@@ -1,5 +1,5 @@
 date: '2024-02-23'
-country: TWN
+countries: [TWN]
 city: tainan
 places:
   - id: eternal-golden-castle

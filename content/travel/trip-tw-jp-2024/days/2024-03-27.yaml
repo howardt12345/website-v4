@@ -1,5 +1,5 @@
 date: '2024-03-27'
-country: JPN
+countries: [JPN]
 city: nagoya
 places:
   - id: ghibli-park

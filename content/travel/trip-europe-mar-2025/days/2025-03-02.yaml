@@ -1,5 +1,5 @@
 date: '2025-03-02'
-country: FRA
+countries: [FRA]
 city: paris
 places:
   - id: cdg-airport

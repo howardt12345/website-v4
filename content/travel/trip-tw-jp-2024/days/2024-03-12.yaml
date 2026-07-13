@@ -1,5 +1,5 @@
 date: '2024-03-12'
-country: JPN
+countries: [JPN]
 city: matsuyama
 places:
   - id: hiroshima-port

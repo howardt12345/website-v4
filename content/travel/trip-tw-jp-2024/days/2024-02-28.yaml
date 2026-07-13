@@ -1,5 +1,5 @@
 date: '2024-02-28'
-country: TWN
+countries: [TWN]
 city: taipei
 places:
   - id: jiufen

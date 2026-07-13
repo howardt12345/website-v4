@@ -1,5 +1,5 @@
 date: '2024-03-09'
-country: JPN
+countries: [JPN]
 city: hiroshima
 places:
   - id: hiroshima-castle

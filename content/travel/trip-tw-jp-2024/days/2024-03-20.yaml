@@ -1,5 +1,5 @@
 date: '2024-03-20'
-country: JPN
+countries: [JPN]
 city: kyoto
 places:
   - id: arashiyama-bamboo-grove
