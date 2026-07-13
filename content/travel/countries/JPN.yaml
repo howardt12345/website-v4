@@ -106,8 +106,8 @@ cities:
     region: JP-22
   - id: oyama
     name: Oyama
-    lon: 138.955
-    lat: 35.365
+    lon: 138.987
+    lat: 35.360
     region: JP-22
   - id: yonezawa
     name: Yonezawa
@@ -166,13 +166,13 @@ cities:
     region: JP-02
   - id: aomori
     name: Aomori
-    lon: 140.740
-    lat: 40.822
+    lon: 140.747
+    lat: 40.823
     region: JP-02
   - id: inakadate
     name: Inakadate
-    lon: 140.552
-    lat: 40.657
+    lon: 140.550
+    lat: 40.631
     region: JP-02
   - id: fukushima
     name: Fukushima

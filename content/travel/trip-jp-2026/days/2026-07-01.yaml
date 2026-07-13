@@ -13,23 +13,23 @@ places:
     city: matsushima
   - id: matsushima-fish-market
     name: Matsushima Fish Market
-    lon: 141.053
-    lat: 38.373
+    lon: 141.065
+    lat: 38.372
     city: matsushima
   - id: godaido
     name: Godaidō
-    lon: 141.062
-    lat: 38.368
+    lon: 141.064
+    lat: 38.370
     city: matsushima
   - id: kanrantei
     name: Kanrantei
-    lon: 141.059
-    lat: 38.366
+    lon: 141.062
+    lat: 38.369
     city: matsushima
   - id: fukuura-island
     name: Fukuura Island
-    lon: 141.068
-    lat: 38.365
+    lon: 141.071
+    lat: 38.367
     city: matsushima
   - id: morioka
     name: Morioka

@@ -7,9 +7,9 @@ places:
     lon: 139.774
     lat: 35.698
   - id: ginza-kira
-    name: Ginza Kira
-    lon: 139.766
-    lat: 35.671
+    name: Kira Ginza (季楽 銀座)
+    lon: 139.763
+    lat: 35.672
   - id: ginza
     name: Ginza
     lon: 139.764

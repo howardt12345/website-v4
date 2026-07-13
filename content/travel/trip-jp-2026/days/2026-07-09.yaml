@@ -9,8 +9,8 @@ places:
     city: fujinomiya
   - id: fujisan-world-heritage-center
     name: Fujisan World Heritage Centre
-    lon: 138.622
-    lat: 35.223
+    lon: 138.609
+    lat: 35.224
     city: fujinomiya
   - id: fujisan-hongu-sengen-taisha
     name: Fujisan Hongū Sengen Taisha
@@ -19,13 +19,13 @@ places:
     city: fujinomiya
   - id: shiraito-falls
     name: Shiraito Falls
-    lon: 138.591
-    lat: 35.310
+    lon: 138.589
+    lat: 35.313
     city: fujinomiya
   - id: wasabi-farm
     name: Wasabi Farm
-    lon: 138.955
-    lat: 35.365
+    lon: 138.977
+    lat: 35.312
     city: oyama
   - id: yokohama
     name: Yokohama
@@ -33,5 +33,5 @@ places:
     lat: 35.444
   - id: shin-yokohama-ramen-museum
     name: Shin-Yokohama Ramen Museum
-    lon: 139.617
-    lat: 35.509
+    lon: 139.615
+    lat: 35.510

@@ -9,8 +9,8 @@ places:
     city: hirosaki
   - id: zao-fox-village
     name: Zaō Fox Village
-    lon: 140.680
-    lat: 38.081
+    lon: 140.530
+    lat: 38.041
     city: shiroishi
   - id: fukushima
     name: Fukushima

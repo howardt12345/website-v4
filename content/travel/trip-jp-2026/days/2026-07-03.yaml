@@ -9,13 +9,13 @@ places:
     city: morioka
   - id: kakunodate-samurai-street
     name: Kakunodate Samurai Residence Street
-    lon: 140.559
+    lon: 140.562
     lat: 39.601
     city: kakunodate
   - id: kawarada-ke
     name: Kawarada-ke Samurai House
-    lon: 140.559
-    lat: 39.600
+    lon: 140.563
+    lat: 39.597
     city: kakunodate
   - id: akita
     name: Akita

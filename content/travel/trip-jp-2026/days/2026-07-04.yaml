@@ -4,13 +4,13 @@ city: hirosaki
 places:
   - id: kubota-castle
     name: Kubota Castle
-    lon: 140.106
+    lon: 140.123
     lat: 39.723
     city: akita
   - id: akita-dog-cafe
     name: Akita Dog Café (秋田犬cafe)
-    lon: 140.568
-    lat: 40.269
+    lon: 140.558
+    lat: 40.272
     city: odate
   - id: akita-dog-center
     name: Akita Dog Center

@@ -4,19 +4,19 @@ city: aomori
 places:
   - id: aspam
     name: ASPAM Tourism Center
-    lon: 140.734
-    lat: 40.831
+    lon: 140.741
+    lat: 40.830
   - id: nebuta-wa-rasse
     name: Nebuta Museum WA RASSE
     lon: 140.735
     lat: 40.829
   - id: aomori-gyosai-center
     name: Aomori Gyosai Center
-    lon: 140.738
-    lat: 40.827
+    lon: 140.736
+    lat: 40.826
   - id: a-factory
     name: A-Factory
-    lon: 140.732
+    lon: 140.735
     lat: 40.830
   - id: hirosaki-castle
     name: Hirosaki Castle
@@ -25,6 +25,6 @@ places:
     city: hirosaki
   - id: inakadate-rice-paddy-art
     name: Inakadate Rice Paddy Art Venue 2
-    lon: 140.552
-    lat: 40.657
+    lon: 140.574
+    lat: 40.632
     city: inakadate

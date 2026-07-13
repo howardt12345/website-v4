@@ -8,13 +8,13 @@ places:
     lat: 39.700
   - id: bank-of-iwate-red-brick
     name: Bank of Iwate Red Brick Building
-    lon: 141.152
-    lat: 39.702
+    lon: 141.155
+    lat: 39.701
   - id: morioka-hachimangu
     name: Morioka Hachimangū
-    lon: 141.161
-    lat: 39.693
+    lon: 141.164
+    lat: 39.695
   - id: nanshoso
     name: Nanshōsō
-    lon: 141.146
-    lat: 39.690
+    lon: 141.149
+    lat: 39.695

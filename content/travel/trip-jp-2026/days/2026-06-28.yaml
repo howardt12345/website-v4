@@ -9,12 +9,12 @@ places:
     city: tokyo
   - id: toko-sake-museum
     name: Tōkō Sake Museum
-    lon: 140.109
-    lat: 37.910
+    lon: 140.112
+    lat: 37.906
   - id: uesugi-shrine
     name: Uesugi Shrine
-    lon: 140.103
-    lat: 37.907
+    lon: 140.104
+    lat: 37.909
   - id: kaminoyama
     name: Kaminoyama
     lon: 140.267
