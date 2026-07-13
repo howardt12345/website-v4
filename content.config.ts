@@ -74,6 +74,8 @@ export default defineContentConfig({
             city: z.string().optional(),
             // Groups places under a named area for the day title
             neighborhood: z.string().optional(),
+            // Path-only stop: bends the route without a pin, list entry, or photo slot.
+            ghost: z.boolean().optional(),
           }),
         ),
       }),

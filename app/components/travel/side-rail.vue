@@ -7,6 +7,7 @@ import {
   daySpan,
   formatDayShort,
   dayTitle,
+  visiblePlaces,
 } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
@@ -157,7 +158,7 @@ watch(
                 <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
                 <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
                 <span class="rail-day__meta">
-                  {{ nStops(day.places.length) }}
+                  {{ nStops(visiblePlaces(day).length) }}
                   <template v-if="dayPhotoCountMap.get(day.date)"> · {{ nPhotos(dayPhotoCountMap.get(day.date)) }}</template>
                 </span>
               </div>

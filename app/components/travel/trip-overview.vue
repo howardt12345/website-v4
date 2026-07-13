@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TravelTrip, TravelDay, TripOverviewDay, TravelTimelineEntry } from '~/types/travel';
-import { formatDayLabel, dayTitle, dayUniqueIso3s } from '~/composables/travel';
+import { formatDayLabel, dayTitle, dayUniqueIso3s, visiblePlaces } from '~/composables/travel';
 import { useTravelStore } from '~/store/travel.store';
 import { usei18n } from '~/store/i18n.store';
 
@@ -23,7 +23,8 @@ const dayCountryLabel = (day: TravelDay): string =>
 const timelineEntries = computed<TravelTimelineEntry[]>(() =>
   props.days.map((item) => {
     const photographed = new Set(item.photos.map((p) => p.placeName));
-    const alsoVisited = item.day.places
+    const dayPlaces = visiblePlaces(item.day);
+    const alsoVisited = dayPlaces
       .filter((p) => !photographed.has(p.name))
       .map((p) => p.name);
 
@@ -42,7 +43,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
         tags: e.photo.tags,
       })),
       onClick: () => emit('pick-day', item.dayIndex),
-      noPhotoPlaces: item.photos.length === 0 ? item.day.places.map((p) => p.name) : undefined,
+      noPhotoPlaces: item.photos.length === 0 ? dayPlaces.map((p) => p.name) : undefined,
       alsoVisited: item.photos.length > 0 && alsoVisited.length > 0 ? alsoVisited : undefined,
     };
   }),

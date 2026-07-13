@@ -31,6 +31,10 @@ places:
     lon: 141.071
     lat: 38.367
     city: matsushima
+  - name: Sendai (transfer)
+    lon: 140.882
+    lat: 38.260
+    ghost: true
   - id: morioka
     name: Morioka
     lon: 141.153

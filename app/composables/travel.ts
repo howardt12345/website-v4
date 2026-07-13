@@ -1,6 +1,10 @@
-import type { TravelCountry, TravelDay, TravelTrip } from '~/types/travel';
+import type { TravelCountry, TravelDay, TravelPlace, TravelTrip } from '~/types/travel';
 
 const cityKey = (iso3: string, cityId: string): string => `${iso3}/${cityId}`;
+
+// Excludes path-only ghost places from anything that lists, counts, or titles places.
+export const visiblePlaces = (day: TravelDay): TravelPlace[] =>
+  day.places.filter((p) => !p.ghost);
 
 export const tripSlug = (trip: TravelTrip): string =>
   trip.stem.replace(/\/index$/, '');
@@ -43,7 +47,7 @@ export const formatDayShort = (date: string, locale: string): string =>
 export const dayUniqueCities = (day: TravelDay): { country: string; city: string }[] => {
   const seen = new Set<string>();
   const result: { country: string; city: string }[] = [];
-  for (const place of day.places) {
+  for (const place of visiblePlaces(day)) {
     const country = place.country ?? day.country;
     const city = place.city ?? day.city;
     const key = `${country}/${city}`;
@@ -62,7 +66,7 @@ export const dayTitle = (
   cityById: (iso3: string, cityId: string) => { name: string } | undefined,
 ): string => {
   const cities = dayUniqueCities(day);
-  const neighborhoods = [...new Set(day.places.map((p) => p.neighborhood).filter(Boolean))];
+  const neighborhoods = [...new Set(visiblePlaces(day).map((p) => p.neighborhood).filter(Boolean))];
 
   if (cities.length === 1 && neighborhoods.length > 0) {
     const city = cities[0]!;
@@ -74,11 +78,11 @@ export const dayTitle = (
 };
 
 export const dayUniqueIso3s = (day: TravelDay): string[] =>
-  [...new Set(day.places.map((p) => p.country ?? day.country))];
+  [...new Set(visiblePlaces(day).map((p) => p.country ?? day.country))];
 
 export const tripVisitedCityKeys = (days: TravelDay[]): Set<string> =>
   new Set(
-    days.flatMap((d) => d.places.map((p) => cityKey(p.country ?? d.country, p.city ?? d.city))),
+    days.flatMap((d) => visiblePlaces(d).map((p) => cityKey(p.country ?? d.country, p.city ?? d.city))),
   );
 
 export const tripVisitedRegions = (

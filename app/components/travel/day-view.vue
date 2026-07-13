@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TravelDay, TravelPlace } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
+import { formatDayLabel, dayUniqueCities, dayUniqueIso3s, visiblePlaces } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -21,6 +21,8 @@ defineEmits<{
 const { cityById, countryByIso3 } = useTravelStore();
 const { currentLanguage } = storeToRefs(usei18n());
 
+// Must match mapPlacePins' list in the travel store, so index i lines up with activePlaceIndex.
+const places = computed(() => visiblePlaces(props.day));
 const uniqueCities = computed(() => dayUniqueCities(props.day));
 const isMultiCityDay = computed(() => uniqueCities.value.length > 1);
 const isMultiCountryDay = computed(() => dayUniqueIso3s(props.day).length > 1);
@@ -73,7 +75,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
     <div class="day-view__layout">
       <div class="day-view__places">
         <TravelPlaceItem
-          v-for="(place, i) in day.places"
+          v-for="(place, i) in places"
           :key="place.id ?? place.name"
           :place
           :index="i"
@@ -84,12 +86,12 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
       </div>
 
       <div class="day-view__sections">
-        <template v-for="(place, i) in day.places" :key="place.id ?? place.name">
+        <template v-for="(place, i) in places" :key="place.id ?? place.name">
           <TravelPhotoSection
             v-show="i === activePlace"
             :place
             :placeIndex="i"
-            :totalPlaces="day.places.length"
+            :totalPlaces="places.length"
             :baseHue="placeHue(place)"
             :photos="photosForPlace(place)"
           />

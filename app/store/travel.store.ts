@@ -11,7 +11,7 @@ import type {
   CityVisitSummary,
 } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { tripSlug, tripsForCountry, tripVisitedCityKeys, tripVisitedRegions } from '~/composables/travel';
+import { tripSlug, tripsForCountry, tripVisitedCityKeys, tripVisitedRegions, visiblePlaces } from '~/composables/travel';
 
 interface ParsedHash {
   countryIso3: string | null;
@@ -243,7 +243,7 @@ export const useTravelStore = defineStore('travel', () => {
     const result: TripOverviewDay[] = [];
     tripDays.value.forEach((day, dayIndex) => {
       const photos: TripOverviewPhoto[] = [];
-      for (const place of day.places) {
+      for (const place of visiblePlaces(day)) {
         if (!place.id) continue;
         for (const photo of tripPhotosMap.value[place.id] ?? []) {
           if (photo.date && photo.date !== day.date) continue;
@@ -265,7 +265,7 @@ export const useTravelStore = defineStore('travel', () => {
       const tId = slug.split('/').at(-1) ?? slug;
       const photosForTrip = travelPhotosByPlace.value[tId] ?? {};
       for (const day of daysForTripSlug(slug)) {
-        for (const place of day.places) {
+        for (const place of visiblePlaces(day)) {
           if ((place.country ?? day.country) !== iso3) continue;
           if ((place.city ?? day.city) !== cityId) continue;
           const placePhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
@@ -299,7 +299,7 @@ export const useTravelStore = defineStore('travel', () => {
       const tripSlugFromDay = day.stem.replace(/\/days\/[^/]+$/, '');
       const citiesSeenToday = new Set<string>();
 
-      for (const place of day.places) {
+      for (const place of visiblePlaces(day)) {
         const iso3 = place.country ?? day.country;
         const cityId = place.city ?? day.city;
         const country = countryByIso3(iso3);
@@ -383,7 +383,8 @@ export const useTravelStore = defineStore('travel', () => {
   });
   const mapPlacePins = computed(() => {
     if (view.value === 'trip' && activeDay.value) {
-      return activeDay.value.places.map((p, i) => ({
+      // Must index the same list day-view.vue renders, so i lines up with activePlaceIndex.
+      return visiblePlaces(activeDay.value).map((p, i) => ({
         lon: p.lon,
         lat: p.lat,
         label: p.name,

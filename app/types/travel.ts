@@ -11,6 +11,7 @@ export interface TravelPlace {
   country?: string;
   city?: string;
   neighborhood?: string;
+  ghost?: boolean;
 }
 
 export interface TravelDay {
