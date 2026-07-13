@@ -11,7 +11,7 @@ import type {
   CityVisitSummary,
 } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { tripSlug, tripsForCountry } from '~/composables/travel';
+import { tripSlug, tripsForCountry, tripVisitedCityKeys, tripVisitedRegions } from '~/composables/travel';
 
 interface ParsedHash {
   countryIso3: string | null;
@@ -227,14 +227,8 @@ export const useTravelStore = defineStore('travel', () => {
 
   const multiCountry = computed(() => (focusTrip.value?.countries.length ?? 0) > 1);
   const tripDayCount = computed(() => tripDays.value.length);
-  const tripCityCount = computed(
-    () =>
-      new Set(
-        tripDays.value.flatMap((d) =>
-          d.places.map((p) => `${p.country ?? d.country}/${p.city ?? d.city}`),
-        ),
-      ).size,
-  );
+  const tripCityKeys = computed<Set<string>>(() => tripVisitedCityKeys(tripDays.value));
+  const tripCityCount = computed(() => tripCityKeys.value.size);
 
   const activeTripId = computed(() =>
     focusTrip.value ? (tripSlug(focusTrip.value).split('/').at(-1) ?? '') : '',
@@ -371,9 +365,18 @@ export const useTravelStore = defineStore('travel', () => {
   const mapVisitedHues = computed<Record<string, number>>(() =>
     Object.fromEntries(countries.value.map((c) => [c.iso3, c.hue])),
   );
-  const mapVisitedRegions = computed<string[]>(() =>
-    mapFocusCountries.value.flatMap((iso3) => countryByIso3(iso3)?.regions ?? []),
-  );
+  const mapVisitedRegions = computed<string[]>(() => {
+    if (view.value === 'trip' && focusTrip.value) return tripVisitedRegions(tripDays.value, countryByIso3);
+    return mapFocusCountries.value.flatMap((iso3) => countryByIso3(iso3)?.regions ?? []);
+  });
+  // Regions of the trip's countries outside this trip, e.g. a country two separate trips both visited.
+  const mapDimmedRegions = computed<string[]>(() => {
+    if (view.value !== 'trip' || !focusTrip.value) return [];
+    const visited = new Set(mapVisitedRegions.value);
+    return mapFocusCountries.value
+      .flatMap((iso3) => countryByIso3(iso3)?.regions ?? [])
+      .filter((region) => !visited.has(region));
+  });
   const mapTripPath = computed<{ lon: number; lat: number }[] | null>(() => {
     if (view.value !== 'trip' || !tripDays.value.length) return null;
     return tripDays.value.flatMap((d) => d.places.map((p) => ({ lon: p.lon, lat: p.lat })));
@@ -419,13 +422,15 @@ export const useTravelStore = defineStore('travel', () => {
       return focusTrip.value.countries.flatMap((iso3) => {
         const country = countryByIso3(iso3);
         if (!country) return [];
-        return country.cities.map((c) => ({
-          lon: c.lon,
-          lat: c.lat,
-          name: c.name,
-          id: c.id,
-          country: iso3,
-        }));
+        return country.cities
+          .filter((c) => tripCityKeys.value.has(`${iso3}/${c.id}`))
+          .map((c) => ({
+            lon: c.lon,
+            lat: c.lat,
+            name: c.name,
+            id: c.id,
+            country: iso3,
+          }));
       });
     }
     return [];
@@ -449,6 +454,7 @@ export const useTravelStore = defineStore('travel', () => {
     focusCountries: mapFocusCountries.value,
     visitedHues: mapVisitedHues.value,
     visitedRegions: mapVisitedRegions.value,
+    dimmedRegions: mapDimmedRegions.value,
     tripPath: mapTripPath.value,
     placePins: mapPlacePins.value,
     cityPins: mapCityPins.value,

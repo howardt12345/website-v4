@@ -1,5 +1,7 @@
 import type { TravelCountry, TravelDay, TravelTrip } from '~/types/travel';
 
+const cityKey = (iso3: string, cityId: string): string => `${iso3}/${cityId}`;
+
 export const tripSlug = (trip: TravelTrip): string =>
   trip.stem.replace(/\/index$/, '');
 
@@ -55,6 +57,24 @@ export const dayUniqueCities = (day: TravelDay): { country: string; city: string
 
 export const dayUniqueIso3s = (day: TravelDay): string[] =>
   [...new Set(day.places.map((p) => p.country ?? day.country))];
+
+export const tripVisitedCityKeys = (days: TravelDay[]): Set<string> =>
+  new Set(
+    days.flatMap((d) => d.places.map((p) => cityKey(p.country ?? d.country, p.city ?? d.city))),
+  );
+
+export const tripVisitedRegions = (
+  days: TravelDay[],
+  countryByIso3: (iso3: string) => TravelCountry | undefined,
+): string[] => {
+  const regions = new Set<string>();
+  for (const key of tripVisitedCityKeys(days)) {
+    const [iso3, cityId] = key.split('/');
+    const region = countryByIso3(iso3!)?.cities.find((c) => c.id === cityId)?.region;
+    if (region) regions.add(region);
+  }
+  return [...regions];
+};
 
 export const tripsForCountry = (trips: TravelTrip[], iso3: string): TravelTrip[] =>
   trips.filter((t) => t.countries.includes(iso3));

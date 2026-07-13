@@ -29,6 +29,7 @@ interface Props {
   focusCountries?: string[];
   visitedHues?: Record<string, number>;
   visitedRegions?: string[];
+  dimmedRegions?: string[];
   tripPath?: { lon: number; lat: number }[] | null;
   placePins?: MapPin[];
   cityPins?: CityPin[];
@@ -41,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   focusCountries: () => [],
   visitedHues: () => ({}),
   visitedRegions: () => [],
+  dimmedRegions: () => [],
   tripPath: null,
   placePins: () => [],
   cityPins: () => [],
@@ -93,6 +95,10 @@ const visitedCountryHover = (hue: number) =>
 
 const visitedRegionFill = (hue: number) =>
   isDark.value ? hslToHex(hue, 55, 48) : hslToHex(hue, 62, 65);
+
+// Hue-tinted rather than plain grey, so it still reads as this country's color, just muted.
+const dimmedRegionFill = (hue: number) =>
+  isDark.value ? hslToHex(hue, 12, 30) : hslToHex(hue, 15, 82);
 
 const provinceStrokeColor = (hue: number) =>
   isDark.value ? hslToHex(hue, 40, 33) : hslToHex(hue, 48, 42);
@@ -514,6 +520,7 @@ const loadPolygons = async () => {
       if (!geo) continue;
       const hue = props.visitedHues[iso3] ?? 200;
       const visitedSet = new Set(props.visitedRegions);
+      const dimmedSet = new Set(props.dimmedRegions);
 
       const provinceSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, { geoJSON: geo }),
@@ -540,6 +547,8 @@ const loadPolygons = async () => {
           if (!isIdContext(ctx)) return;
           if (visitedSet.has(ctx.id)) {
             polygon.set('fill', am5.color(visitedRegionFill(hue)));
+          } else if (dimmedSet.has(ctx.id)) {
+            polygon.set('fill', am5.color(dimmedRegionFill(hue)));
           }
         });
       });
@@ -585,7 +594,7 @@ const buildChart = () => {
 
 watch(() => props.mode, buildChart);
 watch(
-  [() => props.focusCountries, () => props.visitedHues, () => props.visitedRegions, isDark],
+  [() => props.focusCountries, () => props.visitedHues, () => props.visitedRegions, () => props.dimmedRegions, isDark],
   loadPolygons,
   { deep: true },
 );
