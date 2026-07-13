@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: yasukuni-shrine
     name: Yasukuni Shrine
+    neighborhood: Kudanshita
     lon: 139.741
     lat: 35.694
   - id: tokyo-station
     name: Tokyo Station
+    neighborhood: Tokyo Station
     lon: 139.767
     lat: 35.681
   - id: ochanomizu
     name: Ochanomizu
+    neighborhood: Ochanomizu
     lon: 139.764
     lat: 35.699
   - id: nippon-budokan
     name: Nippon Budokan
+    neighborhood: Kudanshita
     lon: 139.752
     lat: 35.693

@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: ueno-park
     name: Ueno Park
+    neighborhood: Ueno
     lon: 139.771
     lat: 35.715
   - id: akihabara
     name: Akihabara
+    neighborhood: Akihabara
     lon: 139.774
     lat: 35.698
   - id: ochanomizu
     name: Ochanomizu
+    neighborhood: Ochanomizu
     lon: 139.765
     lat: 35.700
   - id: tokyo-station
     name: Tokyo Station
+    neighborhood: Tokyo Station
     lon: 139.767
     lat: 35.681

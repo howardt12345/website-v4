@@ -4,6 +4,7 @@ city: yonezawa
 places:
   - id: ueno-station
     name: Ueno Station
+    neighborhood: Ueno
     lon: 139.777
     lat: 35.714
     city: tokyo

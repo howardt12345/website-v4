@@ -11,6 +11,7 @@ places:
     name: Chureito Pagoda
     lon: 138.804
     lat: 35.492
+    city: shimoyoshida
   - id: honcho-street-fujiyoshida
     name: Honchō Street
     lon: 138.795
@@ -28,5 +29,6 @@ places:
     city: shimoyoshida
   - id: akihabara
     name: Akihabara
+    neighborhood: Akihabara
     lon: 139.771
     lat: 35.699

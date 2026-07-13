@@ -6,7 +6,7 @@ import {
   formatTripRange,
   daySpan,
   formatDayShort,
-  dayUniqueCities,
+  dayTitle,
 } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
@@ -78,10 +78,7 @@ const tripRailItems = computed((): TripRailItem[] => {
   return items;
 });
 
-const dayCityLabel = (day: TravelDay): string =>
-  dayUniqueCities(day)
-    .map((loc) => cityById(loc.country, loc.city)?.name ?? loc.city)
-    .join(' → ');
+const dayCityLabel = (day: TravelDay): string => dayTitle(day, cityById);
 
 watch(
   () => props.activeDayIndex,

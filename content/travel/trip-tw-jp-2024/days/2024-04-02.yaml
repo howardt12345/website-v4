@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: tsukiji-outer-market
     name: Tsukiji Outer Market
+    neighborhood: Tsukiji
     lon: 139.770
     lat: 35.665
   - id: azabudai-hills
     name: Azabudai Hills
+    neighborhood: Azabudai
     lon: 139.740
     lat: 35.657
   - id: mori-tower-roppongi
     name: Mori Tower / Roppongi Hills
+    neighborhood: Roppongi
     lon: 139.731
     lat: 35.660
   - id: nakameguro-river
     name: Meguro River
+    neighborhood: Nakameguro
     lon: 139.698
     lat: 35.644

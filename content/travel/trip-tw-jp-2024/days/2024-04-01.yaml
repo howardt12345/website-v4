@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: ochanomizu
     name: Ochanomizu
+    neighborhood: Ochanomizu
     lon: 139.764
     lat: 35.699
   - id: akihabara
     name: Akihabara
+    neighborhood: Akihabara
     lon: 139.771
     lat: 35.699
   - id: shinjuku
     name: Shinjuku
+    neighborhood: Shinjuku
     lon: 139.700
     lat: 35.690
   - id: nakameguro
     name: Nakameguro
+    neighborhood: Nakameguro
     lon: 139.699
     lat: 35.645

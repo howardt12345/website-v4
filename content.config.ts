@@ -72,6 +72,8 @@ export default defineContentConfig({
             // Optional overrides for cross-country or cross-city stops within a day.
             country: z.string().optional(),
             city: z.string().optional(),
+            // Groups places under a named area for the day title
+            neighborhood: z.string().optional(),
           }),
         ),
       }),

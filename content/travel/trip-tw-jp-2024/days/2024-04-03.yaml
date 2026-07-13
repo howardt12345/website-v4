@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: ginza
     name: Ginza
+    neighborhood: Ginza
     lon: 139.764
     lat: 35.672
   - id: kanda
     name: Kanda
+    neighborhood: Kanda
     lon: 139.773
     lat: 35.691
   - id: shimokitazawa
     name: Shimokitazawa
+    neighborhood: Shimokitazawa
     lon: 139.668
     lat: 35.661
   - id: chidorigafuchi
     name: Chidorigafuchi
+    neighborhood: Kudanshita
     lon: 139.747
     lat: 35.694

@@ -4,25 +4,31 @@ city: tokyo
 places:
   - id: sumida-park
     name: Sumida Park
+    neighborhood: Asakusa
     lon: 139.796
     lat: 35.714
   - id: ochanomizu
     name: Ochanomizu
+    neighborhood: Ochanomizu
     lon: 139.764
     lat: 35.699
   - id: ikebukuro
     name: Ikebukuro
+    neighborhood: Ikebukuro
     lon: 139.710
     lat: 35.730
   - id: shibuya-crossing
     name: Shibuya Crossing
+    neighborhood: Shibuya
     lon: 139.701
     lat: 35.659
   - id: magnet-shibuya-rooftop
     name: Magnet by Shibuya 109 Rooftop
+    neighborhood: Shibuya
     lon: 139.699
     lat: 35.659
   - id: shibuya-parco
     name: Shibuya Parco
+    neighborhood: Shibuya
     lon: 139.698
     lat: 35.661

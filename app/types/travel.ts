@@ -10,6 +10,7 @@ export interface TravelPlace {
   blogSlug?: string;
   country?: string;
   city?: string;
+  neighborhood?: string;
 }
 
 export interface TravelDay {

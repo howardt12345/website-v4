@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TravelTrip, TravelDay, TripOverviewDay, TravelTimelineEntry } from '~/types/travel';
-import { formatDayLabel, dayUniqueCities, dayUniqueIso3s } from '~/composables/travel';
+import { formatDayLabel, dayTitle, dayUniqueIso3s } from '~/composables/travel';
 import { useTravelStore } from '~/store/travel.store';
 import { usei18n } from '~/store/i18n.store';
 
@@ -14,11 +14,6 @@ const emit = defineEmits<{ 'pick-day': [idx: number] }>();
 
 const { cityById, countryByIso3 } = useTravelStore();
 const { currentLanguage } = storeToRefs(usei18n());
-
-const dayCityLabel = (day: TravelDay): string =>
-  dayUniqueCities(day)
-    .map((loc) => cityById(loc.country, loc.city)?.name ?? loc.city)
-    .join(' → ');
 
 const dayCountryLabel = (day: TravelDay): string =>
   dayUniqueIso3s(day)
@@ -35,7 +30,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
     return {
       key: item.day.date,
       eyebrow: '',
-      title: dayCityLabel(item.day),
+      title: dayTitle(item.day, cityById),
       titleSub: dayCountryLabel(item.day),
       dividerBefore: formatDayLabel(item.day.date, currentLanguage.value),
       photos: item.photos.map((e) => ({

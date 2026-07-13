@@ -8,17 +8,21 @@ places:
     lat: 35.549
   - id: ueno
     name: Ueno
+    neighborhood: Ueno
     lon: 139.777
     lat: 35.714
   - id: asakusa
     name: Asakusa
+    neighborhood: Asakusa
     lon: 139.796
     lat: 35.711
   - id: nishi-sando
     name: Nishi-sandō
+    neighborhood: Asakusa
     lon: 139.795
     lat: 35.715
   - id: senso-ji
     name: Sensō-ji
+    neighborhood: Asakusa
     lon: 139.797
     lat: 35.715

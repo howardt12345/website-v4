@@ -4,17 +4,21 @@ city: tokyo
 places:
   - id: akihabara
     name: Akihabara
+    neighborhood: Akihabara
     lon: 139.774
     lat: 35.698
   - id: ginza-kira
     name: Kira Ginza (季楽 銀座)
+    neighborhood: Ginza
     lon: 139.763
     lat: 35.672
   - id: ginza
     name: Ginza
+    neighborhood: Ginza
     lon: 139.764
     lat: 35.672
   - id: tokyo-international-forum
     name: Tokyo International Forum
+    neighborhood: Marunouchi
     lon: 139.763
     lat: 35.677

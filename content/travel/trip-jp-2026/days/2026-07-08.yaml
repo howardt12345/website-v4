@@ -4,21 +4,26 @@ city: tokyo
 places:
   - id: shibuya
     name: Shibuya
+    neighborhood: Shibuya
     lon: 139.701
     lat: 35.660
   - id: gotokuji
     name: Gōtoku-ji
+    neighborhood: Gotokuji
     lon: 139.647
     lat: 35.649
   - id: harajuku
     name: Harajuku
+    neighborhood: Harajuku
     lon: 139.702
     lat: 35.670
   - id: meiji-jingu
     name: Meiji Jingū
+    neighborhood: Harajuku
     lon: 139.699
     lat: 35.676
   - id: shinjuku
     name: Shinjuku
+    neighborhood: Shinjuku
     lon: 139.700
     lat: 35.690

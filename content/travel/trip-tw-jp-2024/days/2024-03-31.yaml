@@ -4,9 +4,11 @@ city: tokyo
 places:
   - id: ghibli-museum
     name: Ghibli Museum
+    neighborhood: Kichijoji
     lon: 139.576
     lat: 35.696
   - id: kichijoji-inokashira-park
     name: Kichijoji / Inokashira Park
+    neighborhood: Kichijoji
     lon: 139.580
     lat: 35.700

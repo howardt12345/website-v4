@@ -4,6 +4,7 @@ city: tokyo
 places:
   - id: shinjuku
     name: Shinjuku
+    neighborhood: Shinjuku
     lon: 139.700
     lat: 35.690
   - id: haneda-airport
