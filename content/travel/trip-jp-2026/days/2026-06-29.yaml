@@ -7,6 +7,10 @@ places:
     lon: 140.267
     lat: 38.150
     city: kaminoyama
+  - name: Yamagata (transfer)
+    lon: 140.363
+    lat: 38.240
+    ghost: true
   - id: yamadera
     name: Yamadera (Risshaku-ji)
     lon: 140.437
