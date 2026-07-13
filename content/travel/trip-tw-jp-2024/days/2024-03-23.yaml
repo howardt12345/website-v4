@@ -4,9 +4,11 @@ city: kyoto
 places:
   - id: kyoto-railway-museum
     name: Kyoto Railway Museum
+    neighborhood: Umekoji
     lon: 135.738
     lat: 34.985
   - id: kyoto-station
     name: Kyoto Station
+    neighborhood: Kyoto Station
     lon: 135.759
     lat: 34.986

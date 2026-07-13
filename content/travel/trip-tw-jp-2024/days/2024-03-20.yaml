@@ -4,30 +4,37 @@ city: kyoto
 places:
   - id: arashiyama-bamboo-grove
     name: Arashiyama Bamboo Grove
+    neighborhood: Arashiyama
     lon: 135.672
     lat: 35.017
   - id: nonomiya-shrine
     name: Nonomiya Shrine
+    neighborhood: Arashiyama
     lon: 135.674
     lat: 35.016
   - id: tenryuji
     name: Tenryu-ji
+    neighborhood: Arashiyama
     lon: 135.674
     lat: 35.016
   - id: hogon-in-garden
     name: Hogon-in Garden
+    neighborhood: Arashiyama
     lon: 135.675
     lat: 35.015
   - id: kogenji
     name: Kōgen-ji
+    neighborhood: Arashiyama
     lon: 135.673
     lat: 35.014
   - id: saga-sl-museum
     name: SL Display at Saga Station
+    neighborhood: Arashiyama
     lon: 135.678
     lat: 35.013
   - id: sagano-scenic-railway
     name: Sagano Scenic Railway
+    neighborhood: Arashiyama
     lon: 135.651
     lat: 35.021
   - id: kyoto-station
@@ -36,9 +43,11 @@ places:
     lat: 34.986
   - id: toji-temple
     name: Toji Temple
+    neighborhood: Toji
     lon: 135.748
     lat: 34.981
   - id: umekoji-park
     name: Umekoji Park
+    neighborhood: Umekoji
     lon: 135.738
     lat: 34.988

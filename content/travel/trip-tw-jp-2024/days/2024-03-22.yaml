@@ -4,29 +4,36 @@ city: kyoto
 places:
   - id: kiyomizudera
     name: Kiyomizu-dera
+    neighborhood: Higashiyama
     lon: 135.785
     lat: 34.995
   - id: ninenzaka-chawanzaka
     name: Ninenzaka / Chawanzaka
+    neighborhood: Higashiyama
     lon: 135.782
     lat: 34.997
   - id: kinkakuji
     name: Kinkaku-ji
+    neighborhood: Kinkakuji
     lon: 135.729
     lat: 35.039
   - id: kitano-tenmangu
     name: Kitano Tenmangu
+    neighborhood: Kitano
     lon: 135.735
     lat: 35.031
   - id: philosophers-path
     name: Philosopher's Path
+    neighborhood: Higashiyama
     lon: 135.794
     lat: 35.020
   - id: kodaiji
     name: Kodai-ji
+    neighborhood: Higashiyama
     lon: 135.781
     lat: 34.999
   - id: higashiyama
     name: Higashiyama
+    neighborhood: Higashiyama
     lon: 135.780
     lat: 35.000

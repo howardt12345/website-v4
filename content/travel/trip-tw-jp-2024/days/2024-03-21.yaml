@@ -4,17 +4,21 @@ city: kyoto
 places:
   - id: shirakawa-lane
     name: Shirakawa Lane
+    neighborhood: Gion
     lon: 135.772
     lat: 35.003
   - id: yasaka-pagoda
     name: Yasaka Pagoda
+    neighborhood: Higashiyama
     lon: 135.779
     lat: 34.997
   - id: fushimi-inari
     name: Fushimi Inari
+    neighborhood: Fushimi
     lon: 135.773
     lat: 34.967
   - id: yodo-cherry-trees
     name: Yodo Kawazu-zakura Cherry Trees
+    neighborhood: Yodo
     lon: 135.740
     lat: 34.893
