@@ -2,6 +2,18 @@ date: '2026-07-09'
 country: JPN
 city: yokohama
 places:
+  - name: Tokyo Station (shinkansen)
+    lon: 139.767
+    lat: 35.681
+    ghost: true
+  - name: Yokohama (transfer)
+    lon: 139.638
+    lat: 35.444
+    ghost: true
+  - name: Mishima (shinkansen)
+    lon: 138.911
+    lat: 35.120
+    ghost: true
   - id: fujinomiya
     name: Fujinomiya
     lon: 138.621
@@ -27,6 +39,10 @@ places:
     lon: 138.977
     lat: 35.312
     city: oyama
+  - name: Mishima (shinkansen)
+    lon: 138.911
+    lat: 35.120
+    ghost: true
   - id: yokohama
     name: Yokohama
     lon: 139.638
