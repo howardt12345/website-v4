@@ -31,6 +31,7 @@ export default defineNuxtConfig({
     '/experience': { redirect: '/#experience' },
     '/projects': { redirect: '/#projects' },
     '/contact': { redirect: '/#contact' },
+    '/**': { headers: { 'X-Robots-Tag': 'noai, noimageai' } },
   },
   content: {
     experimental: { sqliteConnector: 'native' }
