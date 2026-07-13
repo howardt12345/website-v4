@@ -8,6 +8,10 @@ places:
     lon: 139.777
     lat: 35.714
     city: tokyo
+  - name: Fukushima (shinkansen)
+    lon: 140.474
+    lat: 37.761
+    ghost: true
   - id: toko-sake-museum
     name: Tōkō Sake Museum
     lon: 140.112

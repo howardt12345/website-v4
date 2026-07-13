@@ -2,6 +2,14 @@ date: '2026-07-07'
 country: JPN
 city: aizuwakamatsu
 places:
+  - name: Fukushima (transfer)
+    lon: 140.474
+    lat: 37.761
+    ghost: true
+  - name: Koriyama (shinkansen)
+    lon: 140.386
+    lat: 37.400
+    ghost: true
   - id: aizu-wakamatsu
     name: Aizu-Wakamatsu
     lon: 139.930
@@ -14,6 +22,10 @@ places:
     name: Sazae-dō
     lon: 139.954
     lat: 37.505
+  - name: Koriyama (shinkansen)
+    lon: 140.386
+    lat: 37.400
+    ghost: true
   - id: shinjuku
     name: Shinjuku
     neighborhood: Shinjuku

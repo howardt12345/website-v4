@@ -7,11 +7,35 @@ places:
     lon: 140.464
     lat: 40.603
     city: hirosaki
+  - name: Shin-Aomori (transfer)
+    lon: 140.701
+    lat: 40.824
+    ghost: true
+  - name: Hachinohe (shinkansen)
+    lon: 141.487
+    lat: 40.512
+    ghost: true
+  - name: Morioka (shinkansen)
+    lon: 141.153
+    lat: 39.702
+    ghost: true
+  - name: Sendai (shinkansen)
+    lon: 140.882
+    lat: 38.260
+    ghost: true
+  - name: Shiroishi-Zaō (shinkansen)
+    lon: 140.618
+    lat: 38.026
+    ghost: true
   - id: zao-fox-village
     name: Zaō Fox Village
     lon: 140.530
     lat: 38.041
     city: shiroishi
+  - name: Shiroishi-Zaō (shinkansen)
+    lon: 140.618
+    lat: 38.026
+    ghost: true
   - id: fukushima
     name: Fukushima
     lon: 140.474

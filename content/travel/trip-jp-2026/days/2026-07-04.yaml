@@ -7,6 +7,10 @@ places:
     lon: 140.123
     lat: 39.723
     city: akita
+  - name: Higashi-Noshiro (Ōu Line)
+    lon: 140.115
+    lat: 40.213
+    ghost: true
   - id: akita-dog-cafe
     name: Akita Dog Café (秋田犬cafe)
     lon: 140.558
