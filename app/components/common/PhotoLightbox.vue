@@ -57,6 +57,7 @@ onUnmounted(() => {
         variant="text"
         size="small"
         class="lightbox__close"
+        :aria-label="$t('Close')"
         @click="close"
       >
         <v-icon>mdi-close</v-icon>
@@ -90,6 +91,7 @@ onUnmounted(() => {
             variant="text"
             size="small"
             :disabled="!hasPrev"
+            :aria-label="$t('Previous photo')"
             @click="prev"
           >
             <v-icon>fas fa-chevron-left</v-icon>
@@ -100,6 +102,7 @@ onUnmounted(() => {
             variant="text"
             size="small"
             :disabled="!hasNext"
+            :aria-label="$t('Next photo')"
             @click="next"
           >
             <v-icon>fas fa-chevron-right</v-icon>

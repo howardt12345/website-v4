@@ -12,6 +12,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+defineEmits<{ 'nav-stop': [index: number] }>();
 
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
@@ -40,28 +41,56 @@ function openLightbox(index: number) {
         <div class="photo-section__eyebrow" v-text="$t('Stop {{n}} of {{m}}', { n: placeIndex + 1, m: totalPlaces })" />
         <div class="photo-section__name">{{ place.name }}</div>
       </div>
-      <v-btn
-        v-if="place.blogSlug"
-        :to="`/blog/${place.blogSlug}`"
-        variant="text"
-        size="small"
-        class="photo-section__link"
-      >
-        {{ $t('Read post') }} →
-      </v-btn>
+      <div class="photo-section__actions">
+        <v-btn
+          icon
+          size="x-small"
+          variant="text"
+          :disabled="placeIndex === 0"
+          :aria-label="$t('Previous stop')"
+          @click="$emit('nav-stop', placeIndex - 1)"
+        >
+          <v-icon size="14">fas fa-chevron-left</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          size="x-small"
+          variant="text"
+          :disabled="placeIndex === totalPlaces - 1"
+          :aria-label="$t('Next stop')"
+          @click="$emit('nav-stop', placeIndex + 1)"
+        >
+          <v-icon size="14">fas fa-chevron-right</v-icon>
+        </v-btn>
+        <v-btn
+          v-if="place.blogSlug"
+          :to="`/blog/${place.blogSlug}`"
+          variant="text"
+          size="small"
+          class="photo-section__link"
+        >
+          {{ $t('Read post') }} →
+        </v-btn>
+      </div>
     </div>
 
     <div v-if="photos.length" class="photo-grid">
-      <v-img
+      <button
         v-for="(photo, i) in photos"
         :key="photo.url"
-        :src="photo.url"
-        :alt="photo.alt ?? photo.title ?? place.name"
-        :aspect-ratio="1"
-        cover
-        class="photo-grid__photo"
+        type="button"
+        class="photo-grid__btn"
+        :aria-label="$t('View photo: {{name}}', { name: photo.alt ?? photo.title ?? place.name })"
         @click="openLightbox(i)"
-      />
+      >
+        <v-img
+          :src="photo.url"
+          :alt="photo.alt ?? photo.title ?? place.name"
+          :aspect-ratio="1"
+          cover
+          class="photo-grid__photo"
+        />
+      </button>
     </div>
     <p v-else class="photo-section__empty">{{ $t('No photos for this stop yet.') }}</p>
 
@@ -99,6 +128,12 @@ function openLightbox(index: number) {
     letter-spacing: -0.01em;
   }
 
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(2);
+  }
+
   &__link {
     color: $accent;
     letter-spacing: normal;
@@ -124,13 +159,27 @@ function openLightbox(index: number) {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  &__btn {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid $accent;
+      outline-offset: 2px;
+    }
+  }
+
   &__photo {
     border-radius: rem(8);
-    cursor: pointer;
     transition: opacity 0.2s ease;
 
-    &:hover {
-      opacity: 0.88;
+    @media (hover: hover) {
+      .photo-grid__btn:hover & {
+        opacity: 0.88;
+      }
     }
   }
 }

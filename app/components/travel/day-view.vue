@@ -31,7 +31,7 @@ const dayCountryNames = computed(() =>
   dayUniqueIso3s(props.day).map((iso3) => countryByIso3(iso3)?.name ?? iso3),
 );
 
-const dayDefaultCountry = computed(() => props.day.countries[0]!);
+const dayDefaultCountry = computed(() => props.day.countries[0] ?? null);
 
 const placeHue = (place: TravelPlace): number =>
   countryByIso3(placeCountry(props.day, place))?.hue ?? 200;
@@ -55,18 +55,19 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
               :key="`${loc.country}/${loc.city}`"
             >
               <span v-if="idx > 0" class="day-view__city-sep"> → </span>
-              <span
+              <button
+                type="button"
                 class="day-view__city-link"
                 @click="$emit('city-click', { country: loc.country, city: loc.city })"
-              >{{ cityById(loc.country, loc.city)?.name ?? loc.city }}</span>
+              >{{ cityById(loc.country, loc.city)?.name ?? loc.city }}</button>
             </span>
           </template>
-          <template v-else>
-            <span
-              class="day-view__city-link"
-              @click="$emit('city-click', { country: dayDefaultCountry, city: day.city })"
-            >{{ cityById(dayDefaultCountry, day.city)?.name }}</span>
-          </template>
+          <button
+            v-else-if="dayDefaultCountry"
+            type="button"
+            class="day-view__city-link"
+            @click="$emit('city-click', { country: dayDefaultCountry, city: day.city })"
+          >{{ cityById(dayDefaultCountry, day.city)?.name }}</button>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
             · {{ dayCountryNames.join(' → ') }}
           </span>
@@ -96,6 +97,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
             :totalPlaces="places.length"
             :baseHue="placeHue(place)"
             :photos="photosForPlace(place)"
+            @nav-stop="$emit('update:activePlace', $event)"
           />
         </template>
       </div>
@@ -133,11 +135,21 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
   }
 
   &__city-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
     cursor: pointer;
     transition: opacity 0.15s;
 
     &:hover {
       opacity: 0.7;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $accent;
+      outline-offset: 2px;
     }
   }
 

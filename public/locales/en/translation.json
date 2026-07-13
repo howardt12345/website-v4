@@ -103,5 +103,20 @@
   "voivodeships": "voivodeships",
   "Visited Cities": "Visited Cities",
   "{{n}} trips": "{{n}} trips",
-  "{{n}} places": "{{n}} places"
+  "{{n}} places": "{{n}} places",
+  "Collapse timeline": "Collapse timeline",
+  "The map is interactive with a mouse; all destinations are also reachable from the timeline and city lists below.": "The map is interactive with a mouse; all destinations are also reachable from the timeline and city lists below.",
+  "Expand timeline": "Expand timeline",
+  "Previous stop": "Previous stop",
+  "Next stop": "Next stop",
+  "View photo: {{name}}": "View photo: {{name}}",
+  "Previous photo": "Previous photo",
+  "Next photo": "Next photo",
+  "Filter cities": "Filter cities",
+  "Most recent": "Most recent",
+  "Most days": "Most days",
+  "A–Z": "A–Z",
+  "No cities match “{{q}}”.": "No cities match “{{q}}”.",
+  "Zoom in": "Zoom in",
+  "Zoom out": "Zoom out"
 }

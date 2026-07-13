@@ -26,10 +26,13 @@ interface ParsedHash {
   tripId: string | null;
   dayDate: string | null;
   cityFocus: { country: string; city: string } | null;
+  stopIndex: number | null;
 }
 
 const parseHash = (hash: string): ParsedHash => {
-  const raw = hash.replace(/^#/, '');
+  const stopMatch = hash.replace(/^#/, '').match(/^(.*)\/stop\/(\d+)$/);
+  const raw = stopMatch ? stopMatch[1]! : hash.replace(/^#/, '');
+  const stopIndex = stopMatch ? Number(stopMatch[2]) : null;
 
   const countryWithCity = raw.match(/^country\/([A-Z]{3})\/city\/([^/]+)$/);
   if (countryWithCity) {
@@ -38,14 +41,15 @@ const parseHash = (hash: string): ParsedHash => {
       tripId: null,
       dayDate: null,
       cityFocus: { country: countryWithCity[1]!, city: countryWithCity[2]! },
+      stopIndex,
     };
   }
 
   const countryOnly = raw.match(/^country\/([A-Z]{3})$/);
-  if (countryOnly) return { countryIso3: countryOnly[1]!, tripId: null, dayDate: null, cityFocus: null };
+  if (countryOnly) return { countryIso3: countryOnly[1]!, tripId: null, dayDate: null, cityFocus: null, stopIndex };
 
   const tripPrefix = raw.match(/^trip\/(.+)$/);
-  if (!tripPrefix) return { countryIso3: null, tripId: null, dayDate: null, cityFocus: null };
+  if (!tripPrefix) return { countryIso3: null, tripId: null, dayDate: null, cityFocus: null, stopIndex };
 
   const tripTail = tripPrefix[1]!;
 
@@ -56,21 +60,28 @@ const parseHash = (hash: string): ParsedHash => {
       tripId: tripDayCountryCity[1]!,
       dayDate: tripDayCountryCity[2]!,
       cityFocus: { country: tripDayCountryCity[3]!, city: tripDayCountryCity[4]! },
+      stopIndex,
     };
   }
 
   const tripDayCountry = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})\/country\/([A-Z]{3})$/);
   if (tripDayCountry) {
-    return { countryIso3: tripDayCountry[3]!, tripId: tripDayCountry[1]!, dayDate: tripDayCountry[2]!, cityFocus: null };
+    return { countryIso3: tripDayCountry[3]!, tripId: tripDayCountry[1]!, dayDate: tripDayCountry[2]!, cityFocus: null, stopIndex };
   }
 
   const tripDay = tripTail.match(/^(.+)\/day\/(\d{4}-\d{2}-\d{2})$/);
-  if (tripDay) return { countryIso3: null, tripId: tripDay[1]!, dayDate: tripDay[2]!, cityFocus: null };
+  if (tripDay) return { countryIso3: null, tripId: tripDay[1]!, dayDate: tripDay[2]!, cityFocus: null, stopIndex };
 
   const tripWithCountry = tripTail.match(/^(.+)\/country\/([A-Z]{3})$/);
-  if (tripWithCountry) return { countryIso3: tripWithCountry[2]!, tripId: tripWithCountry[1]!, dayDate: null, cityFocus: null };
+  if (tripWithCountry) return { countryIso3: tripWithCountry[2]!, tripId: tripWithCountry[1]!, dayDate: null, cityFocus: null, stopIndex };
 
-  return { countryIso3: null, tripId: tripTail, dayDate: null, cityFocus: null };
+  return { countryIso3: null, tripId: tripTail, dayDate: null, cityFocus: null, stopIndex };
+};
+
+const MAP_MODE_STORAGE_KEY = 'travel:mapMode';
+const readStoredMapMode = (): 'flat' | 'globe' => {
+  const stored = import.meta.client ? localStorage.getItem(MAP_MODE_STORAGE_KEY) : null;
+  return stored === 'flat' || stored === 'globe' ? stored : 'flat';
 };
 
 export const useTravelStore = defineStore('travel', () => {
@@ -159,9 +170,13 @@ export const useTravelStore = defineStore('travel', () => {
   const focusTripId = ref<string | null>(null);
   const activeDayIndex = ref<number | null>(null);
   const pendingDayDate = ref<string | null>(null);
+  const pendingStopIndex = ref<number | null>(null);
   const activePlaceIndex = ref(0);
   const activeCityFocus = ref<{ country: string; city: string } | null>(null);
-  const mapMode = ref<'flat' | 'globe'>('flat');
+  const mapMode = ref<'flat' | 'globe'>(readStoredMapMode());
+  watch(mapMode, (mode) => {
+    if (import.meta.client) localStorage.setItem(MAP_MODE_STORAGE_KEY, mode);
+  });
 
   const applyHash = (hash: string): void => {
     const parsed = parseHash(hash);
@@ -169,6 +184,7 @@ export const useTravelStore = defineStore('travel', () => {
     focusTripId.value = parsed.tripId;
     activeCityFocus.value = parsed.cityFocus;
     pendingDayDate.value = parsed.dayDate;
+    pendingStopIndex.value = parsed.stopIndex;
   };
 
   watch(() => route.hash, (hash) => {
@@ -197,7 +213,7 @@ export const useTravelStore = defineStore('travel', () => {
   const navCity = (iso3: string, cityId: string): void => { router.push({ hash: `#country/${iso3}/city/${cityId}` }); };
   const navTripDayCity = (dayDate: string, country: string, cityId: string): void => {
     if (!focusTripId.value) return;
-    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
+    router.replace({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
   };
   const navTrip = (slug: string): void => {
     const countryParam = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
@@ -209,12 +225,28 @@ export const useTravelStore = defineStore('travel', () => {
     const hash = idx !== null && tripDays.value[idx]
       ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}${countryPart}`
       : `#trip/${focusTripId.value}${countryPart}`;
-    router.push({ hash });
+    if (view.value === 'trip') {
+      router.replace({ hash });
+    } else {
+      router.push({ hash });
+    }
+  };
+  const pickStop = (i: number): void => {
+    if (!focusTripId.value || !activeDay.value) return;
+    const base = route.hash.replace(/\/stop\/\d+$/, '');
+    router.replace({ hash: `${base}/stop/${i}` });
   };
 
   const tripDays = computed<TravelDay[]>(() =>
     focusTrip.value ? daysForTripSlug(tripSlug(focusTrip.value)) : [],
   );
+
+  const applyPendingStop = (day: TravelDay): void => {
+    if (pendingStopIndex.value === null) return;
+    const maxIdx = visiblePlaces(day).length - 1;
+    activePlaceIndex.value = maxIdx >= 0 ? Math.min(Math.max(pendingStopIndex.value, 0), maxIdx) : 0;
+    pendingStopIndex.value = null;
+  };
 
   const resolvePendingDay = (): void => {
     if (!pendingDayDate.value || !tripDays.value.length) return;
@@ -222,6 +254,7 @@ export const useTravelStore = defineStore('travel', () => {
     if (idx !== -1) {
       activeDayIndex.value = idx;
       pendingDayDate.value = null;
+      applyPendingStop(tripDays.value[idx]!);
     }
   };
   watch(tripDays, resolvePendingDay);
@@ -542,6 +575,7 @@ export const useTravelStore = defineStore('travel', () => {
     navTripDayCity,
     navTrip,
     pickDay,
+    pickStop,
     mapProps,
     railProps,
     statsBarProps,

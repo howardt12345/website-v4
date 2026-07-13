@@ -57,7 +57,6 @@ const stats = computed((): StatItem[] => {
   if (props.view === 'trip' && props.trip) {
     return [
       { value: daySpan(props.trip), label: t('days') },
-      { value: props.tripDayCount ?? 0, label: t('days logged') },
       { value: props.tripCityCount ?? 0, label: t('cities') },
       { value: props.tripPhotoCount ?? 0, label: t('photos') },
     ];
@@ -83,6 +82,11 @@ const stats = computed((): StatItem[] => {
 .travel-stats {
   display: flex;
   gap: rem(22);
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    gap: rem(14);
+  }
 
   &__item {
     display: flex;
@@ -96,6 +100,10 @@ const stats = computed((): StatItem[] => {
     color: $text;
     font-variant-numeric: tabular-nums;
     font-weight: 500;
+
+    @media (max-width: 600px) {
+      font-size: rem(16);
+    }
   }
 
   &__total {

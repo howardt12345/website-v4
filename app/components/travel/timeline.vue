@@ -92,15 +92,21 @@ function openLightbox(entryIdx: number, photoIdx: number) {
             v-for="(photo, photoIdx) in entry.photos"
             :key="photo.url"
             class="timeline-photo"
-            @click="openLightbox(entryIdx, photoIdx)"
           >
-            <v-img
-              :src="photo.url"
-              :alt="photo.alt"
-              :aspect-ratio="1"
-              cover
-              class="timeline-photo__img"
-            />
+            <button
+              type="button"
+              class="timeline-photo__btn"
+              :aria-label="$t('View photo: {{name}}', { name: photo.alt ?? photo.label ?? '' })"
+              @click="openLightbox(entryIdx, photoIdx)"
+            >
+              <v-img
+                :src="photo.url"
+                :alt="photo.alt"
+                :aspect-ratio="1"
+                cover
+                class="timeline-photo__img"
+              />
+            </button>
             <figcaption v-if="photo.label" class="timeline-photo__caption">{{ photo.label }}</figcaption>
           </figure>
         </div>
@@ -275,12 +281,28 @@ function openLightbox(entryIdx: number, photoIdx: number) {
 .timeline-photo {
   margin: 0;
 
+  &__btn {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid $accent;
+      outline-offset: 2px;
+    }
+  }
+
   &__img {
     border-radius: rem(8);
     transition: opacity 0.2s ease;
 
-    &:hover {
-      opacity: 0.88;
+    @media (hover: hover) {
+      .timeline-photo__btn:hover & {
+        opacity: 0.88;
+      }
     }
   }
 

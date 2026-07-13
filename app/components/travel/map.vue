@@ -2,7 +2,7 @@
 import * as am5 from '@amcharts/amcharts5';
 import * as am5map from '@amcharts/amcharts5/map';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
-import am5geodata_worldHigh from '@amcharts/amcharts5-geodata/worldHigh';
+import am5geodata_worldLow from '@amcharts/amcharts5-geodata/worldLow';
 import type { FeatureCollection, GeometryObject } from 'geojson';
 import { hslToHex, vuetifyColorToHex } from '~/utils/color';
 import { loadProvinceGeo } from '~/utils/province-geo';
@@ -110,14 +110,17 @@ function isIdContext(v: unknown): v is { id: string } {
 }
 
 const mapEl = ref<HTMLElement | null>(null);
+const chartReady = ref(false);
 let root: am5.Root | null = null;
 let chart: am5map.MapChart | null = null;
+let currentWorldFC: FeatureCollection = am5geodata_worldLow as FeatureCollection;
 let loadId = 0;
 let loadsInFlight = 0;
 let pendingOverlayRebuild = false;
 let overlaySeriesStart = 0;
 let zoomTimer: ReturnType<typeof setTimeout> | null = null;
 const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
+const clickBoundPolygons = new WeakSet<am5map.MapPolygon>();
 
 const colorizeVisitedCountries = (
   worldSeries: am5map.MapPolygonSeries,
@@ -138,7 +141,10 @@ const colorizeVisitedCountries = (
       polygon.set('fill', am5.color(visitedCountryFill(hue)));
       polygon.states.create('hover', { fill: am5.color(visitedCountryHover(hue)) });
       polygon.set('cursorOverStyle', 'pointer');
-      polygon.events.once('click', () => emit('country-click', iso3));
+      if (!clickBoundPolygons.has(polygon)) {
+        clickBoundPolygons.add(polygon);
+        polygon.events.on('click', () => emit('country-click', iso3));
+      }
     }
   });
 };
@@ -232,8 +238,7 @@ const animateToCountry = (iso3: string) => {
   const iso2 = iso3ToIso2.value[iso3];
   if (!iso2) return;
 
-  const worldFC = am5geodata_worldHigh as FeatureCollection;
-  const feature = worldFC.features.find(
+  const feature = currentWorldFC.features.find(
     (f) => f.id === iso2 || (f.properties as Record<string, unknown>)?.['id'] === iso2,
   );
   if (!feature?.geometry) return;
@@ -487,13 +492,19 @@ const loadPolygons = async () => {
   const callId = ++loadId;
 
   try {
-    const provinceGeos = await Promise.all(
-      props.focusCountries.map(async (iso3) => ({
-        iso3,
-        geo: await loadProvinceGeo(iso3),
-      })),
-    );
+    const [provinceGeos, worldFC] = await Promise.all([
+      Promise.all(
+        props.focusCountries.map(async (iso3) => ({
+          iso3,
+          geo: await loadProvinceGeo(iso3),
+        })),
+      ),
+      props.focusCountries.length
+        ? import('@amcharts/amcharts5-geodata/worldHigh').then((m) => m.default as unknown as FeatureCollection)
+        : Promise.resolve(am5geodata_worldLow as FeatureCollection),
+    ]);
     if (callId !== loadId || !root || !chart) return;
+    currentWorldFC = worldFC;
 
     const provinceLoaded = new Set(
       provinceGeos.filter((p) => p.geo).map((p) => p.iso3),
@@ -512,7 +523,7 @@ const loadPolygons = async () => {
 
     const worldSeries = chart.series.push(
       am5map.MapPolygonSeries.new(root, {
-        geoJSON: am5geodata_worldHigh,
+        geoJSON: worldFC,
         exclude: ['AQ'],
       }),
     );
@@ -607,13 +618,21 @@ const buildChart = () => {
       panX: isGlobe ? 'rotateX' : 'translateX',
       panY: isGlobe ? 'rotateY' : 'translateY',
       projection: isGlobe ? am5map.geoOrthographic() : am5map.geoMercator(),
-      wheelY: 'zoom',
+      wheelY: 'none',
       maxZoomLevel: MAX_ZOOM_LEVEL,
     }),
   );
 
+  root.events.once('frameended', () => { chartReady.value = true; });
+
   loadPolygons();
 };
+
+const onWheelModifierChange = (e: KeyboardEvent | MouseEvent) => {
+  chart?.set('wheelY', e.ctrlKey || e.metaKey ? 'zoom' : 'none');
+};
+const zoomIn = () => chart?.zoomIn();
+const zoomOut = () => chart?.zoomOut();
 
 watch(() => props.mode, buildChart);
 watch(
@@ -627,10 +646,20 @@ watch(
 );
 watch(() => props.zoomCountry, applyZoom);
 
-onMounted(buildChart);
+onMounted(() => {
+  buildChart();
+  if (import.meta.client) {
+    window.addEventListener('keydown', onWheelModifierChange);
+    window.addEventListener('keyup', onWheelModifierChange);
+  }
+});
 onUnmounted(() => {
   if (zoomTimer !== null) clearTimeout(zoomTimer);
   pinHaloTimers.forEach(clearTimeout);
+  if (import.meta.client) {
+    window.removeEventListener('keydown', onWheelModifierChange);
+    window.removeEventListener('keyup', onWheelModifierChange);
+  }
   root?.dispose();
 });
 </script>
@@ -638,6 +667,33 @@ onUnmounted(() => {
 <template>
   <div class="travel-map">
     <div ref="mapEl" class="travel-map__canvas" />
+
+    <div class="travel-map__zoom">
+      <v-btn
+        icon
+        size="small"
+        variant="text"
+        :aria-label="$t('Zoom in')"
+        @click="zoomIn"
+      >
+        <v-icon size="14">fas fa-plus</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        size="small"
+        variant="text"
+        :aria-label="$t('Zoom out')"
+        @click="zoomOut"
+      >
+        <v-icon size="14">fas fa-minus</v-icon>
+      </v-btn>
+    </div>
+
+    <Transition name="skeleton-fade">
+      <div v-if="!chartReady" class="travel-map__skeleton" aria-hidden="true">
+        <v-skeleton-loader type="image" height="100%" />
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -649,10 +705,49 @@ onUnmounted(() => {
   overflow: hidden;
   user-select: none;
 
+  &__skeleton {
+    position: absolute;
+    inset: 0;
+
+    :deep(.v-skeleton-loader__image) {
+      height: 100%;
+      border-radius: 0;
+    }
+  }
+
+  .skeleton-fade-enter-active,
+  .skeleton-fade-leave-active {
+    transition: opacity 0.2s ease;
+  }
+
+  .skeleton-fade-enter-from,
+  .skeleton-fade-leave-to {
+    opacity: 0;
+  }
+
   &__canvas {
     width: 100%;
     height: 100%;
     background: rgb(var(--v-theme-map-ocean));
+  }
+
+  &__zoom {
+    position: absolute;
+    bottom: rem(14);
+    left: rem(14);
+    display: flex;
+    flex-direction: column;
+    background: $background-glass;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid $border-color;
+    border-radius: rem(8);
+    overflow: hidden;
+
+    @media (max-width: 600px) {
+      bottom: auto;
+      top: rem(14);
+    }
   }
 }
 </style>

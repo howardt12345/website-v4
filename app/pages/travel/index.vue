@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { tripCountryNames, daySpan, formatTripRange } from '~/composables/travel';
+import { tripCountryNames, daySpan, formatTripRange, formatDayLabel } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 import { usePhotoItems } from '~/composables/photos';
+import { useMediaQueries } from '~/composables/media-queries';
 
 definePageMeta({ layout: 'default' });
-
-useSeoMeta({
-  title: 'Travel · Howard Tseng',
-  description: 'An interactive log of countries, cities, and places — from Taiwan to Japan to Europe.',
-});
 
 const travelStore = useTravelStore();
 
@@ -23,7 +19,6 @@ const {
   focusCountry,
   focusTrip,
   activeDay,
-  activePlaceIndex,
   mapMode,
   mapProps,
   railProps,
@@ -34,7 +29,7 @@ const {
   citiesOverviewProps,
 } = storeToRefs(travelStore);
 
-const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, countryByIso3 } = travelStore;
+const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3 } = travelStore;
 
 const handleCityClick = (loc: { country: string; city: string }) => {
   if (view.value === 'trip' && activeDay.value) {
@@ -44,13 +39,70 @@ const handleCityClick = (loc: { country: string; city: string }) => {
   }
 };
 
-const { currentLanguage } = storeToRefs(usei18n());
+const i18n = usei18n();
+const { currentLanguage } = storeToRefs(i18n);
+const { t } = i18n;
+
+const pageTitle = (): string => {
+  if (view.value === 'trip' && focusTrip.value) {
+    return activeDay.value
+      ? `${formatDayLabel(activeDay.value.date, currentLanguage.value)} — ${focusTrip.value.title} · Travel · Howard Tseng`
+      : `${focusTrip.value.title} · Travel · Howard Tseng`;
+  }
+  if (cityViewProps.value) return `${cityViewProps.value.city.name} · Travel · Howard Tseng`;
+  if (focusCountry.value) return `${focusCountry.value.name} · Travel · Howard Tseng`;
+  return 'Travel · Howard Tseng';
+};
+const pageDescription = (): string =>
+  focusTrip.value?.excerpt ?? 'An interactive log of countries, cities, and places — from Taiwan to Japan to Europe.';
+const pageImage = computed<string | undefined>(() => {
+  const dayEntry = activeDay.value
+    ? tripOverviewProps.value.days.find((d) => d.day.date === activeDay.value!.date)
+    : undefined;
+  if (dayEntry?.photos[0]) return dayEntry.photos[0].photo.url;
+  for (const d of tripOverviewProps.value.days) {
+    if (d.photos[0]) return d.photos[0].photo.url;
+  }
+  return undefined;
+});
+
+useSeoMeta({
+  title: pageTitle,
+  description: pageDescription,
+  ogTitle: pageTitle,
+  ogDescription: pageDescription,
+  ogImage: () => pageImage.value,
+});
+
+const tripCountryPairs = computed(() =>
+  (focusTrip.value?.countries ?? []).map((iso3) => ({ iso3, name: countryByIso3(iso3)?.name ?? iso3 })),
+);
+
+const { isMobile, isNarrow } = useMediaQueries();
 
 const railCollapsed = ref(false);
+watch(isNarrow, (narrow) => {
+  if (narrow) railCollapsed.value = false;
+});
 
 const stageClass = computed(() => ({
   'travel-stage--collapsed': railCollapsed.value,
 }));
+
+const contentRef = ref<HTMLElement | null>(null);
+let mounted = false;
+onMounted(() => nextTick(() => { mounted = true; }));
+watch(
+  () => activeDay.value?.date,
+  async (date) => {
+    if (!mounted || !date) return;
+    await nextTick();
+    if (!contentRef.value) return;
+    const prefersReducedMotion = import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    contentRef.value.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    contentRef.value.focus({ preventScroll: true });
+  },
+);
 </script>
 
 <template>
@@ -59,6 +111,7 @@ const stageClass = computed(() => ({
       :country="focusCountry"
       :trip="focusTrip"
       :city-name="cityViewProps?.city.name"
+      :trip-countries="tripCountryPairs"
       @nav-world="navWorld"
       @nav-country="navCountry"
     />
@@ -81,19 +134,30 @@ const stageClass = computed(() => ({
       </template>
     </div>
 
+    <p class="sr-only">
+      {{ t('The map is interactive with a mouse; all destinations are also reachable from the timeline and city lists below.') }}
+    </p>
+
     <div class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
-        <TravelMap
-          v-bind="mapProps"
-          @country-click="navCountry"
-          @place-click="activePlaceIndex = $event"
-          @city-click="handleCityClick"
-        />
+        <ClientOnly>
+          <TravelMap
+            v-bind="mapProps"
+            @country-click="navCountry"
+            @place-click="pickStop"
+            @city-click="handleCityClick"
+          />
+          <template #fallback>
+            <div class="travel-stage__map-fallback" aria-hidden="true">
+              <v-skeleton-loader type="image" height="100%" />
+            </div>
+          </template>
+        </ClientOnly>
 
         <div class="travel-stage__overlay">
           <TravelStatsBar v-bind="statsBarProps" />
           <v-btn
-            v-if="view === 'trip' && focusTrip?.blogSlug"
+            v-if="!isMobile && view === 'trip' && focusTrip?.blogSlug"
             :to="`/blog/${focusTrip.blogSlug}`"
             variant="text"
             size="small"
@@ -108,13 +172,22 @@ const stageClass = computed(() => ({
           class="travel-stage__controls"
           mandatory
           density="compact"
-          variant="outlined"
-          rounded="lg"
+          variant="text"
         >
           <v-btn value="flat" size="small">{{ $t('Flat') }}</v-btn>
           <v-btn value="globe" size="small">{{ $t('Globe') }}</v-btn>
         </v-btn-toggle>
       </div>
+
+      <v-btn
+        v-if="isMobile && view === 'trip' && focusTrip?.blogSlug"
+        :to="`/blog/${focusTrip.blogSlug}`"
+        variant="text"
+        size="small"
+        class="travel-stage__blog-link travel-stage__blog-link--mobile"
+      >
+        {{ $t('Read trip writeup') }} →
+      </v-btn>
 
       <TravelSideRail
         v-bind="railProps"
@@ -124,30 +197,44 @@ const stageClass = computed(() => ({
       />
     </div>
 
-    <TravelDayView
-      v-if="dayViewProps"
-      v-bind="dayViewProps"
-      @update:active-place="activePlaceIndex = $event"
-      @city-click="handleCityClick"
-    />
-    <TravelTripOverview
-      v-else-if="view === 'trip' && focusTrip"
-      v-bind="tripOverviewProps"
-      @pick-day="pickDay"
-    />
-    <TravelCityView
-      v-else-if="cityViewProps"
-      v-bind="cityViewProps"
-    />
-    <TravelCitiesOverview
-      v-else-if="citiesOverviewProps"
-      v-bind="citiesOverviewProps"
-      @city-click="navCity"
-    />
+    <div ref="contentRef" class="travel-page__content" tabindex="-1">
+      <TravelDayView
+        v-if="dayViewProps"
+        v-bind="dayViewProps"
+        @update:active-place="pickStop"
+        @city-click="handleCityClick"
+      />
+      <TravelTripOverview
+        v-else-if="view === 'trip' && focusTrip"
+        v-bind="tripOverviewProps"
+        @pick-day="pickDay"
+      />
+      <TravelCityView
+        v-else-if="cityViewProps"
+        v-bind="cityViewProps"
+      />
+      <TravelCitiesOverview
+        v-else-if="citiesOverviewProps"
+        v-bind="citiesOverviewProps"
+        @city-click="navCity"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .travel-page {
   padding-top: rem(20);
 
@@ -193,6 +280,10 @@ const stageClass = computed(() => ({
     line-height: 1.6;
     margin-bottom: 0;
   }
+
+  &__content {
+    outline: none;
+  }
 }
 
 .travel-stage {
@@ -223,7 +314,17 @@ const stageClass = computed(() => ({
   background: rgb(var(--v-theme-surface));
 
   @media (max-width: 960px) {
-    height: rem(380);
+    height: rem(300);
+  }
+}
+
+.travel-stage__map-fallback {
+  position: absolute;
+  inset: 0;
+
+  :deep(.v-skeleton-loader__image) {
+    height: 100%;
+    border-radius: 0;
   }
 }
 
@@ -245,6 +346,19 @@ const stageClass = computed(() => ({
   > * {
     pointer-events: auto;
   }
+
+  @media (max-width: 600px) {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
 }
 
 .travel-stage__controls {
@@ -254,6 +368,9 @@ const stageClass = computed(() => ({
   background: $background-glass;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  border: 1px solid $border-color;
+  border-radius: rem(8);
+  overflow: hidden;
 }
 
 .travel-stage__blog-link {
@@ -263,5 +380,9 @@ const stageClass = computed(() => ({
   font-size: rem(13);
   align-self: flex-start;
   padding-left: 0;
+
+  &--mobile {
+    justify-self: start;
+  }
 }
 </style>

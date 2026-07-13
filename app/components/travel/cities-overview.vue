@@ -20,6 +20,30 @@ const nDays = (n: number) => t('{{n}} days', { n });
 const nTrips = (n: number) => t('{{n}} trips', { n });
 const nPlaces = (n: number) => t('{{n}} places', { n });
 
+const filterQuery = ref('');
+type SortMode = 'recent' | 'visits' | 'alpha';
+const sortBy = ref<SortMode>('recent');
+const sortOptions = computed(() => [
+  { value: 'recent' as const, title: t('Most recent') },
+  { value: 'visits' as const, title: t('Most days') },
+  { value: 'alpha' as const, title: t('A–Z') },
+]);
+
+const filteredSortedSummaries = computed<CityVisitSummary[]>(() => {
+  const q = filterQuery.value.trim().toLowerCase();
+  const filtered = q
+    ? props.summaries.filter(
+        (s) => s.city.name.toLowerCase().includes(q) || s.country.name.toLowerCase().includes(q),
+      )
+    : props.summaries;
+
+  const sorted = [...filtered];
+  if (sortBy.value === 'recent') sorted.sort((a, b) => b.lastVisited.localeCompare(a.lastVisited));
+  else if (sortBy.value === 'visits') sorted.sort((a, b) => b.visitCount - a.visitCount || a.city.name.localeCompare(b.city.name));
+  else sorted.sort((a, b) => a.city.name.localeCompare(b.city.name, currentLanguage.value));
+  return sorted;
+});
+
 const regionNameMap = ref<Map<string, string>>(new Map());
 
 watchEffect(async () => {
@@ -48,7 +72,7 @@ interface CountryGroup {
 const countryGroups = computed<CountryGroup[]>(() => {
   const countryMap = new Map<string, { iso3: string; name: string; regionMap: Map<string, CityVisitSummary[]> }>();
 
-  for (const summary of props.summaries) {
+  for (const summary of filteredSortedSummaries.value) {
     const { iso3, name } = summary.country;
     if (!countryMap.has(iso3)) countryMap.set(iso3, { iso3, name, regionMap: new Map() });
     const country = countryMap.get(iso3)!;
@@ -72,7 +96,35 @@ const countryGroups = computed<CountryGroup[]>(() => {
   <div class="cities-overview">
     <div class="cities-overview__head">
       <div class="cities-overview__eyebrow">{{ $t('Visited Cities') }}</div>
+      <div class="cities-overview__filters">
+        <v-text-field
+          v-model="filterQuery"
+          density="compact"
+          variant="outlined"
+          prepend-inner-icon="fas fa-magnifying-glass"
+          :placeholder="$t('Filter cities')"
+          clearable
+          hide-details
+          class="cities-overview__search"
+        />
+        <v-select
+          v-model="sortBy"
+          density="compact"
+          variant="outlined"
+          :items="sortOptions"
+          item-title="title"
+          item-value="value"
+          hide-details
+          class="cities-overview__sort"
+        />
+      </div>
     </div>
+
+    <p
+      v-if="!countryGroups.length"
+      class="cities-overview__empty"
+      v-text="t('No cities match “{{q}}”.', { q: filterQuery })"
+    />
 
     <div
       v-for="group in countryGroups"
@@ -144,6 +196,11 @@ const countryGroups = computed<CountryGroup[]>(() => {
   margin-top: rem(8);
 
   &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: rem(12);
     margin-bottom: rem(20);
   }
 
@@ -154,6 +211,26 @@ const countryGroups = computed<CountryGroup[]>(() => {
     color: $text-secondary;
     font-weight: 600;
     opacity: 0.7;
+  }
+
+  &__filters {
+    display: flex;
+    gap: rem(10);
+  }
+
+  &__search {
+    max-width: rem(240);
+  }
+
+  &__sort {
+    max-width: rem(160);
+  }
+
+  &__empty {
+    color: $text-secondary;
+    font-size: rem(13);
+    opacity: 0.6;
+    padding: rem(24) 0;
   }
 
   &__group {

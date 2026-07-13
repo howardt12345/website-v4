@@ -11,6 +11,7 @@ import {
 } from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
+import { useMediaQueries } from '~/composables/media-queries';
 
 interface Props {
   view: TravelView;
@@ -28,6 +29,8 @@ const emit = defineEmits<{
 }>();
 
 const collapsed = defineModel<boolean>('collapsed', { default: false });
+
+const { isNarrow } = useMediaQueries();
 
 const travelStore = useTravelStore();
 const { cityById, countryByIso3 } = travelStore;
@@ -86,8 +89,8 @@ watch(
   async () => {
     await nextTick();
     railBodyRef.value
-      ?.querySelector<HTMLElement>('.rail-day-item--active')
-      ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      ?.querySelector<HTMLElement>('.rail-day-item--active, .rail-strip__item--active')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
   },
 );
 </script>
@@ -96,14 +99,12 @@ watch(
   <aside class="side-rail" :class="{ 'side-rail--collapsed': collapsed }">
 
     <template v-if="collapsed">
-      <button
-        class="side-rail__expand-btn"
-        :aria-label="$t('Timeline of trips')"
-        @click="collapsed = false"
-      >
-        <v-icon size="16">fas fa-chevron-left</v-icon>
-      </button>
-      <span class="side-rail__collapsed-label">{{ $t('Timeline') }}</span>
+      <div class="side-rail__collapsed-hit" @click="collapsed = false">
+        <button class="side-rail__expand-btn" type="button" :aria-label="$t('Expand timeline')">
+          <v-icon size="16">fas fa-chevron-left</v-icon>
+        </button>
+        <span class="side-rail__collapsed-label">{{ $t('Timeline') }}</span>
+      </div>
     </template>
 
     <template v-else>
@@ -117,7 +118,8 @@ watch(
         </span>
         <button
           class="side-rail__collapse-btn"
-          :aria-label="$t('Close')"
+          type="button"
+          :aria-label="$t('Collapse timeline')"
           @click="collapsed = true"
         >
           <v-icon size="16">fas fa-chevron-right</v-icon>
@@ -126,72 +128,133 @@ watch(
 
       <div ref="railBodyRef" class="side-rail__body">
 
-        <template v-if="view === 'trip' && focusTrip">
-          <v-timeline density="compact" side="end" align="start" class="rail-timeline">
-            <v-timeline-item
-              :dot-color="activeDayIndex === null ? 'primary' : undefined"
-              size="x-small"
-              class="rail-day-item"
-              :class="{ 'rail-day-item--active': activeDayIndex === null }"
+        <div v-if="isNarrow" class="rail-strip">
+          <template v-if="view === 'trip' && focusTrip">
+            <button
+              type="button"
+              class="rail-strip__item"
+              :class="{ 'rail-strip__item--active': activeDayIndex === null }"
+              :aria-current="activeDayIndex === null ? 'true' : undefined"
               @click="emit('pick-day', null)"
             >
-              <div class="rail-day">
-                <span class="rail-day__date">{{ $t('Overview') }}</span>
-                <span class="rail-day__city">{{ $t('Full trip') }}</span>
-                <span class="rail-day__meta">
-                  {{ nDays(tripDays.length) }}
-                  <template v-if="tripTotalPhotoCount"> · {{ nPhotos(tripTotalPhotoCount) }}</template>
-                </span>
-              </div>
-            </v-timeline-item>
-
-            <v-timeline-item
+              <span class="rail-strip__line1">{{ $t('Overview') }}</span>
+              <span class="rail-strip__line2">{{ $t('Full trip') }}</span>
+            </button>
+            <button
               v-for="(day, i) in tripDays"
               :key="day.date"
-              :dot-color="i === activeDayIndex ? 'primary' : undefined"
-              size="x-small"
-              class="rail-day-item"
-              :class="{ 'rail-day-item--active': i === activeDayIndex }"
+              type="button"
+              class="rail-strip__item"
+              :class="{ 'rail-strip__item--active': i === activeDayIndex }"
+              :aria-current="i === activeDayIndex ? 'true' : undefined"
               @click="emit('pick-day', i)"
             >
-              <div class="rail-day">
-                <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
-                <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
-                <span class="rail-day__meta">
-                  {{ nStops(visiblePlaces(day).length) }}
-                  <template v-if="dayPhotoCountMap.get(day.date)"> · {{ nPhotos(dayPhotoCountMap.get(day.date)) }}</template>
-                </span>
-              </div>
-            </v-timeline-item>
-          </v-timeline>
-        </template>
+              <span class="rail-strip__line1">{{ formatDayShort(day.date, currentLanguage) }}</span>
+              <span class="rail-strip__line2">{{ dayCityLabel(day) }}</span>
+            </button>
+          </template>
 
-        <template v-else>
-          <v-timeline density="compact" side="end" align="start" class="rail-timeline">
+          <template v-else>
             <template v-for="item in tripRailItems" :key="item.key">
-              <v-timeline-item v-if="item.type === 'year'" hide-dot class="rail-year-item">
-                <span class="rail-year">{{ item.year }}</span>
-              </v-timeline-item>
-              <v-timeline-item
+              <span v-if="item.type === 'year'" class="rail-strip__year">{{ item.year }}</span>
+              <button
                 v-else
-                dot-color="accent"
-                size="x-small"
-                class="rail-trip-item"
+                type="button"
+                class="rail-strip__item"
                 @click="emit('pick-trip', tripSlug(item.trip))"
               >
-                <div class="rail-trip">
-                  <span class="rail-trip__countries">
-                    {{ tripCountryNames(item.trip, countryByIso3).join(' · ') }}
-                  </span>
-                  <span class="rail-trip__title">{{ item.trip.title }}</span>
-                  <span class="rail-trip__meta">
-                    {{ formatTripRange(item.trip, currentLanguage) }} · {{ nDays(daySpan(item.trip)) }}
-                    <template v-if="photoCountForTrip(item.trip)"> · {{ nPhotos(photoCountForTrip(item.trip)) }}</template>
-                  </span>
-                </div>
-              </v-timeline-item>
+                <span class="rail-strip__line1">{{ tripCountryNames(item.trip, countryByIso3).join(' · ') }}</span>
+                <span class="rail-strip__line2">{{ item.trip.title }}</span>
+              </button>
             </template>
-          </v-timeline>
+          </template>
+        </div>
+
+        <template v-else>
+          <template v-if="view === 'trip' && focusTrip">
+            <v-timeline density="compact" side="end" align="start" class="rail-timeline">
+              <v-timeline-item
+                :dot-color="activeDayIndex === null ? 'primary' : undefined"
+                size="x-small"
+                class="rail-day-item"
+                :class="{ 'rail-day-item--active': activeDayIndex === null }"
+              >
+                <button
+                  type="button"
+                  class="rail-item-btn"
+                  :aria-current="activeDayIndex === null ? 'true' : undefined"
+                  @click="emit('pick-day', null)"
+                >
+                  <div class="rail-day">
+                    <span class="rail-day__date">{{ $t('Overview') }}</span>
+                    <span class="rail-day__city">{{ $t('Full trip') }}</span>
+                    <span class="rail-day__meta">
+                      {{ nDays(tripDays.length) }}
+                      <template v-if="tripTotalPhotoCount"> · {{ nPhotos(tripTotalPhotoCount) }}</template>
+                    </span>
+                  </div>
+                </button>
+              </v-timeline-item>
+
+              <v-timeline-item
+                v-for="(day, i) in tripDays"
+                :key="day.date"
+                :dot-color="i === activeDayIndex ? 'primary' : undefined"
+                size="x-small"
+                class="rail-day-item"
+                :class="{ 'rail-day-item--active': i === activeDayIndex }"
+              >
+                <button
+                  type="button"
+                  class="rail-item-btn"
+                  :aria-current="i === activeDayIndex ? 'true' : undefined"
+                  @click="emit('pick-day', i)"
+                >
+                  <div class="rail-day">
+                    <span class="rail-day__date">{{ formatDayShort(day.date, currentLanguage) }}</span>
+                    <span class="rail-day__city">{{ dayCityLabel(day) }}</span>
+                    <span class="rail-day__meta">
+                      {{ nStops(visiblePlaces(day).length) }}
+                      <template v-if="dayPhotoCountMap.get(day.date)"> · {{ nPhotos(dayPhotoCountMap.get(day.date)) }}</template>
+                    </span>
+                  </div>
+                </button>
+              </v-timeline-item>
+            </v-timeline>
+          </template>
+
+          <template v-else>
+            <v-timeline density="compact" side="end" align="start" class="rail-timeline">
+              <template v-for="item in tripRailItems" :key="item.key">
+                <v-timeline-item v-if="item.type === 'year'" hide-dot class="rail-year-item">
+                  <span class="rail-year">{{ item.year }}</span>
+                </v-timeline-item>
+                <v-timeline-item
+                  v-else
+                  dot-color="accent"
+                  size="x-small"
+                  class="rail-trip-item"
+                >
+                  <button
+                    type="button"
+                    class="rail-item-btn"
+                    @click="emit('pick-trip', tripSlug(item.trip))"
+                  >
+                    <div class="rail-trip">
+                      <span class="rail-trip__countries">
+                        {{ tripCountryNames(item.trip, countryByIso3).join(' · ') }}
+                      </span>
+                      <span class="rail-trip__title">{{ item.trip.title }}</span>
+                      <span class="rail-trip__meta">
+                        {{ formatTripRange(item.trip, currentLanguage) }} · {{ nDays(daySpan(item.trip)) }}
+                        <template v-if="photoCountForTrip(item.trip)"> · {{ nPhotos(photoCountForTrip(item.trip)) }}</template>
+                      </span>
+                    </div>
+                  </button>
+                </v-timeline-item>
+              </template>
+            </v-timeline>
+          </template>
         </template>
 
       </div>
@@ -212,13 +275,20 @@ watch(
   &--collapsed {
     align-items: center;
     padding-top: rem(12);
-    cursor: pointer;
   }
 
   @media (max-width: 960px) {
     height: auto;
-    max-height: rem(400);
   }
+}
+
+.side-rail__collapsed-hit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
 }
 
 .side-rail__head {
@@ -257,6 +327,17 @@ watch(
     color: $text;
     background: rgba(var(--v-border-color), var(--v-border-opacity));
   }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+}
+
+.side-rail__collapse-btn {
+  @media (max-width: 960px) {
+    display: none;
+  }
 }
 
 .side-rail__expand-btn {
@@ -280,6 +361,33 @@ watch(
   flex: 1;
   overflow-y: auto;
   padding: rem(4) rem(6) rem(20);
+
+  @media (max-width: 960px) {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    padding: rem(10);
+  }
+}
+
+.rail-item-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+    border-radius: rem(4);
+  }
 }
 
 .rail-timeline {
@@ -317,8 +425,6 @@ watch(
 }
 
 .rail-trip-item {
-  cursor: pointer;
-
   &:hover .rail-trip__title {
     color: $accent;
   }
@@ -354,8 +460,6 @@ watch(
 }
 
 .rail-day-item {
-  cursor: pointer;
-
   &--active .rail-day__date {
     color: $accent;
     opacity: 1;
@@ -395,5 +499,77 @@ watch(
     color: $text-secondary;
     opacity: 0.65;
   }
+}
+
+.rail-strip {
+  display: flex;
+  align-items: stretch;
+  gap: rem(8);
+  scroll-snap-type: x proximity;
+}
+
+.rail-strip__year {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: rem(11);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: $text-secondary;
+  opacity: 0.55;
+  padding: 0 rem(4);
+}
+
+.rail-strip__item {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: rem(2);
+  min-width: rem(120);
+  max-width: rem(160);
+  padding: rem(8) rem(12);
+  background: rgb(var(--v-theme-surface));
+  border: 1px solid $border-color;
+  border-radius: rem(8);
+  text-align: left;
+  cursor: pointer;
+  transition: $transition-fast;
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &--active {
+    border-color: $accent;
+  }
+}
+
+.rail-strip__line1 {
+  font-size: rem(10);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $text-secondary;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .rail-strip__item--active & {
+    color: $accent;
+    opacity: 1;
+  }
+}
+
+.rail-strip__line2 {
+  font-size: rem(12);
+  font-weight: 500;
+  color: $text;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
