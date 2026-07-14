@@ -14,6 +14,8 @@ interface Props {
   tripDayCount?: number;
   tripPhotoCount?: number;
   tripCityCount?: number;
+  tripRegionCount?: number;
+  multiCountry?: boolean;
 }
 
 interface StatItem {
@@ -32,18 +34,14 @@ const stats = computed((): StatItem[] => {
       { value: countries.value.length, total: WORLD_COUNTRY_TOTAL, label: t('countries') },
       { value: countries.value.reduce((sum, c) => sum + c.cities.length, 0), label: t('cities') },
       { value: props.trips.length, label: t('trips') },
-      { value: props.trips.reduce((sum, trip) => sum + daySpan(trip), 0), label: t('days on the road') },
+      { value: props.trips.reduce((sum, trip) => sum + daySpan(trip), 0), label: t('days traveled') },
     ];
   }
 
   if (props.view === 'country' && props.country) {
     const countryTrips = tripsForCountry(props.trips, props.country.iso3);
     const subdivisionMeta = COUNTRY_SUBDIVISION_META[props.country.iso3];
-    const items: StatItem[] = [
-      { value: countryTrips.length, label: t('trips') },
-      { value: props.country.cities.length, label: t('cities') },
-      { value: props.countryDayCount ?? 0, label: t('days logged') },
-    ];
+    const items: StatItem[] = [];
     if (subdivisionMeta && props.country.regions.length > 0) {
       items.push({
         value: props.country.regions.length,
@@ -51,15 +49,30 @@ const stats = computed((): StatItem[] => {
         label: t(subdivisionMeta.label),
       });
     }
+    items.push(
+      { value: props.country.cities.length, label: t('cities') },
+      { value: countryTrips.length, label: t('trips') },
+      { value: props.countryDayCount ?? 0, label: t('days logged') },
+    );
     return items;
   }
 
   if (props.view === 'trip' && props.trip) {
-    return [
-      { value: daySpan(props.trip), label: t('days') },
+    const items: StatItem[] = [];
+    if (props.multiCountry) {
+      items.push({ value: props.trip.countries.length, label: t('countries') });
+    } else {
+      const subdivisionMeta = COUNTRY_SUBDIVISION_META[props.trip.countries[0] ?? ''];
+      if (subdivisionMeta && (props.tripRegionCount ?? 0) > 0) {
+        items.push({ value: props.tripRegionCount ?? 0, label: t(subdivisionMeta.label) });
+      }
+    }
+    items.push(
       { value: props.tripCityCount ?? 0, label: t('cities') },
+      { value: daySpan(props.trip), label: t('days') },
       { value: props.tripPhotoCount ?? 0, label: t('photos') },
-    ];
+    );
+    return items;
   }
 
   return [];

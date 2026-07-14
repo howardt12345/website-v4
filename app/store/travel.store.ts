@@ -273,6 +273,7 @@ export const useTravelStore = defineStore('travel', () => {
   const tripDayCount = computed(() => tripDays.value.length);
   const tripCityKeys = computed<Set<string>>(() => tripVisitedCityKeys(tripDays.value));
   const tripCityCount = computed(() => tripCityKeys.value.size);
+  const tripRegionCount = computed(() => tripVisitedRegions(tripDays.value, countryByIso3).length);
 
   const activeTripId = computed(() =>
     focusTrip.value ? (tripSlug(focusTrip.value).split('/').at(-1) ?? '') : '',
@@ -532,6 +533,8 @@ export const useTravelStore = defineStore('travel', () => {
     tripDayCount: tripDayCount.value,
     tripPhotoCount: tripPhotoCount.value,
     tripCityCount: tripCityCount.value,
+    tripRegionCount: tripRegionCount.value,
+    multiCountry: multiCountry.value,
   }));
 
   const dayViewProps = computed(() =>
