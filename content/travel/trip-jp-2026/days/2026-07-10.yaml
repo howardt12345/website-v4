@@ -9,5 +9,6 @@ places:
     lat: 35.690
   - id: haneda-airport
     name: Haneda Airport
+    neighborhood: Airport
     lon: 139.780
     lat: 35.549

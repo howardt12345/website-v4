@@ -6,6 +6,11 @@ places:
     name: Haneda Airport
     lon: 139.780
     lat: 35.549
+    neighborhood: Airport
+  - name: Hamamatsucho (transfer)
+    lon: 139.757
+    lat: 35.655
+    ghost: true
   - id: ueno
     name: Ueno
     neighborhood: Ueno

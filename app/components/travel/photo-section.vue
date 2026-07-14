@@ -146,7 +146,6 @@ function openLightbox(index: number) {
     font-size: rem(13);
     opacity: 0.6;
     margin: 0;
-    padding: rem(24) 0;
   }
 }
 
