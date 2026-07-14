@@ -394,6 +394,23 @@ watch(
   height: auto;
   row-gap: rem(6);
 
+  // Vuetify's __before/__after segments overlap at row-gaps < 24px, causing alpha banding
+  :deep(.v-timeline-divider__before),
+  :deep(.v-timeline-divider__after) {
+    display: none !important;
+  }
+
+  :deep(.v-timeline-divider)::after {
+    content: '';
+    position: absolute;
+    top: calc(#{rem(6)} / -2);
+    bottom: calc(#{rem(6)} / -2);
+    left: 50%;
+    width: var(--v-timeline-line-thickness, 2px);
+    transform: translateX(-50%);
+    background: rgba(var(--v-border-color), var(--v-border-opacity));
+  }
+
   :deep(.v-timeline-item__body) {
     padding-inline-start: rem(8) !important;
   }
