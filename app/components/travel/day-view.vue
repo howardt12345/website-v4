@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import type { TravelDay, TravelPlace } from '~/types/travel';
 import type { PhotoItem } from '~/types/photos';
-import { formatDayLabel, dayUniqueCities, dayUniqueIso3s, placeCountry, visiblePlaces } from '~/composables/travel';
+import {
+  formatDayLabel,
+  dayUniqueCities,
+  dayUniqueIso3s,
+  dayNeighborhoods,
+  placeCountry,
+  visiblePlaces,
+} from '~/composables/travel';
 import { usei18n } from '~/store/i18n.store';
 import { useTravelStore } from '~/store/travel.store';
 
@@ -26,6 +33,9 @@ const places = computed(() => visiblePlaces(props.day));
 const uniqueCities = computed(() => dayUniqueCities(props.day));
 const isMultiCityDay = computed(() => uniqueCities.value.length > 1);
 const isMultiCountryDay = computed(() => dayUniqueIso3s(props.day).length > 1);
+// Only meaningful for a single-city day — dayTitle() itself falls back to plain
+// city names once a day spans more than one city, so the button list above covers that case.
+const neighborhoods = computed(() => (isMultiCityDay.value ? [] : dayNeighborhoods(props.day)));
 
 const dayCountryNames = computed(() =>
   dayUniqueIso3s(props.day).map((iso3) => countryByIso3(iso3)?.name ?? iso3),
@@ -68,6 +78,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
             class="day-view__city-link"
             @click="$emit('city-click', { country: dayDefaultCountry, city: day.city })"
           >{{ cityById(dayDefaultCountry, day.city)?.name }}</button>
+          <span v-if="neighborhoods.length" class="day-view__neighborhoods">: {{ neighborhoods.join(' → ') }}</span>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
             · {{ dayCountryNames.join(' → ') }}
           </span>
@@ -151,6 +162,12 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
       outline: 2px solid $accent;
       outline-offset: 2px;
     }
+  }
+
+  &__neighborhoods {
+    color: $text-secondary;
+    font-size: rem(22);
+    font-weight: 400;
   }
 
   &__country {

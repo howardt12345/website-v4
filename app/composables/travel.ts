@@ -64,6 +64,14 @@ export const dayUniqueCities = (day: TravelDay): { country: string; city: string
   return result;
 };
 
+export const dayNeighborhoods = (day: TravelDay): string[] => [
+  ...new Set(
+    visiblePlaces(day)
+      .map((p) => p.neighborhood)
+      .filter((n): n is string => Boolean(n)),
+  ),
+];
+
 // "City: neighborhood → neighborhood" when the day stays in one city and any place
 // names a neighborhood; otherwise the day's city name(s), e.g. "Tokyo → Kyoto".
 export const dayTitle = (
@@ -71,7 +79,7 @@ export const dayTitle = (
   cityById: (iso3: string, cityId: string) => { name: string } | undefined,
 ): string => {
   const cities = dayUniqueCities(day);
-  const neighborhoods = [...new Set(visiblePlaces(day).map((p) => p.neighborhood).filter(Boolean))];
+  const neighborhoods = dayNeighborhoods(day);
 
   if (cities.length === 1 && neighborhoods.length > 0) {
     const city = cities[0]!;
