@@ -80,7 +80,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
           >{{ cityById(dayDefaultCountry, day.city)?.name }}</button>
           <span v-if="neighborhoods.length" class="day-view__neighborhoods">: {{ neighborhoods.join(' → ') }}</span>
           <span v-if="multiCountry || isMultiCountryDay" class="day-view__country">
-            · {{ dayCountryNames.join(' → ') }}
+            <span class="day-view__country-dot">·</span>{{ dayCountryNames.join(' → ') }}
           </span>
         </div>
       </div>
@@ -173,8 +173,11 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
   &__country {
     color: $text-secondary;
     font-size: rem(22);
-    margin-left: rem(8);
     font-weight: 400;
+  }
+
+  &__country-dot {
+    margin-inline: rem(8);
   }
 
   &__layout {
