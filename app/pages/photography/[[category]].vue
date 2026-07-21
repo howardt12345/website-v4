@@ -129,12 +129,25 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
     />
   </div>
   <div class="photos-container">
+    <PhotosCategories v-if="!pending && showCategoriesView" :categories="categories" />
     <PhotosGallery
-      v-if="!pending && !showCategoriesView"
+      v-else-if="!pending && visiblePhotos.length"
       :photos="visiblePhotos"
       :selected-tags="selectedTags"
     />
-    <PhotosCategories v-else-if="!pending" :categories="categories" />
+    <div v-else-if="!pending" class="photos-empty">
+      <h3>{{ $t('No photos match these filters') }}</h3>
+      <p>{{ $t('Try removing a tag or widening the category.') }}</p>
+      <v-btn
+        v-if="selectedTags.length"
+        variant="outlined"
+        size="small"
+        class="photos-empty__reset"
+        @click="selectedTags = []"
+      >
+        {{ $t('Clear all filters') }}
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -158,5 +171,28 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
 .photos-container {
   width: 80vw;
   margin: 0 auto;
+}
+
+.photos-empty {
+  padding: rem(80) rem(24);
+  text-align: center;
+  border: 1px dashed $border-color;
+  border-radius: rem(14);
+  color: $text-secondary;
+
+  h3 {
+    font-size: rem(20);
+    margin-bottom: rem(8);
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  &__reset {
+    margin-top: rem(14);
+  }
 }
 </style>

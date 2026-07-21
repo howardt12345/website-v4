@@ -20,7 +20,9 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 });
 
-const { isDark } = useTheme();
+const themeStore = useTheme();
+const { isDark } = storeToRefs(themeStore);
+onMounted(themeStore.init);
 
 usei18n();
 
@@ -29,6 +31,7 @@ useImageProtection();
 
 <template>
   <v-app>
+    <NuxtLoadingIndicator />
     <Suspense>
       <NuxtLayout>
         <NuxtPage />
@@ -40,7 +43,7 @@ useImageProtection();
             'loading-container--dark': isDark,
           }"
         >
-          <h1>Loading...</h1>
+          <v-progress-circular indeterminate color="primary" size="48" />
         </div>
       </template>
     </Suspense>

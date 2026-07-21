@@ -1,18 +1,40 @@
 <script setup lang="ts">
 import { useMounted } from '@vueuse/core';
 import { useMediaQueries } from '~/composables/media-queries';
+import { readStorage, writeStorage } from '~/utils/storage';
 
 const NAV_LINKS_DELAY = 1250;
+const THEME_TOGGLE_DELAY = 1700;
+const HERO_ENTER_MS = 500;
+const HERO_INTRO_KEY = 'heroIntroPlayed';
 
 const isMounted = useMounted();
 const { isMobile, isTablet } = useMediaQueries();
 const route = useRoute();
 
+const heroIntroPlayed = readStorage('session', HERO_INTRO_KEY) === '1';
+const heroAnimate = !heroIntroPlayed;
+const navLinksDelay = heroIntroPlayed ? 0 : NAV_LINKS_DELAY;
+const themeToggleDelay = heroIntroPlayed ? 0 : THEME_TOGGLE_DELAY;
+const heroEnterMs = heroIntroPlayed ? 0 : HERO_ENTER_MS;
+
 onMounted(() => {
+  writeStorage('session', HERO_INTRO_KEY, '1');
+
+  // Fallback for progressively-mounted sections; skip if the router/native scroll already handled it.
   if (!route.hash) return;
-  setTimeout(() => {
-    document.querySelector(route.hash)?.scrollIntoView({ behavior: 'smooth' });
-  }, NAV_LINKS_DELAY);
+  let userScrolled = false;
+  const flagScroll = () => (userScrolled = true);
+  window.addEventListener('wheel', flagScroll, { once: true, passive: true });
+  window.addEventListener('touchmove', flagScroll, { once: true, passive: true });
+  nextTick(() => {
+    const target = document.querySelector(route.hash);
+    if (target && !userScrolled && window.scrollY === 0) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+    window.removeEventListener('wheel', flagScroll);
+    window.removeEventListener('touchmove', flagScroll);
+  });
 });
 </script>
 
@@ -21,7 +43,7 @@ onMounted(() => {
     <section id="home" class="home-section">
       <div v-if="isMounted" class="home-section__content">
         <HomeTitle :is-mobile="isMobile" :is-tablet="isTablet" />
-        <NavLinks :animate="true" :delay="NAV_LINKS_DELAY" :icon-only="isMobile" />
+        <NavLinks :animate="heroAnimate" :delay="navLinksDelay" :icon-only="isMobile" />
         <div
           v-motion
           class="theme-toggle"
@@ -29,9 +51,9 @@ onMounted(() => {
           :enter="{
             opacity: 1,
             y: 0,
-            transition: { duration: 500, type: 'keyframes', ease: 'easeOut' },
+            transition: { duration: heroEnterMs, type: 'keyframes', ease: 'easeOut' },
           }"
-          :delay="1700"
+          :delay="themeToggleDelay"
         >
           <CommonThemeToggle />
         </div>

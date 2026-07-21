@@ -8,6 +8,7 @@ const toggleDrawer = () => (drawerOpen.value = !drawerOpen.value);
 const closeDrawer = () => (drawerOpen.value = false);
 
 const links = useNavLinks();
+const { isLinkActive } = useLinkActive();
 const route = useRoute();
 
 watch(() => route.fullPath, closeDrawer);
@@ -56,12 +57,17 @@ onUnmounted(() => heroObserver?.disconnect());
           nuxt
           :to="link.path"
           :title="$t(link.name)"
+          :active="isLinkActive(link)"
           :ripple="false"
         />
       </v-list>
     </v-navigation-drawer>
 
-    <header class="top-nav" :class="{ 'top-nav--hidden': !headerVisible }">
+    <header
+      class="top-nav"
+      :class="{ 'top-nav--hidden': !headerVisible }"
+      :inert="!headerVisible"
+    >
       <v-btn
         v-if="isTablet"
         :icon="drawerOpen ? 'fas fa-xmark' : 'fas fa-bars'"

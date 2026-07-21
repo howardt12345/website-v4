@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useNavLinks, type NavLink } from '~/composables/links';
-import { useActiveSection } from '~/composables/useActiveSection';
+import { useNavLinks, useLinkActive } from '~/composables/links';
 
-const HASH_SECTION_PREFIX = '/#';
 const ANIMATE_ENTER_DURATION_MS = 500;
 const LINK_STAGGER_MS = 150;
 
@@ -14,19 +12,7 @@ interface Props {
 const { animate = false, delay = 0, iconOnly = false } = defineProps<Props>();
 
 const links = useNavLinks();
-const route = useRoute();
-
-const isHashSectionLink = (path: string) => path.startsWith(HASH_SECTION_PREFIX);
-const sectionIdFromPath = (path: string) => path.slice(HASH_SECTION_PREFIX.length);
-
-const { activeSection } = useActiveSection(['about', 'experience', 'projects', 'contact']);
-
-const isLinkActive = (link: NavLink): boolean => {
-  if (isHashSectionLink(link.path)) {
-    return route.path === '/' && activeSection.value === sectionIdFromPath(link.path);
-  }
-  return route.path.startsWith(link.path);
-};
+const { isLinkActive } = useLinkActive();
 </script>
 
 <template>
