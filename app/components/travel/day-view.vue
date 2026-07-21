@@ -94,7 +94,7 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
           :place
           :index="i"
           :active="i === activePlace"
-          :photoCount="photosForPlace(place).length"
+          :photo-count="photosForPlace(place).length"
           @pick="$emit('update:activePlace', $event)"
         />
       </div>
@@ -104,9 +104,9 @@ const photosForPlace = (place: TravelPlace): PhotoItem[] => {
           <TravelPhotoSection
             v-show="i === activePlace"
             :place
-            :placeIndex="i"
-            :totalPlaces="places.length"
-            :baseHue="placeHue(place)"
+            :place-index="i"
+            :total-places="places.length"
+            :base-hue="placeHue(place)"
             :photos="photosForPlace(place)"
             @nav-stop="$emit('update:activePlace', $event)"
           />

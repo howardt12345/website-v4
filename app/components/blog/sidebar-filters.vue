@@ -12,9 +12,8 @@ interface Props {
 
 interface Emits {
   (e: 'update:cat', value: string): void;
-  (e: 'update:sub', value: string | null): void;
+  (e: 'update:sub' | 'update:archive', value: string | null): void;
   (e: 'update:tags', value: string[]): void;
-  (e: 'update:archive', value: string | null): void;
 }
 
 const props = defineProps<Props>();

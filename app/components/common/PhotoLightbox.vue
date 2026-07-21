@@ -8,7 +8,7 @@ interface Props {
   selectedTags?: string[];
 }
 
-const props = withDefaults(defineProps<Props>(), { startIndex: 0 });
+const props = withDefaults(defineProps<Props>(), { startIndex: 0, selectedTags: () => [] });
 const emit = defineEmits<{ 'update:modelValue': [val: boolean]; toggleTag: [tag: string] }>();
 
 const currentIndex = ref(props.startIndex);
