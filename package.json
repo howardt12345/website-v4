@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "check:icons": "node scripts/check-fa-icons.mjs",
+    "build": "npm run check:icons && nuxt build",
     "dev": "nuxt prepare && nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "npm run check:icons && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",

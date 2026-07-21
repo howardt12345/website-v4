@@ -10,7 +10,7 @@ defineProps<Props>();
 <template>
   <div class="blog-cover-art" aria-hidden="true">
     <template v-if="image">
-      <img :src="image" alt="" class="blog-cover-art__img" />
+      <img :src="image" alt="" class="blog-cover-art__img" loading="lazy" decoding="async" >
     </template>
     <CommonPhotoPlaceholder v-else :hue="cover.hue" :pattern="cover.pattern" />
   </div>

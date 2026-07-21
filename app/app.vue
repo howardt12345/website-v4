@@ -51,11 +51,6 @@ useImageProtection();
 </template>
 
 <style lang="scss">
-@font-face {
-  font-family: 'Poppins';
-  src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
-}
-
 .loading-container {
   display: flex;
   justify-content: center;

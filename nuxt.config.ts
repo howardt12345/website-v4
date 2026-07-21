@@ -121,7 +121,7 @@ export default defineNuxtConfig({
       nitroConfig.prerender.routes.push(...[...categories].map((c) => `/photography/${c}`));
     },
     'nitro:build:public-assets': async (nitro) => {
-      const { readdir, readFile, writeFile, rm, access } = await import('node:fs/promises');
+      const { readdir, readFile, writeFile, rm, access, stat } = await import('node:fs/promises');
       const { join, resolve } = await import('node:path');
       const { parse: parseYaml } = await import('yaml');
       const { default: sharp } = await import('sharp');
@@ -191,6 +191,34 @@ export default defineNuxtConfig({
           await writeFile(assetPath, processed);
         } catch (err) {
           console.warn(`[photos] Failed to downsize/watermark photos/${stem}.${ext} —`, err);
+        }
+      }));
+
+      // public/images bypasses the content-photos pipeline and ships raw; downsize the
+      // oversized ones so a page doesn't pull a multi-MB screenshot or portrait.
+      const imagesDir = join(outputPublicDir, 'images');
+      const MAX_IMAGE_EDGE = 1600;
+      const RECOMPRESS_MIN_BYTES = 150_000;
+      let imageFiles: string[] = [];
+      try {
+        imageFiles = (await readdir(imagesDir, { recursive: true, encoding: 'utf8' }))
+          .filter((f) => /\.jpe?g$/i.test(f));
+      } catch {
+        imageFiles = [];
+      }
+
+      await Promise.all(imageFiles.map(async (rel) => {
+        const abs = join(imagesDir, rel);
+        try {
+          const { size } = await stat(abs);
+          if (size < RECOMPRESS_MIN_BYTES) return;
+          const optimized = await sharp(await readFile(abs))
+            .resize({ width: MAX_IMAGE_EDGE, height: MAX_IMAGE_EDGE, fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 82, mozjpeg: true })
+            .toBuffer();
+          if (optimized.length < size) await writeFile(abs, optimized);
+        } catch (err) {
+          console.warn(`[images] Failed to optimize images/${rel} —`, err);
         }
       }));
     },
