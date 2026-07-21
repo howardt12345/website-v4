@@ -248,6 +248,9 @@ to light mode, reload → light by default.
 
 **Fix:**
 - Add `<NuxtLoadingIndicator />` as the first child in `app.vue`'s template.
+  (Note, under `ssr: false`: this covers *route changes* only — cold boot is the
+  `app.vue` Suspense fallback at `:42`. So the blank/"Loading..." first-load
+  window is fixed by the branded fallback below, not by `NuxtLoadingIndicator`.)
 - In the photography page, render a skeleton grid while pending
   (`v-skeleton-loader type="image"` × ~9 in the masonry container), and an
   empty state ("No photos match these filters" + clear-filters button) when
@@ -339,6 +342,13 @@ the active-section composable). Consider extracting `isLinkActive` into
 **Problem:** `app/components/common/filters.vue:17-23` — collapsing the filter
 panel wipes `selectedTags`; and on a deep link like `/photography?tags=street`
 the panel starts collapsed so active filters are invisible.
+
+**Gotcha (verified):** `CommonFilters` has a second consumer the handoff body
+omits — `app/components/about/timeline.vue:36` (the home-page Experience
+"Filter by Skills"). Any close/clear/init change here also affects that filter;
+verify both. The photography page also independently clears `selectedTags` on
+category change and pushes `?tags=` to the URL, so the new "Clear" action and
+those parent watchers must be coordinated, not left to fight.
 
 **Fix:**
 - Remove the selection-clearing from the close handler; add a separate,
@@ -529,11 +539,23 @@ entrances (`pages/index.vue:26-34`, `nav/links.vue:36-48`), TOC smooth scroll
 `<main>`/page container `id="main-content"` and `tabindex="-1"`. Style
 `.skip-link` visually-hidden until `:focus-visible` (standard pattern).
 
+**Gotcha (verified):** the layout has no `<main>` — it renders `<slot/>` directly
+(`default.vue:87`). `pages/index.vue:20` has its own `<main>`, but `blog/[slug].vue`
+and other pages use `<div>`. Either wrap the slot in a `<main id="main-content"
+tabindex="-1">` in the layout (simplest — one place) or add the id per page. This
+same inconsistency also affects 4.3's heading-landmark reasoning.
+
 ### 4.7 Light-theme contrast for active nav/accent text
 
 **Problem:** active nav links use primary `#2196F3` on white ≈ 3.1:1 — below
 WCAG AA 4.5:1 for small text (`app/assets/theme/theme.ts:1`,
 `nav/links.vue:106-108`). Dark theme is fine.
+
+**Gotcha (verified):** `_vars.scss:2` defines `$accent: rgb(var(--v-theme-primary))`,
+and the light `info` color also reuses the same `ACCENT` constant (`theme.ts:29`).
+Darkening the light `primary` therefore recolors *every* `$accent` usage site-wide
+(nav underline, section eyebrows, links, `::selection`), not just nav text — which
+is exactly why the separate `primary-text` token below is the safer route.
 
 **Fix:** darken the light theme's primary used *for text* to `#1565C0`-ish
 (verify ≥4.5:1 with a contrast checker). If `#2196F3` is wanted for
@@ -550,8 +572,9 @@ nothing:
   with zero effect.
 - `common/TagChips.vue:12-21` (used on photo cards `photos/card.vue:25-27` and
   the lightbox) — clicks bubble to the card and open the lightbox instead.
-- `blog/[slug].vue:77-79` — post tags identical to the index's clickable
-  filter chips, but inert.
+- `blog/[slug].vue:78` — post tags. **Correction (verified):** these are plain
+  `<v-chip variant="tonal">`, *not* inside a `v-chip-group`, so they are not the
+  setterless-computed no-op the others are — they merely look tappable.
 
 **Fix — choose per-site policy, then apply consistently:**
 - **Option A (display-only, cheapest):** render plain `v-chip`s *not* inside a
@@ -613,9 +636,11 @@ const selectedCategory = computed({
 ```
 
 Use `router.replace` (not `push`) so each keystroke/toggle doesn't spam
-history. Debounce the search input's writes (~300 ms). VueUse's
-`useRouteQuery` from `@vueuse/router` does exactly this if you'd rather add
-the subpackage.
+history. Debounce the search input's writes (~300 ms) with `useDebounceFn`
+(already available from the installed `@vueuse/core`). VueUse's `useRouteQuery`
+from `@vueuse/router` does exactly this, but that subpackage is **not currently
+installed** — `npm i @vueuse/router` first, or hand-roll `route.query`
+get/set computeds.
 
 **Verify:** apply filters + search → copy URL into a new tab → identical
 view. Open a post, press Back → filters intact.
@@ -653,7 +678,8 @@ doesn't restore position). And the TOC is `display: none` below 1200 px
 
 ### 5.4 Reading-progress bar hidden behind the header
 
-**Problem:** `blog/reading-progress.vue:26-31` is `fixed; top: 0; z-index: 99`
+**Problem:** `blog/reading-progress.vue` is `fixed; top: 0; z-index: 99`
+(the `.reading-progress` rule is lines 25-35; `z-index: 99` is on line 32)
 while the sticky header is `z-index: 100` with 85 %-opacity glass
 (`_vars.scss:8`) — the bar renders dimmed/blurred *under* the nav.
 
@@ -669,7 +695,13 @@ chronological prev/next, though `allPosts` is already fetched
 
 **Fix:** from the sorted-by-date list, find the current index and render a
 two-cell footer nav (`← older | newer →`) with post titles. Handle first/last
-(render only one side).
+(render only one side). The list is pre-sorted date DESC, so `index - 1` is
+newer and `index + 1` is older; match the current post via
+`path === `/blog/${slug}`` and build links with `slugFromPath` (`blog.ts:65`).
+
+**Gotcha (verified):** only one post exists today (`content/blog/placeholder.md`),
+so prev/next (and Related) render empty until more posts land — test with mocked
+data.
 
 ### 5.6 Small blog fixes
 
@@ -705,10 +737,12 @@ two-cell footer nav (`← older | newer →`) with post titles. Handle first/las
 `showCategoriesView = true` — the categories grid stays on screen; only the
 title changes (`[[category]].vue:82`, `photos/categories.vue:23`).
 
-**Fix:** extend the existing watcher at `[[category]].vue:55`:
+**Fix (verified):** the watcher already exists at `[[category]].vue:55` and
+watches the `category` computed (it currently clears `selectedTags`). Add one
+line to it — no new `route.params` watcher needed:
 
 ```ts
-watch(() => route.params.category, () => {
+watch(category, () => {
   selectedTags.value = [];        // existing behavior
   showCategoriesView.value = false;
 });
@@ -745,13 +779,22 @@ deep-linking on page load), close when cleared. Closing via Esc/X should
 the param. Test interaction with 6.2's query handling (both live in
 `route.query` — merge, don't clobber).
 
+**Gotcha (verified):** `PhotoLightbox` is shared by three consumers —
+`photos/gallery.vue:64`, `travel/photo-section.vue:97`, `travel/timeline.vue:132`
+— and a travel city view mounts several instances at once (see 7.6b). A single
+global `route.query.photo` scheme will collide across instances: scope the
+deep-link to the gallery consumer (or key it per instance). Also `LightboxEntry`
+(`app/types/ui.ts`) has no stable id/`stem` today — add one and populate it in
+all three consumers.
+
 ### 6.4 Lightbox: swipe + loading + preloading
 
 **Where:** `PhotoLightbox.vue:66-72, 88-110`.
 
 **Fix:**
 - **Swipe:** VueUse `useSwipe` on the image container; `left → next`,
-  `right → prev`. (Already a dependency.)
+  `right → prev`. `@vueuse/core` is installed, but there is no `@vueuse/nuxt`
+  auto-import module — `import { useSwipe } from '@vueuse/core'` explicitly.
 - **Loading feedback:** use `v-img`'s `#placeholder` slot with
   `v-progress-circular indeterminate` so switching photos on slow connections
   shows feedback instead of a blank pane.
@@ -899,9 +942,12 @@ changes the hero greeting and nothing else (`fallbackLng: 'en'`,
   Mind i18next plural suffixes (`_one`/`_other`) and interpolations
   (`{{n}} min read`). Chinese generally needs only `_other`.
 - **B. Hide until ready:** remove zh from `SUPPORTED_LANGUAGES`
-  (`app/plugins/03.i18n.ts:6-13`) — the picker hides automatically if it
-  renders from that list (confirm; otherwise gate the picker on
-  `SUPPORTED_LANGUAGES.length > 1`).
+  (`app/plugins/03.i18n.ts:6-13`). **Correction (verified):** the picker does
+  *not* hide automatically, and `SUPPORTED_LANGUAGES` is an object (a
+  `Record`, no `.length`). `app/components/common/language-picker.vue:5,15`
+  does `Object.entries(SUPPORTED_LANGUAGES)` and renders a lone bold label
+  when one entry remains. Gate it explicitly inside the picker:
+  `v-if="languageEntries.length > 1"`.
 
 Also fix the label typo at `03.i18n.ts:11`: `'國語 (臺灣）'` mixes half-width
 `(` with full-width `）` — make both full-width `（臺灣）` or both half-width.
@@ -928,7 +974,7 @@ site's translation files.
 
 ### 8.3 Hardcoded English strings
 
-- `app/app.vue:43` — Suspense fallback `Loading...` (first thing every user
+- `app/app.vue:42` — Suspense fallback `Loading...` (first thing every user
   sees). i18n is not ready at that point in the tree — either replace with a
   language-neutral spinner (recommended) or the SPA loading template from 1.1.
 - `app/components/blog/toc.vue:64` — `aria-label="On this page"`: use `$t`
