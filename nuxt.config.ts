@@ -1,6 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+    },
+  },
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://howardt12345.com',
+    },
+  },
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/', '/blog', '/photography', '/travel', '/app-policy'],
+      failOnError: true,
+    },
+  },
   build: { transpile: ['vuetify'] },
   devtools: { enabled: true },
   css: [
@@ -37,6 +53,64 @@ export default defineNuxtConfig({
     experimental: { sqliteConnector: 'native' }
   },
   hooks: {
+    'nitro:init': async (nitro) => {
+      const { writeFileSync } = await import('node:fs');
+      const { join } = await import('node:path');
+      const base = (process.env.NUXT_PUBLIC_SITE_URL || 'https://howardt12345.com').replace(/\/$/, '');
+      const REDIRECTS = new Set(['/about', '/experience', '/projects', '/contact']);
+      const routes = new Set<string>();
+
+      // Rewritten per route because `nuxt generate` fires no terminal prerender
+      // hook; the handler stays synchronous so parallel routes can't interleave.
+      nitro.hooks.hook('prerender:generate', (route) => {
+        if (
+          !route.fileName?.endsWith('.html') ||
+          ['/200.html', '/404.html'].includes(route.route) ||
+          REDIRECTS.has(route.route)
+        ) {
+          return;
+        }
+        routes.add(route.route);
+        const urls = [...routes]
+          .sort()
+          .map((r) => `  <url><loc>${base}${r === '/' ? '/' : r}</loc></url>`)
+          .join('\n');
+        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+        writeFileSync(join(nitro.options.output.publicDir, 'sitemap.xml'), xml);
+      });
+    },
+    // Category pages are only linked from a toggled-in view, so crawlLinks can't
+    // find them; enumerate from content so a cold /photography/<cat> link isn't a 404.
+    'nitro:config': async (nitroConfig) => {
+      const { readdir, readFile } = await import('node:fs/promises');
+      const { resolve, join } = await import('node:path');
+      const { parse: parseYaml } = await import('yaml');
+
+      const photosDir = resolve(process.cwd(), 'content/photos');
+      let indexFiles: string[] = [];
+      try {
+        const all = await readdir(photosDir, { recursive: true, encoding: 'utf8' });
+        indexFiles = all.filter((f) => f.endsWith('index.yaml'));
+      } catch {
+        return;
+      }
+
+      const categories = new Set<string>();
+      await Promise.all(
+        indexFiles.map(async (rel) => {
+          try {
+            const parsed = parseYaml(await readFile(join(photosDir, rel), 'utf8')) as { category?: string };
+            if (parsed?.category) categories.add(parsed.category);
+          } catch {
+            // ignore unreadable/malformed folder metadata
+          }
+        }),
+      );
+
+      nitroConfig.prerender ??= {};
+      nitroConfig.prerender.routes ??= [];
+      nitroConfig.prerender.routes.push(...[...categories].map((c) => `/photography/${c}`));
+    },
     'nitro:build:public-assets': async (nitro) => {
       const { readdir, readFile, writeFile, rm, access } = await import('node:fs/promises');
       const { join, resolve } = await import('node:path');

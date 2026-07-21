@@ -119,5 +119,8 @@
   "No cities match “{{q}}”.": "No cities match “{{q}}”.",
   "Zoom in": "Zoom in",
   "Zoom out": "Zoom out",
-  "days traveled": "days traveled"
+  "days traveled": "days traveled",
+  "Page not found": "Page not found",
+  "Something went wrong": "Something went wrong",
+  "Back to home": "Back to home"
 }

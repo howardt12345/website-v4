@@ -5,13 +5,37 @@ import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
 
-useSeoMeta({
-  title: 'Photography · Howard Tseng',
-  description: 'A gallery of travel and street photography.',
-});
+const router = useRouter();
+const route = useRoute();
+
+const category = computed<string>(() => route.params.category?.toString() ?? '');
 
 const { allPhotos, pending } = usePhotoItems();
 const { t } = usei18n();
+
+// Await the content so an unknown category can 404 in setup during SSR
+// (same keys as usePhotoItems, so this dedupes rather than refetches).
+await Promise.all([
+  useAsyncData('photos', () => queryCollection('photos').order('stem', 'ASC').all()),
+  useAsyncData('photo-folders', () => queryCollection('photoFolders').all()),
+]);
+
+if (
+  category.value &&
+  !allPhotos.value.some((photo) => photo.category?.toLowerCase() === category.value.toLowerCase())
+) {
+  throw createError({ statusCode: 404, statusMessage: 'Photo category not found', fatal: true });
+}
+
+const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
+useSeoMeta({
+  title: () =>
+    category.value
+      ? `${capitalize(category.value)} · Photography · Howard Tseng`
+      : 'Photography · Howard Tseng',
+  description: 'A gallery of travel and street photography.',
+});
 
 const categories = computed<PhotoCategory[]>(() => {
   const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
@@ -30,11 +54,6 @@ const categories = computed<PhotoCategory[]>(() => {
     }))
     .sort((a, b) => a.category.localeCompare(b.category));
 });
-
-const router = useRouter();
-const route = useRoute();
-
-const category = computed<string>(() => route.params.category?.toString() ?? '');
 
 const categoryPhotos = computed(() =>
   allPhotos.value.filter(

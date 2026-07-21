@@ -7,6 +7,7 @@ export const usei18n = defineStore('i18n', () => {
 
   const changeLanguage = (language: string) => {
     i18next.changeLanguage(language);
+    if (import.meta.client) document.documentElement.lang = language;
   };
 
   return {

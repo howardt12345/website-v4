@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { i18nextPromise } from '~/plugins/03.i18n';
 import { usei18n } from '~/store/i18n.store';
 import { useTheme } from '~/store/theme.store';
 
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+
 useHead({
-  link: [{ rel: 'icon', type: 'image/png', href: 'favicon.ico' }],
+  link: [{ rel: 'icon', type: 'image/png', href: '/favicon.ico' }],
 });
 
 useSeoMeta({
@@ -14,12 +15,12 @@ useSeoMeta({
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
   ogDescription:
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
+  ogType: 'website',
+  ogImage: siteUrl ? `${siteUrl}/images/og-default.jpg` : undefined,
   twitterCard: 'summary_large_image',
 });
 
 const { isDark } = useTheme();
-
-await i18nextPromise;
 
 usei18n();
 

@@ -91,18 +91,12 @@ export const useTravelStore = defineStore('travel', () => {
     allPhotos.value = photos;
   };
 
-  const { data: rawCountries, pending: countriesPending } = useAsyncData(
-    'travel-countries',
-    () => queryCollection('travelCountries').all(),
-  );
-  const { data: rawTrips, pending: tripsPending } = useAsyncData(
-    'travel-trips',
-    () => queryCollection('travelTrips').order('start', 'DESC').all(),
-  );
-  const { data: rawDays, pending: daysPending } = useAsyncData(
-    'travel-days',
-    () => queryCollection('travelDays').order('date', 'ASC').all(),
-  );
+  const countriesAsync = useAsyncData('travel-countries', () => queryCollection('travelCountries').all());
+  const tripsAsync = useAsyncData('travel-trips', () => queryCollection('travelTrips').order('start', 'DESC').all());
+  const daysAsync = useAsyncData('travel-days', () => queryCollection('travelDays').order('date', 'ASC').all());
+  const { data: rawCountries } = countriesAsync;
+  const { data: rawTrips } = tripsAsync;
+  const { data: rawDays } = daysAsync;
 
   const countries = computed<TravelCountry[]>(
     () => (rawCountries.value ?? []) as unknown as TravelCountry[],
@@ -114,23 +108,9 @@ export const useTravelStore = defineStore('travel', () => {
     () => (rawDays.value ?? []) as unknown as TravelDay[],
   );
 
-  const hydrate = (): Promise<void> => {
-    if (!countriesPending.value && !tripsPending.value && !daysPending.value) {
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => {
-      const stop = watch(
-        [countriesPending, tripsPending, daysPending],
-        ([cp, tp, dp]) => {
-          if (!cp && !tp && !dp) {
-            stop();
-            resolve();
-          }
-        },
-        { immediate: true },
-      );
-    });
-  };
+  // Await the requests directly. A `watch` on `pending` never fires during SSR
+  // (no watcher flush), which would hang the /travel prerender forever.
+  const hydrate = (): Promise<unknown> => Promise.all([countriesAsync, tripsAsync, daysAsync]);
 
   const iso2ToIso3 = computed<Record<string, string>>(() =>
     Object.fromEntries(countries.value.map((c) => [c.iso2, c.iso3])),

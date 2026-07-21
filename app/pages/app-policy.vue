@@ -1,3 +1,10 @@
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Privacy Policy · Howard Tseng',
+  description: 'Privacy policy for Howard Tseng’s applications and services.',
+});
+</script>
+
 <template>
   <strong>Privacy Policy</strong>
   <p>

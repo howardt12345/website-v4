@@ -26,9 +26,20 @@ const relatedPosts = computed(() => getRelatedPosts(post.value, allPosts.value))
 
 const tocLinks = computed(() => postData.value?.body.toc?.links ?? []);
 
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+const ogImage = computed(() => {
+  const img = post.value.image;
+  if (img) return img.startsWith('http') ? img : siteUrl ? `${siteUrl}${img}` : undefined;
+  return siteUrl ? `${siteUrl}/images/og-default.jpg` : undefined;
+});
+
 useSeoMeta({
   title: computed(() => `${post.value.title} · Howard Tseng`),
   description: computed(() => post.value.summary),
+  ogTitle: computed(() => post.value.title),
+  ogDescription: computed(() => post.value.summary),
+  ogType: 'article',
+  ogImage,
 });
 </script>
 

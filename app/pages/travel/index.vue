@@ -66,12 +66,18 @@ const pageImage = computed<string | undefined>(() => {
   return undefined;
 });
 
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+
 useSeoMeta({
   title: pageTitle,
   description: pageDescription,
   ogTitle: pageTitle,
   ogDescription: pageDescription,
-  ogImage: () => pageImage.value,
+  ogType: 'website',
+  ogImage: () => {
+    if (!siteUrl) return undefined;
+    return pageImage.value ? `${siteUrl}${pageImage.value}` : `${siteUrl}/images/og-default.jpg`;
+  },
 });
 
 const tripCountryPairs = computed(() =>
@@ -141,7 +147,7 @@ watch(
     <div class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
         <ClientOnly>
-          <TravelMap
+          <LazyTravelMap
             v-bind="mapProps"
             @country-click="navCountry"
             @place-click="pickStop"

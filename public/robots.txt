@@ -28,3 +28,5 @@ Disallow: /
 # Everything else (search engines etc.) is fine.
 User-agent: *
 Allow: /
+
+Sitemap: https://howardt12345.com/sitemap.xml
