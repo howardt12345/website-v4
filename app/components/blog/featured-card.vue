@@ -56,7 +56,7 @@ const { currentLanguage } = storeToRefs(usei18n());
   transition: $transition;
 
   &:hover {
-    border-color: rgb(var(--v-border-opacity));
+    border-color: $accent;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 32px 72px rgba(0, 0, 0, 0.38);
     text-decoration: none;
     color: inherit;

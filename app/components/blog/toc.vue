@@ -59,6 +59,7 @@ onMounted(() => {
 onUnmounted(() => observer?.disconnect());
 
 const scrollToHeading = (id: string) => {
+  if (import.meta.client) history.pushState(null, '', `#${id}`);
   document
     .getElementById(id)
     ?.scrollIntoView({ behavior: prefersReducedMotion.value ? 'auto' : 'smooth', block: 'start' });
@@ -66,7 +67,7 @@ const scrollToHeading = (id: string) => {
 </script>
 
 <template>
-  <nav v-if="flatLinks.length" class="blog-toc" aria-label="On this page">
+  <nav v-if="flatLinks.length" class="blog-toc" :aria-label="$t('On this page')">
     <div class="blog-toc__label">{{ $t('On this page') }}</div>
     <a
       v-for="link in flatLinks"
@@ -82,6 +83,25 @@ const scrollToHeading = (id: string) => {
       {{ link.text }}
     </a>
   </nav>
+
+  <details v-if="flatLinks.length" class="blog-toc-mobile">
+    <summary class="blog-toc-mobile__summary">{{ $t('On this page') }}</summary>
+    <div class="blog-toc-mobile__list">
+      <a
+        v-for="link in flatLinks"
+        :key="link.id"
+        :href="`#${link.id}`"
+        class="blog-toc__item"
+        :class="{
+          'blog-toc__item--h3': link.depth === 3,
+          'blog-toc__item--active': activeId === link.id,
+        }"
+        @click.prevent="scrollToHeading(link.id)"
+      >
+        {{ link.text }}
+      </a>
+    </div>
+  </details>
 </template>
 
 <style scoped lang="scss">
@@ -135,6 +155,34 @@ const scrollToHeading = (id: string) => {
       border-left-color: $accent;
       opacity: 1;
     }
+  }
+}
+
+.blog-toc-mobile {
+  display: none;
+  margin-bottom: rem(40);
+  border: 1px solid $border-color;
+  border-radius: rem(10);
+
+  @media (max-width: 1200px) {
+    display: block;
+  }
+
+  &__summary {
+    cursor: pointer;
+    padding: rem(12) rem(16);
+    font-size: rem(11);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: $text-secondary;
+    font-weight: 600;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2);
+    padding: rem(4) rem(12) rem(12);
   }
 }
 </style>

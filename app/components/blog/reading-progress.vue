@@ -24,7 +24,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .reading-progress {
   position: fixed;
-  top: 0;
+  top: $nav-height;
   left: 0;
   right: 0;
   height: 2px;

@@ -137,5 +137,11 @@
   "Skip to content": "Skip to content",
   "{{name}} proficiency: {{level}}": "{{name}} proficiency: {{level}}",
   "Portrait of Howard Tseng": "Portrait of Howard Tseng",
-  "Instagram": "Instagram"
+  "Instagram": "Instagram",
+  "Filters": "Filters",
+  "Older": "Older",
+  "Newer": "Newer",
+  "Post navigation": "Post navigation",
+  "{{n}} of {{m}} posts_one": "{{n}} of {{m}} post",
+  "{{n}} of {{m}} posts_other": "{{n}} of {{m}} posts"
 }

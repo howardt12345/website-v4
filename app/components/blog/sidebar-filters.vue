@@ -42,7 +42,6 @@ const subCount = (catSlug: string, subSlug: string) =>
 
 const setCat = (slug: string) => {
   emit('update:cat', slug);
-  emit('update:sub', null);
 };
 
 const toggleSub = (slug: string) => {

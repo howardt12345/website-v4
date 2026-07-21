@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
+import { useDebounceFn } from '@vueuse/core';
 
 definePageMeta({ layout: 'default' });
 
@@ -17,8 +18,25 @@ const allPosts = computed<BlogPost[]>(() => (posts.value ?? []) as unknown as Bl
 const route = useRoute();
 const router = useRouter();
 
-const filterCat = ref('all');
-const filterSub = ref<string | null>(null);
+const filterCat = computed<string>({
+  get: () => (route.query.category as string) ?? 'all',
+  set: (value) => {
+    router.replace({
+      query: {
+        ...route.query,
+        category: value === 'all' ? undefined : value,
+        sub: undefined,
+        tags: undefined,
+      },
+    });
+  },
+});
+const filterSub = computed<string | null>({
+  get: () => (route.query.sub as string) ?? null,
+  set: (value) => {
+    router.replace({ query: { ...route.query, sub: value ?? undefined } });
+  },
+});
 const filterTags = computed<string[]>({
   get: () => {
     const raw = route.query.tags;
@@ -30,8 +48,29 @@ const filterTags = computed<string[]>({
     });
   },
 });
-const filterQuery = ref('');
-const filterArchive = ref<string | null>(null);
+const searchText = ref((route.query.q as string) ?? '');
+const commitSearch = useDebounceFn((value: string) => {
+  router.replace({ query: { ...route.query, q: value || undefined } });
+}, 300);
+const filterQuery = computed<string>({
+  get: () => searchText.value,
+  set: (value) => {
+    searchText.value = value;
+    commitSearch(value);
+  },
+});
+watch(
+  () => route.query.q,
+  (value) => {
+    searchText.value = (value as string) ?? '';
+  },
+);
+const filterArchive = computed<string | null>({
+  get: () => (route.query.archive as string) ?? null,
+  set: (value) => {
+    router.replace({ query: { ...route.query, archive: value ?? undefined } });
+  },
+});
 
 const activeFilterCount = computed(
   () =>
@@ -70,18 +109,18 @@ const displayedPosts = computed(() =>
     : filteredPosts.value,
 );
 
-const onCatChange = (cat: string) => {
-  filterCat.value = cat;
-  filterSub.value = null;
-  filterTags.value = [];
-};
-
 const clearFilters = () => {
-  filterCat.value = 'all';
-  filterSub.value = null;
-  filterTags.value = [];
   filterQuery.value = '';
-  filterArchive.value = null;
+  router.replace({
+    query: {
+      ...route.query,
+      category: undefined,
+      sub: undefined,
+      tags: undefined,
+      q: undefined,
+      archive: undefined,
+    },
+  });
 };
 
 </script>
@@ -113,17 +152,42 @@ const clearFilters = () => {
           class="blog-search__input"
         >
       </div>
-      <span class="blog-result-count" v-text="$t('{{n}} of {{m}} posts', { n: filteredPosts.length, m: allPosts.length })" />
+      <span class="blog-result-count" v-text="$t('{{n}} of {{m}} posts', { n: filteredPosts.length, m: allPosts.length, count: allPosts.length })" />
     </div>
 
     <div class="blog-layout">
+      <v-expansion-panels
+        variant="accordion"
+        class="blog-filters-disclosure"
+      >
+        <v-expansion-panel>
+          <v-expansion-panel-title>
+            {{ activeFilterCount ? $t('Filters') + ' (' + activeFilterCount + ')' : $t('Filters') }}
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <BlogSidebarFilters
+              :posts="allPosts"
+              :cat="filterCat"
+              :sub="filterSub"
+              :tags="filterTags"
+              :archive="filterArchive"
+              @update:cat="filterCat = $event"
+              @update:sub="filterSub = $event"
+              @update:tags="filterTags = $event"
+              @update:archive="filterArchive = $event"
+            />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+
       <BlogSidebarFilters
+        class="blog-sidebar--desktop"
         :posts="allPosts"
         :cat="filterCat"
         :sub="filterSub"
         :tags="filterTags"
         :archive="filterArchive"
-        @update:cat="onCatChange"
+        @update:cat="filterCat = $event"
         @update:sub="filterSub = $event"
         @update:tags="filterTags = $event"
         @update:archive="filterArchive = $event"
@@ -233,6 +297,39 @@ const clearFilters = () => {
   @media (max-width: 960px) {
     grid-template-columns: 1fr;
     gap: rem(32);
+  }
+}
+
+.blog-filters-disclosure {
+  display: none;
+  border: 1px solid $border-color;
+  border-radius: rem(10);
+  overflow: hidden;
+  background: rgb(var(--v-theme-surface));
+
+  @media (max-width: 960px) {
+    display: block;
+  }
+
+  :deep(.v-expansion-panel) {
+    background: transparent;
+  }
+
+  :deep(.v-expansion-panel-title) {
+    min-height: rem(48);
+    font-size: rem(13);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  :deep(.v-expansion-panel-title--active) {
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+.blog-sidebar--desktop {
+  @media (max-width: 960px) {
+    display: none;
   }
 }
 
