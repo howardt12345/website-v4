@@ -79,6 +79,12 @@ watch(selectedTags, () => {
   router.push({ query: { tags: selectedTags.value } });
 });
 
+const toggleTag = (tag: string) => {
+  selectedTags.value = selectedTags.value.includes(tag)
+    ? selectedTags.value.filter((t) => t !== tag)
+    : [...selectedTags.value, tag];
+};
+
 const visiblePhotos = computed(() =>
   categoryPhotos.value.filter(
     (photo) =>
@@ -134,6 +140,7 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
       v-else-if="!pending && visiblePhotos.length"
       :photos="visiblePhotos"
       :selected-tags="selectedTags"
+      @toggle-tag="toggleTag"
     />
     <div v-else-if="!pending" class="photos-empty">
       <h3>{{ $t('No photos match these filters') }}</h3>

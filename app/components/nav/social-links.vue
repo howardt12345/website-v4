@@ -18,6 +18,7 @@ const socialLinks = useSocialLinks();
         rel="nofollow noopener noreferrer"
         variant="plain"
         :icon="`${link.icon}`"
+        :aria-label="link.name"
       />
     </div>
   </div>

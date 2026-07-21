@@ -63,6 +63,8 @@ onUnmounted(() => heroObserver?.disconnect());
       </v-list>
     </v-navigation-drawer>
 
+    <a href="#main-content" class="skip-link">{{ $t('Skip to content') }}</a>
+
     <header
       class="top-nav"
       :class="{ 'top-nav--hidden': !headerVisible }"
@@ -71,6 +73,8 @@ onUnmounted(() => heroObserver?.disconnect());
       <v-btn
         v-if="isTablet"
         :icon="drawerOpen ? 'fas fa-xmark' : 'fas fa-bars'"
+        :aria-label="$t('Toggle navigation menu')"
+        :aria-expanded="drawerOpen"
         variant="plain"
         :ripple="false"
         class="top-nav__menu-btn"
@@ -90,12 +94,32 @@ onUnmounted(() => heroObserver?.disconnect());
       <CommonThemeToggle />
     </header>
 
-    <slot />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
     <NavFooter />
   </div>
 </template>
 
 <style scoped lang="scss">
+.skip-link {
+  position: absolute;
+  top: rem(8);
+  left: rem(8);
+  z-index: 200;
+  padding: rem(8) rem(16);
+  background: $background;
+  color: $accent;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}
+
 .top-nav {
   position: sticky;
   top: 0;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useNavLinks, useLinkActive } from '~/composables/links';
+import { useReducedMotion } from '~/composables/useReducedMotion';
 
 const ANIMATE_ENTER_DURATION_MS = 500;
 const LINK_STAGGER_MS = 150;
@@ -13,6 +14,7 @@ const { animate = false, delay = 0, iconOnly = false } = defineProps<Props>();
 
 const links = useNavLinks();
 const { isLinkActive } = useLinkActive();
+const prefersReducedMotion = useReducedMotion();
 </script>
 
 <template>
@@ -26,12 +28,12 @@ const { isLinkActive } = useLinkActive();
         opacity: 1,
         y: 0,
         transition: {
-          duration: animate ? ANIMATE_ENTER_DURATION_MS : 0,
+          duration: animate && !prefersReducedMotion ? ANIMATE_ENTER_DURATION_MS : 0,
           type: 'keyframes',
           ease: 'easeOut',
         },
       }"
-      :delay="index * LINK_STAGGER_MS + delay"
+      :delay="prefersReducedMotion ? 0 : index * LINK_STAGGER_MS + delay"
     >
       <v-btn
         v-if="!iconOnly"
@@ -53,6 +55,7 @@ const { isLinkActive } = useLinkActive();
         active-class=""
         exact-active-class=""
         :icon="`fas fa-${link.icon}`"
+        :aria-label="$t(link.name)"
         :class="{ 'nav-link-active': isLinkActive(link) }"
       />
     </div>
@@ -90,7 +93,7 @@ const { isLinkActive } = useLinkActive();
   }
 
   &.nav-link-active {
-    color: $accent;
+    color: $accent-text;
   }
 }
 </style>

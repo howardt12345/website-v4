@@ -124,5 +124,18 @@
   "days traveled": "days traveled",
   "Page not found": "Page not found",
   "Something went wrong": "Something went wrong",
-  "Back to home": "Back to home"
+  "Back to home": "Back to home",
+  "Switch to light theme": "Switch to light theme",
+  "Switch to dark theme": "Switch to dark theme",
+  "Toggle navigation menu": "Toggle navigation menu",
+  "View source on GitHub": "View source on GitHub",
+  "View live project": "View live project",
+  "Visit {{name}}": "Visit {{name}}",
+  "{{category}} photo": "{{category}} photo",
+  "{{category}} photo from {{date}}": "{{category}} photo from {{date}}",
+  "Photo": "Photo",
+  "Skip to content": "Skip to content",
+  "{{name}} proficiency: {{level}}": "{{name}} proficiency: {{level}}",
+  "Portrait of Howard Tseng": "Portrait of Howard Tseng",
+  "Instagram": "Instagram"
 }

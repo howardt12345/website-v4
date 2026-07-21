@@ -15,7 +15,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <h1 class="section-title">{{ $t('About') }}</h1>
+  <h2 class="section-title">{{ $t('About') }}</h2>
   <div class="about">
     <div class="about__content">
       <ContentRenderer class="content-renderer" :value="data" />
@@ -39,8 +39,9 @@ defineProps<Props>();
         :href="instagramLink"
         target="_blank"
         rel="nofollow noopener noreferrer"
+        :aria-label="$t('Instagram')"
       >
-        <v-img src="images/me.jpg"/>
+        <v-img src="/images/me.jpg" :alt="$t('Portrait of Howard Tseng')" />
       </a>
     </div>
   </div>

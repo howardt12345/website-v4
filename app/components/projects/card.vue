@@ -8,6 +8,7 @@ interface Props {
 }
 
 defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 </script>
 
 <template>
@@ -41,7 +42,13 @@ defineProps<Props>();
 
     <v-card-actions v-if="project.tech" class="projects-card__actions">
       <v-chip-group class="projects-card__actions-chips">
-        <v-chip v-for="tech in project.tech" :key="tech" color="primary" variant="tonal">
+        <v-chip
+          v-for="tech in project.tech"
+          :key="tech"
+          color="primary"
+          variant="tonal"
+          @click="emit('toggleTag', tech)"
+        >
           {{ tech }}
         </v-chip>
       </v-chip-group>

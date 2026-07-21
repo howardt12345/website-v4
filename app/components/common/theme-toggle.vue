@@ -7,6 +7,8 @@ const { toggleTheme } = useTheme();
 <template>
   <v-btn
     :icon="isDark ? 'fas fa-sun' : 'fas fa-moon'"
+    :aria-label="isDark ? $t('Switch to light theme') : $t('Switch to dark theme')"
+    :aria-pressed="isDark"
     variant="plain"
     @click="toggleTheme"
   />

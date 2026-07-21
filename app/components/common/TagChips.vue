@@ -5,16 +5,18 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 const selected = computed<string[]>(() => props.selectedTags ?? []);
 </script>
 
 <template>
-  <v-chip-group :model-value="selected" color="primary">
+  <v-chip-group :model-value="selected" multiple color="primary">
     <v-chip
       v-for="tag in tags"
       :key="tag"
       :value="tag"
       class="chip"
+      @click.stop="emit('toggleTag', tag)"
     >
       {{ tag }}
     </v-chip>

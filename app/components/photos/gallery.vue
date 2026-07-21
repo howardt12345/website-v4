@@ -8,6 +8,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 
 const lightboxPhotos = computed<LightboxEntry[]>(() =>
   props.photos.map((photo) => ({
@@ -57,7 +58,12 @@ watch(
       v-masonry-tile
       class="masonry-item"
     >
-      <PhotosCard :photo="photo" :selected-tags="selectedTags" @select="openLightbox(index)" />
+      <PhotosCard
+        :photo="photo"
+        :selected-tags="selectedTags"
+        @select="openLightbox(index)"
+        @toggle-tag="emit('toggleTag', $event)"
+      />
     </div>
   </div>
 
@@ -66,6 +72,7 @@ watch(
     :photos="lightboxPhotos"
     :start-index="lightboxIndex"
     :selected-tags="selectedTags"
+    @toggle-tag="emit('toggleTag', $event)"
   />
 </template>
 

@@ -7,6 +7,7 @@ interface Props {
 }
 
 defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 const { isTablet } = useMediaQueries();
 </script>
 
@@ -38,7 +39,7 @@ const { isTablet } = useMediaQueries();
         </div>
       </template>
       <template #default>
-        <ProjectsCard :project="project" :show-image="isTablet" />
+        <ProjectsCard :project="project" :show-image="isTablet" @toggle-tag="emit('toggleTag', $event)" />
       </template>
     </v-timeline-item>
   </v-timeline>

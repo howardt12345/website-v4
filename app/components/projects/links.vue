@@ -16,6 +16,7 @@ defineProps<Props>();
     target="_blank"
     rel="nofollow noopener noreferrer"
     variant="plain"
+    :aria-label="$t('View source on GitHub')"
   />
   <v-btn
     v-if="project.externalLink"
@@ -24,5 +25,6 @@ defineProps<Props>();
     target="_blank"
     rel="nofollow noopener noreferrer"
     variant="plain"
+    :aria-label="$t('View live project')"
   />
 </template>

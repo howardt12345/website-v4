@@ -86,7 +86,13 @@ useSeoMeta({
       <ContentRenderer class="blog-article__body" :value="post" />
 
       <div class="blog-article__tags">
-        <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
+        <v-chip
+          v-for="tag in post.tags"
+          :key="tag"
+          :to="{ path: '/blog', query: { tags: tag } }"
+          size="small"
+          variant="tonal"
+        >{{ tag }}</v-chip>
       </div>
     </article>
 

@@ -9,7 +9,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), { startIndex: 0 });
-const emit = defineEmits<{ 'update:modelValue': [val: boolean] }>();
+const emit = defineEmits<{ 'update:modelValue': [val: boolean]; toggleTag: [tag: string] }>();
 
 const currentIndex = ref(props.startIndex);
 
@@ -25,6 +25,18 @@ const hasNext = computed(() => currentIndex.value < props.photos.length - 1);
 const prev = () => { if (hasPrev.value) currentIndex.value--; };
 const next = () => { if (hasNext.value) currentIndex.value++; };
 const close = () => emit('update:modelValue', false);
+
+watch(
+  () => props.photos,
+  (photos, prevPhotos) => {
+    if (!props.modelValue) return;
+    if (!photos.length) return close();
+    // ponytail: follow the viewed photo by src; add a stable entry id if srcs ever collide
+    const viewed = prevPhotos?.[currentIndex.value];
+    const nextIndex = viewed ? photos.findIndex((p) => p.src === viewed.src) : -1;
+    currentIndex.value = nextIndex >= 0 ? nextIndex : Math.min(currentIndex.value, photos.length - 1);
+  },
+);
 
 const onKeydown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowLeft') prev();
@@ -82,6 +94,7 @@ onUnmounted(() => {
             :tags="current.tags"
             :selected-tags="selectedTags"
             class="lightbox__tags"
+            @toggle-tag="emit('toggleTag', $event)"
           />
         </div>
 

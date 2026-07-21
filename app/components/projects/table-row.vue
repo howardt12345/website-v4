@@ -9,14 +9,11 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 
-const selected = computed<number[]>(() => {
-  return props.selectedTags
-    ? props.selectedTags
-        .map((tag) => props.project.tech?.indexOf(tag) ?? -1)
-        .filter((index) => index >= 0)
-    : [];
-});
+const selected = computed<string[]>(() =>
+  (props.selectedTags ?? []).filter((tag) => props.project.tech?.includes(tag)),
+);
 </script>
 
 <template>
@@ -27,8 +24,13 @@ const selected = computed<number[]>(() => {
       <ContentRenderer class="content-renderer" :value="project" />
     </td>
     <td v-if="!hideTech">
-      <v-chip-group v-model="selected" color="primary">
-        <v-chip v-for="tech in project.tech" :key="tech">
+      <v-chip-group :model-value="selected" multiple color="primary">
+        <v-chip
+          v-for="tech in project.tech"
+          :key="tech"
+          :value="tech"
+          @click="emit('toggleTag', tech)"
+        >
           {{ tech }}
         </v-chip>
       </v-chip-group>

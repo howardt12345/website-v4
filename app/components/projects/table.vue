@@ -8,6 +8,7 @@ interface Props {
 }
 
 defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 
 const { isMobile, isTablet } = useMediaQueries();
 </script>
@@ -31,6 +32,7 @@ const { isMobile, isTablet } = useMediaQueries();
         :selected-tags="selectedTags"
         :hide-description="isTablet"
         :hide-tech="isMobile"
+        @toggle-tag="emit('toggleTag', $event)"
       />
     </TransitionGroup>
   </v-table>

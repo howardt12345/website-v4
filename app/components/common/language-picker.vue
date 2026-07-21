@@ -13,13 +13,15 @@ const { changeLanguage } = usei18n();
     <div>
       <div>
         <span v-for="([lng, language], index) in languageEntries" :key="lng">
-          <strong v-if="currentLanguage === lng">
+          <button
+            type="button"
+            class="language-btn"
+            :aria-pressed="currentLanguage === lng"
+            @click="changeLanguage(lng)"
+          >
             {{ language.nativeName }}
-          </strong>
-          <a v-else class="language-link" @click="changeLanguage(lng)">
-            {{ language.nativeName }}
-          </a>
-          <span v-if="index < languageEntries.length - 1">&nbsp;|&nbsp;</span>
+          </button>
+          <span v-if="index < languageEntries.length - 1" aria-hidden="true">&nbsp;|&nbsp;</span>
         </span>
       </div>
     </div>
@@ -27,8 +29,19 @@ const { changeLanguage } = usei18n();
 </template>
 
 <style scoped lang="scss">
-.language-link {
-  cursor: pointer;
+.language-btn {
+  appearance: none;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
   color: $text-secondary;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    color: $text;
+    text-shadow: 0.4px 0 0 currentColor, -0.4px 0 0 currentColor;
+    cursor: default;
+  }
 }
 </style>

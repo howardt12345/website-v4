@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useReducedMotion } from '~/composables/useReducedMotion';
+
 interface TocLink {
   id: string;
   text: string;
@@ -12,6 +14,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const prefersReducedMotion = useReducedMotion();
 const activeId = ref<string | null>(null);
 
 const flatLinks = computed(() => {
@@ -56,7 +59,9 @@ onMounted(() => {
 onUnmounted(() => observer?.disconnect());
 
 const scrollToHeading = (id: string) => {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: prefersReducedMotion.value ? 'auto' : 'smooth', block: 'start' });
 };
 </script>
 

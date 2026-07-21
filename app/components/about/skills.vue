@@ -42,19 +42,14 @@ const languageLevel = (value: number) => {
         <h2 class="skills-title">{{ $t('Languages') }}</h2>
         <div v-for="{ name, value } in languages" :key="name" class="language-item">
           <span class="language-item__text">{{ name }}</span>
-          <v-slider
+          <v-progress-linear
+            class="language-item__bar"
             :model-value="value * 20"
             color="primary"
-            track-color="gray"
-            thumb-label
-            :thumb-size="0"
-            readonly
-            hide-details
-          >
-            <template #thumb-label>
-              <span>{{ languageLevel(value) }}</span>
-            </template>
-          </v-slider>
+            bg-color="gray"
+            rounded
+            :aria-label="$t('{{name}} proficiency: {{level}}', { name, level: languageLevel(value) })"
+          />
         </div>
       </div>
     </div>
@@ -92,6 +87,10 @@ const languageLevel = (value: number) => {
     height: fit-content;
     align-self: center;
     font-size: rem(16);
+  }
+
+  &__bar {
+    align-self: center;
   }
 }
 </style>

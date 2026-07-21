@@ -14,9 +14,22 @@ const { data: posts } = await useAsyncData('blog-posts', () =>
 
 const allPosts = computed<BlogPost[]>(() => (posts.value ?? []) as unknown as BlogPost[]);
 
+const route = useRoute();
+const router = useRouter();
+
 const filterCat = ref('all');
 const filterSub = ref<string | null>(null);
-const filterTags = ref<string[]>([]);
+const filterTags = computed<string[]>({
+  get: () => {
+    const raw = route.query.tags;
+    return typeof raw === 'string' && raw ? raw.split(',') : [];
+  },
+  set: (value) => {
+    router.replace({
+      query: { ...route.query, tags: value.length ? value.join(',') : undefined },
+    });
+  },
+});
 const filterQuery = ref('');
 const filterArchive = ref<string | null>(null);
 

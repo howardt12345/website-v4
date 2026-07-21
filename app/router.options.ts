@@ -9,7 +9,11 @@ export default {
     if (to.hash) {
       try {
         const el = document.querySelector(to.hash);
-        if (el) return { el: to.hash, behavior: 'smooth' };
+        if (el) {
+          const prefersReduced =
+            import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          return { el: to.hash, behavior: prefersReduced ? 'auto' : 'smooth' };
+        }
       } catch {
         return false;
       }

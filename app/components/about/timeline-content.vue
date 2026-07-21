@@ -9,6 +9,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{ toggleSkill: [skill: string] }>();
 const selected = computed<string[]>(() => props.selectedSkills ?? []);
 </script>
 
@@ -41,6 +42,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
           :href="experience.link.url"
           target="_blank"
           rel="nofollow noopener noreferrer"
+          :aria-label="$t('Visit {{name}}', { name: experience.title })"
           class="timeline-card__link-btn"
         >
           <v-icon size="small">fas fa-arrow-up-right-from-square</v-icon>
@@ -67,7 +69,8 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
 
     <v-card-actions v-if="experience.skills" class="timeline-card__actions">
       <v-chip-group
-        v-model="selected"
+        :model-value="selected"
+        multiple
         class="timeline-card__chip-group"
         color="primary"
       >
@@ -77,6 +80,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
           class="timeline-card__chip"
           :value="skill"
           variant="tonal"
+          @click="emit('toggleSkill', skill)"
         >
           {{ skill }}
         </v-chip>

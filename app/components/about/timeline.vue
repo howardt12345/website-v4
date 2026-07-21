@@ -28,10 +28,16 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
         ),
       ),
 );
+
+const toggleSkill = (skill: string) => {
+  selectedSkills.value = selectedSkills.value.includes(skill)
+    ? selectedSkills.value.filter((s) => s !== skill)
+    : [...selectedSkills.value, skill];
+};
 </script>
 
 <template>
-  <h1 class="section-title">{{ $t('Experience') }}</h1>
+  <h2 class="section-title">{{ $t('Experience') }}</h2>
 
   <CommonFilters
     v-model:selected-tags="selectedSkills"
@@ -62,6 +68,7 @@ const filteredExperiences = computed<TimelineItem[]>(() =>
           :experience
           :is-mobile
           :selected-skills
+          @toggle-skill="toggleSkill"
         />
       </template>
     </v-timeline-item>

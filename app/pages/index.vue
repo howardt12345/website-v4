@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMounted } from '@vueuse/core';
 import { useMediaQueries } from '~/composables/media-queries';
+import { useReducedMotion } from '~/composables/useReducedMotion';
 import { readStorage, writeStorage } from '~/utils/storage';
 
 const NAV_LINKS_DELAY = 1250;
@@ -13,10 +14,11 @@ const { isMobile, isTablet } = useMediaQueries();
 const route = useRoute();
 
 const heroIntroPlayed = readStorage('session', HERO_INTRO_KEY) === '1';
-const heroAnimate = !heroIntroPlayed;
-const navLinksDelay = heroIntroPlayed ? 0 : NAV_LINKS_DELAY;
-const themeToggleDelay = heroIntroPlayed ? 0 : THEME_TOGGLE_DELAY;
-const heroEnterMs = heroIntroPlayed ? 0 : HERO_ENTER_MS;
+const prefersReducedMotion = useReducedMotion();
+const heroAnimate = !heroIntroPlayed && !prefersReducedMotion.value;
+const navLinksDelay = heroAnimate ? NAV_LINKS_DELAY : 0;
+const themeToggleDelay = heroAnimate ? THEME_TOGGLE_DELAY : 0;
+const heroEnterMs = heroAnimate ? HERO_ENTER_MS : 0;
 
 onMounted(() => {
   writeStorage('session', HERO_INTRO_KEY, '1');
@@ -30,7 +32,7 @@ onMounted(() => {
   nextTick(() => {
     const target = document.querySelector(route.hash);
     if (target && !userScrolled && window.scrollY === 0) {
-      target.scrollIntoView({ behavior: 'smooth' });
+      target.scrollIntoView({ behavior: prefersReducedMotion.value ? 'auto' : 'smooth' });
     }
     window.removeEventListener('wheel', flagScroll);
     window.removeEventListener('touchmove', flagScroll);
@@ -39,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
+  <div>
     <section id="home" class="home-section">
       <div v-if="isMounted" class="home-section__content">
         <HomeTitle :is-mobile="isMobile" :is-tablet="isTablet" />
@@ -77,7 +79,7 @@ onMounted(() => {
         <HomeContact />
       </section>
     </div>
-  </main>
+  </div>
 </template>
 
 <style scoped lang="scss">
