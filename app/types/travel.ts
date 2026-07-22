@@ -70,6 +70,7 @@ export interface CityViewPlace {
 
 export interface TravelTimelinePhoto {
   url: string;
+  large?: string;
   alt?: string;
   label?: string;
   title?: string;

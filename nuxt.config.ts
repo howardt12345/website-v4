@@ -130,8 +130,10 @@ export default defineNuxtConfig({
       const outputPublicDir = nitro.options.output.publicDir;
 
       // Public photos get downsized + watermarked so a scrape only nets a
-      // web-res, marked copy — never the full-res original.
-      const MAX_EDGE = 800;
+      // web-res, marked copy — never the full-res original. Two renditions per
+      // photo: a masonry thumb and a larger one for the lightbox (stem@2x).
+      const THUMB_EDGE = 800;
+      const LARGE_EDGE = 1600;
       const watermarkSvg = (width: number, height: number) => {
         const fontSize = Math.max(14, Math.round(width * 0.028));
         const padding = Math.round(fontSize * 0.8);
@@ -141,6 +143,20 @@ export default defineNuxtConfig({
             fill="rgba(255,255,255,0.75)" stroke="rgba(0,0,0,0.55)"
             stroke-width="${Math.round(fontSize * 0.08)}" paint-order="stroke">© Howard Tseng</text>
         </svg>`);
+      };
+
+      // Resize first and read back the *actual* output size — sharp's fit:'inside'
+      // rounds internally, so a size precomputed from the original's metadata can be
+      // off by a pixel and make composite() reject the watermark as "too big".
+      const renderRendition = async (original: Buffer, maxEdge: number) => {
+        const { data: resized, info } = await sharp(original)
+          .resize({ width: maxEdge, height: maxEdge, fit: 'inside', withoutEnlargement: true })
+          .toBuffer({ resolveWithObject: true });
+        // .jpeg()/.toBuffer() without withMetadata() strips EXIF (GPS, camera, etc.) by default.
+        return sharp(resized)
+          .composite([{ input: watermarkSvg(info.width, info.height), gravity: 'southeast' }])
+          .jpeg({ quality: 82, mozjpeg: true })
+          .toBuffer();
       };
 
       const allFiles = await readdir(contentPhotosDir, { recursive: true, encoding: 'utf8' });
@@ -174,21 +190,12 @@ export default defineNuxtConfig({
 
         try {
           const original = await readFile(assetPath);
-
-          // Resize first and read back the *actual* output size — sharp's fit:'inside'
-          // rounds internally, so a size precomputed from the original's metadata can be
-          // off by a pixel and make composite() reject the watermark as "too big".
-          const { data: resized, info } = await sharp(original)
-            .resize({ width: MAX_EDGE, height: MAX_EDGE, fit: 'inside', withoutEnlargement: true })
-            .toBuffer({ resolveWithObject: true });
-
-          // .jpeg()/.toBuffer() without withMetadata() strips EXIF (GPS, camera, etc.) by default.
-          const processed = await sharp(resized)
-            .composite([{ input: watermarkSvg(info.width, info.height), gravity: 'southeast' }])
-            .jpeg({ quality: 82, mozjpeg: true })
-            .toBuffer();
-
-          await writeFile(assetPath, processed);
+          const largePath = join(outputPublicDir, 'photos', `${stem}@2x.${ext}`);
+          const [thumb, large] = await Promise.all([
+            renderRendition(original, THUMB_EDGE),
+            renderRendition(original, LARGE_EDGE),
+          ]);
+          await Promise.all([writeFile(assetPath, thumb), writeFile(largePath, large)]);
         } catch (err) {
           console.warn(`[photos] Failed to downsize/watermark photos/${stem}.${ext} —`, err);
         }

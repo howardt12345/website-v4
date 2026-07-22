@@ -36,6 +36,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
       dividerBefore: formatDayLabel(item.day.date, currentLanguage.value),
       photos: item.photos.map((e) => ({
         url: e.photo.url,
+        large: e.photo.largeUrl,
         alt: e.photo.alt ?? e.photo.title ?? e.placeName,
         label: e.placeName,
         title: e.photo.title,

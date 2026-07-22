@@ -61,22 +61,30 @@ const categoryPhotos = computed(() =>
   ),
 );
 
-const selectedTags = ref<string[]>([]);
+const showCategoriesView = ref(false);
+const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesView.value);
 
-onMounted(() => {
-  selectedTags.value = Array.isArray(route.query.tags)
-    ? (route.query.tags as string[])
-    : route.query.tags
-    ? [route.query.tags as string]
-    : [];
+// Prerendered pages carry no query, so gate the URL read until after hydration to keep server and client markup identical.
+const mounted = ref(false);
+onMounted(() => (mounted.value = true));
+
+const selectedTags = computed<string[]>({
+  get: () => {
+    if (!mounted.value) return [];
+    const raw = route.query.tags;
+    if (Array.isArray(raw)) return raw.filter((tag): tag is string => !!tag);
+    return typeof raw === 'string' && raw ? raw.split(',') : [];
+  },
+  set: (value) => {
+    router.replace({
+      query: { ...route.query, tags: value.length ? value.join(',') : undefined },
+    });
+  },
 });
 
 watch(category, () => {
-  selectedTags.value = [];
-});
-
-watch(selectedTags, () => {
-  router.push({ query: { tags: selectedTags.value } });
+  showCategoriesView.value = false;
+  if (route.query.tags) selectedTags.value = [];
 });
 
 const toggleTag = (tag: string) => {
@@ -101,11 +109,8 @@ const availableTags = computed(() => {
 
 const breadcrumbItems = computed(() => [
   { title: t('Photos'), to: '/photography' },
-  { title: category.value, to: `/photography/${category.value}` },
+  { title: category.value, active: true },
 ]);
-
-const showCategoriesView = ref(false);
-const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesView.value);
 </script>
 
 <template>
@@ -164,6 +169,9 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+.section-title {
+  text-transform: capitalize;
 }
 .categories-button {
   margin-bottom: rem(16);

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSwipe } from '@vueuse/core';
 import type { LightboxEntry } from '~/types/ui';
 
 interface Props {
@@ -25,6 +26,21 @@ const hasNext = computed(() => currentIndex.value < props.photos.length - 1);
 const prev = () => { if (hasPrev.value) currentIndex.value--; };
 const next = () => { if (hasNext.value) currentIndex.value++; };
 const close = () => emit('update:modelValue', false);
+
+const imgWrap = ref<HTMLElement | null>(null);
+useSwipe(imgWrap, {
+  onSwipeEnd(_e, direction) {
+    if (direction === 'left') next();
+    if (direction === 'right') prev();
+  },
+});
+
+watch(currentIndex, (idx) => {
+  if (!import.meta.client) return;
+  for (const neighbor of [props.photos[idx - 1], props.photos[idx + 1]]) {
+    if (neighbor) new Image().src = neighbor.large ?? neighbor.src;
+  }
+});
 
 watch(
   () => props.photos,
@@ -61,6 +77,7 @@ onUnmounted(() => {
   <v-dialog
     :model-value="modelValue"
     max-width="900"
+    :aria-label="current?.title ?? current?.alt ?? current?.label ?? $t('Photo')"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <v-card v-if="current" class="lightbox">
@@ -75,13 +92,22 @@ onUnmounted(() => {
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
-      <v-img
-        :src="current.src"
-        :alt="current.alt"
-        max-height="70vh"
-        contain
-        class="lightbox__img"
-      />
+      <div ref="imgWrap" class="lightbox__img-wrap">
+        <v-img
+          :src="current.large ?? current.src"
+          :lazy-src="current.src"
+          :alt="current.alt"
+          max-height="70vh"
+          contain
+          class="lightbox__img"
+        >
+          <template #placeholder>
+            <div class="lightbox__loader">
+              <v-progress-circular indeterminate size="40" color="primary" />
+            </div>
+          </template>
+        </v-img>
+      </div>
 
       <div class="lightbox__footer">
         <div class="lightbox__meta">
@@ -136,6 +162,18 @@ onUnmounted(() => {
     top: rem(8);
     right: rem(8);
     z-index: 1;
+  }
+
+  &__img-wrap {
+    touch-action: pan-y;
+  }
+
+  &__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: rem(200);
+    height: 100%;
   }
 
   &__footer {

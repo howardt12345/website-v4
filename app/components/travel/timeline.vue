@@ -11,6 +11,7 @@ const allLightboxPhotos = computed<LightboxEntry[]>(() =>
   props.entries.flatMap((entry) =>
     entry.photos.map((photo) => ({
       src: photo.url,
+      large: photo.large,
       alt: photo.alt,
       label: photo.label,
       title: photo.title,

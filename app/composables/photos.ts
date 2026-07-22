@@ -51,9 +51,12 @@ export function usePhotoItems() {
     .map((raw) => {
       const folderPath = raw.stem.split('/').slice(0, -1).join('/');
       const folder = folderMap.value.get(folderPath);
+      const ext = raw.ext ?? 'jpg';
+      const url = `/${raw.stem}.${ext}`;
       return {
         stem: raw.stem,
-        url: `/${raw.stem}.${raw.ext ?? 'jpg'}`,
+        url,
+        largeUrl: import.meta.dev ? url : `/${raw.stem}@2x.${ext}`,
         title: raw.title,
         caption: raw.caption,
         alt: raw.alt,
