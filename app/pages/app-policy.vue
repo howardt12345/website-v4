@@ -53,7 +53,6 @@ useSeoMeta({
           >Google Play Services</a
         >
       </li>
-      <!----><!---->
       <li>
         <a
           href="https://firebase.google.com/support/privacy/"
@@ -62,7 +61,6 @@ useSeoMeta({
           >Firebase Crashlytics</a
         >
       </li>
-      <!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
     </ul>
   </div>
   <p><strong>Log Data</strong></p>
@@ -134,7 +132,6 @@ useSeoMeta({
       able to do the necessary actions.
     </p>
   </div>
-  <!---->
   <p><strong>Changes to This Privacy Policy</strong></p>
   <p>
     I may update our Privacy Policy from time to time. Thus, you are advised to

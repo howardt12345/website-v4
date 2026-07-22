@@ -64,7 +64,6 @@ export interface CityViewPlace {
   place: TravelPlace;
   tripTitle: string;
   dayDate: string;
-  hue: number;
   photos: PhotoItem[];
 }
 

@@ -162,7 +162,7 @@ useSeoMeta({
     display: flex;
     align-items: center;
     gap: rem(10);
-    color: $accent;
+    color: $accent-text;
     font-size: rem(11);
     font-weight: 600;
     text-transform: uppercase;
@@ -281,7 +281,7 @@ useSeoMeta({
     }
 
     :deep(a) {
-      color: $accent;
+      color: $accent-text;
       text-decoration: underline;
       text-underline-offset: 3px;
 

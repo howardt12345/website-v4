@@ -48,7 +48,7 @@ const selected = computed<string[]>(() =>
 }
 
 .title {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .links {

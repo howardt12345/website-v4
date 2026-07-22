@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { theme_light, theme_dark } from './app/assets/theme/theme';
+
 export default defineNuxtConfig({
   app: {
     head: {
@@ -8,7 +10,7 @@ export default defineNuxtConfig({
           // Prerendered HTML is always dark; set the real theme before first paint so a light preference doesn't flash.
           // ponytail: background-only; a data-theme CSS-var layer would also kill the brief component recolor at hydration.
           innerHTML:
-            "try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.dataset.theme=t;document.documentElement.style.backgroundColor=t==='light'?'#FFFFFF':'#111111'}catch(e){}",
+            `try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.dataset.theme=t;document.documentElement.style.backgroundColor=t==='light'?'${theme_light.colors.background}':'${theme_dark.colors.background}'}catch(e){}`,
           tagPosition: 'head',
         },
       ],
@@ -74,6 +76,7 @@ export default defineNuxtConfig({
       nitro.hooks.hook('prerender:generate', (route) => {
         if (
           !route.fileName?.endsWith('.html') ||
+          route.route.includes('?') ||
           ['/200.html', '/404.html'].includes(route.route) ||
           REDIRECTS.has(route.route)
         ) {

@@ -5,7 +5,7 @@ import { useTheme } from '~/store/theme.store';
 const siteUrl = useRuntimeConfig().public.siteUrl as string;
 
 useHead({
-  link: [{ rel: 'icon', type: 'image/png', href: '/favicon.ico' }],
+  link: [{ rel: 'icon', href: '/favicon.ico' }],
 });
 
 useSeoMeta({

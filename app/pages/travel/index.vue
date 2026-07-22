@@ -9,7 +9,7 @@ definePageMeta({ layout: 'default' });
 
 const travelStore = useTravelStore();
 
-const { allPhotos } = usePhotoItems();
+const { allPhotos, error: photosError, refresh: refreshPhotos } = usePhotoItems();
 watchEffect(() => travelStore.setPhotos(allPhotos.value));
 
 await travelStore.hydrate();
@@ -31,6 +31,11 @@ const {
 } = storeToRefs(travelStore);
 
 const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3, reload } = travelStore;
+
+const retryLoad = () => {
+  reload();
+  refreshPhotos();
+};
 
 const handleCityClick = (loc: { country: string; city: string }) => {
   if (view.value === 'trip' && activeDay.value) {
@@ -151,13 +156,13 @@ watch(
     </p>
 
     <CommonRetryPanel
-      v-if="loadError"
+      v-if="loadError || photosError"
       class="travel-page__error"
       :message="$t('Could not load travel data.')"
-      @retry="reload"
+      @retry="retryLoad"
     />
 
-    <div v-if="!loadError" class="travel-stage" :class="stageClass">
+    <div v-if="!loadError && !photosError" class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
         <ClientOnly>
           <LazyTravelMap
@@ -218,7 +223,7 @@ watch(
       />
     </div>
 
-    <div v-if="!loadError" ref="contentRef" class="travel-page__content" tabindex="-1">
+    <div v-if="!loadError && !photosError" ref="contentRef" class="travel-page__content" tabindex="-1">
       <TravelDayView
         v-if="dayViewProps"
         v-bind="dayViewProps"
@@ -280,7 +285,7 @@ watch(
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: $accent;
+    color: $accent-text;
     margin-top: rem(10);
     margin-bottom: rem(10);
 
@@ -390,7 +395,7 @@ watch(
 }
 
 .travel-stage__blog-link {
-  color: $accent;
+  color: $accent-text;
   letter-spacing: normal;
   text-transform: none;
   font-size: rem(13);

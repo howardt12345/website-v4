@@ -19,7 +19,7 @@ if (import.meta.client) {
   i18next.use(LanguageDetector).use(Backend);
 }
 
-export const i18nextPromise = i18next.init({
+void i18next.init({
   fallbackLng: 'en',
   lng: import.meta.client ? undefined : 'en',
   resources: { en: { translation: en } },

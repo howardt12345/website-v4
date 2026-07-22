@@ -69,37 +69,13 @@ const scrollToHeading = (id: string) => {
 <template>
   <nav v-if="flatLinks.length" class="blog-toc" :aria-label="$t('On this page')">
     <div class="blog-toc__label">{{ $t('On this page') }}</div>
-    <a
-      v-for="link in flatLinks"
-      :key="link.id"
-      :href="`#${link.id}`"
-      class="blog-toc__item"
-      :class="{
-        'blog-toc__item--h3': link.depth === 3,
-        'blog-toc__item--active': activeId === link.id,
-      }"
-      @click.prevent="scrollToHeading(link.id)"
-    >
-      {{ link.text }}
-    </a>
+    <BlogTocList :links="flatLinks" :active-id="activeId" @select="scrollToHeading" />
   </nav>
 
   <details v-if="flatLinks.length" class="blog-toc-mobile">
     <summary class="blog-toc-mobile__summary">{{ $t('On this page') }}</summary>
     <div class="blog-toc-mobile__list">
-      <a
-        v-for="link in flatLinks"
-        :key="link.id"
-        :href="`#${link.id}`"
-        class="blog-toc__item"
-        :class="{
-          'blog-toc__item--h3': link.depth === 3,
-          'blog-toc__item--active': activeId === link.id,
-        }"
-        @click.prevent="scrollToHeading(link.id)"
-      >
-        {{ link.text }}
-      </a>
+      <BlogTocList :links="flatLinks" :active-id="activeId" @select="scrollToHeading" />
     </div>
   </details>
 </template>
@@ -130,32 +106,6 @@ const scrollToHeading = (id: string) => {
     opacity: 0.7;
   }
 
-  &__item {
-    color: $text-secondary;
-    padding: rem(4) rem(10);
-    border-left: 2px solid $border-color;
-    font-size: rem(12.5);
-    line-height: 1.4;
-    text-decoration: none;
-    transition: $transition-fast;
-    opacity: 0.75;
-
-    &:hover {
-      color: $text;
-      opacity: 1;
-    }
-
-    &--h3 {
-      padding-left: rem(20);
-      font-size: rem(12);
-    }
-
-    &--active {
-      color: $accent;
-      border-left-color: $accent;
-      opacity: 1;
-    }
-  }
 }
 
 .blog-toc-mobile {

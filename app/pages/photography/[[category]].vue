@@ -109,7 +109,7 @@ const availableTags = computed(() => {
 
 const breadcrumbItems = computed(() => [
   { title: t('Photos'), to: '/photography' },
-  { title: category.value, active: true },
+  { title: category.value, disabled: true },
 ]);
 </script>
 
@@ -141,6 +141,9 @@ const breadcrumbItems = computed(() => [
   </div>
   <div class="photos-container">
     <CommonRetryPanel v-if="error" @retry="refresh" />
+    <div v-else-if="pending" class="photos-skeleton" aria-hidden="true">
+      <v-skeleton-loader v-for="n in 9" :key="n" type="image" />
+    </div>
     <PhotosCategories v-else-if="!pending && showCategoriesView" :categories="categories" />
     <PhotosGallery
       v-else-if="!pending && visiblePhotos.length"
@@ -187,6 +190,16 @@ const breadcrumbItems = computed(() => [
 .photos-container {
   width: 80vw;
   margin: 0 auto;
+}
+
+.photos-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(rem(220), 1fr));
+  gap: rem(12);
+
+  :deep(.v-skeleton-loader__image) {
+    height: rem(220);
+  }
 }
 
 .photos-empty {

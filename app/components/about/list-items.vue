@@ -43,7 +43,7 @@ defineProps<Props>();
   &__item {
     &:before {
       content: '▹';
-      color: $accent;
+      color: $accent-text;
     }
   }
 }

@@ -102,7 +102,7 @@ const emit = defineEmits<{ toggleTag: [tag: string] }>();
 
       &:hover,
       &:focus {
-        color: $accent;
+        color: $accent-text;
       }
     }
   }

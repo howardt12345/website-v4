@@ -109,7 +109,7 @@ onUnmounted(() => heroObserver?.disconnect());
   z-index: 200;
   padding: rem(8) rem(16);
   background: $background;
-  color: $accent;
+  color: $accent-text;
   border: 1px solid $border-color;
   border-radius: 4px;
   transform: translateY(-150%);

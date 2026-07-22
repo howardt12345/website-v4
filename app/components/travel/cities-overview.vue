@@ -324,7 +324,7 @@ const countryGroups = computed<CountryGroup[]>(() => {
       border-color: $accent;
 
       .cities-overview__city-name {
-        color: $accent;
+        color: $accent-text;
       }
     }
   }

@@ -348,7 +348,7 @@ watch(
 .side-rail__collapsed-label {
   writing-mode: vertical-lr;
   font-size: rem(12);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: $text-secondary;
@@ -433,7 +433,7 @@ watch(
 .rail-year {
   display: block;
   font-size: rem(11);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: $text-secondary;
@@ -443,7 +443,7 @@ watch(
 
 .rail-trip-item {
   &:hover .rail-trip__title {
-    color: $accent;
+    color: $accent-text;
   }
 }
 
@@ -455,10 +455,10 @@ watch(
 
   &__countries {
     font-size: rem(10);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: $accent;
+    color: $accent-text;
   }
 
   &__title {
@@ -478,12 +478,12 @@ watch(
 
 .rail-day-item {
   &--active .rail-day__date {
-    color: $accent;
+    color: $accent-text;
     opacity: 1;
   }
 
   &:hover .rail-day__city {
-    color: $accent;
+    color: $accent-text;
   }
 }
 
@@ -495,7 +495,7 @@ watch(
 
   &__date {
     font-size: rem(10);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: $text-secondary;
@@ -529,7 +529,7 @@ watch(
   flex-shrink: 0;
   align-self: center;
   font-size: rem(11);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: $text-secondary;
@@ -565,7 +565,7 @@ watch(
 
 .rail-strip__line1 {
   font-size: rem(10);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: $text-secondary;
@@ -575,7 +575,7 @@ watch(
   text-overflow: ellipsis;
 
   .rail-strip__item--active & {
-    color: $accent;
+    color: $accent-text;
     opacity: 1;
   }
 }

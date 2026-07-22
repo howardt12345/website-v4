@@ -75,7 +75,7 @@ const { currentLanguage } = storeToRefs(usei18n());
   }
 
   &__cat {
-    color: $accent;
+    color: $accent-text;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;

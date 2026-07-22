@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
 import { useTheme as useVuetifyTheme } from 'vuetify';
 import { readStorage, writeStorage } from '~/utils/storage';
+import { theme_light, theme_dark } from '~/assets/theme/theme';
 
 type ThemeName = 'light' | 'dark';
 
 const STORAGE_KEY = 'theme';
-const BACKGROUND: Record<ThemeName, string> = { light: '#FFFFFF', dark: '#111111' };
+const BACKGROUND: Record<ThemeName, string> = {
+  light: theme_light.colors.background,
+  dark: theme_dark.colors.background,
+};
 
 export const useTheme = defineStore('theme', () => {
   const theme = useVuetifyTheme();

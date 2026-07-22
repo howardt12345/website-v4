@@ -181,7 +181,7 @@ function openLightbox(entryIdx: number, photoIdx: number) {
     transition: $transition-fast;
 
     &:hover .timeline-entry__title {
-      color: $accent;
+      color: $accent-text;
     }
   }
 }

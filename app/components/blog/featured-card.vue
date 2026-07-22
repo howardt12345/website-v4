@@ -92,7 +92,7 @@ const { currentLanguage } = storeToRefs(usei18n());
     font-size: rem(11);
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: $accent;
+    color: $accent-text;
     font-weight: 600;
 
     &::before {
@@ -154,7 +154,7 @@ const { currentLanguage } = storeToRefs(usei18n());
   }
 
   &__link {
-    color: $accent;
+    color: $accent-text;
     font-size: rem(14);
     font-weight: 500;
     margin-top: rem(4);

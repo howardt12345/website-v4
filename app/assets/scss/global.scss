@@ -68,7 +68,7 @@ html {
 
 ::selection {
   background: $translucent-accent;
-  color: $accent;
+  color: $accent-text;
 }
 
 ::-webkit-scrollbar {
@@ -106,7 +106,7 @@ html {
   }
   &:hover,
   &:focus-visible {
-    color: $accent;
+    color: $accent-text;
   }
 }
 
@@ -165,7 +165,7 @@ html {
 
   a {
     text-decoration: none;
-    color: $accent;
+    color: $accent-text;
     transition: $transition-fast;
 
     &:hover {

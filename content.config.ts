@@ -1,9 +1,4 @@
 import { defineCollection, defineContentConfig, z } from '@nuxt/content';
-import { BLOG_CATEGORIES } from './app/composables/blog';
-
-const BLOG_SUBCATEGORY_SLUGS = BLOG_CATEGORIES.flatMap((c) =>
-  c.subcategories.map((s) => s.slug),
-) as [string, ...string[]];
 
 export default defineContentConfig({
   collections: {
@@ -16,7 +11,7 @@ export default defineContentConfig({
         date: z.string(),
         readMins: z.number(),
         category: z.string(),
-        subcategory: z.enum(BLOG_SUBCATEGORY_SLUGS),
+        subcategory: z.string(),
         tags: z.array(z.string()),
         cover: z.object({
           hue: z.number(),

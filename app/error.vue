@@ -44,7 +44,7 @@ const handleClearError = () => clearError({ redirect: '/' });
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: $accent;
+    color: $accent-text;
     margin: 0;
   }
 

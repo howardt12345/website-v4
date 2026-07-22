@@ -126,7 +126,7 @@ const selected = computed<string[]>(() => props.selectedSkills ?? []);
   }
 
   &__title-org {
-    color: $accent;
+    color: $accent-text;
     font-size: rem(14);
     font-weight: 400;
   }

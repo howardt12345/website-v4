@@ -9,7 +9,7 @@ useSeoMeta({
   description: 'Field notes on engineering, hardware and photography. Mostly things I wanted to write down before I forgot them.',
 });
 
-const { data: posts } = await useAsyncData('blog-posts', () =>
+const { data: posts, error, refresh } = await useAsyncData('blog-posts', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 );
 
@@ -34,7 +34,6 @@ const filterCat = computed<string>({
         ...route.query,
         category: value === 'all' ? undefined : value,
         sub: undefined,
-        tags: undefined,
       },
     });
   },
@@ -202,7 +201,8 @@ const clearFilters = () => {
       />
 
       <div class="blog-grid">
-        <template v-if="displayedPosts.length">
+        <CommonRetryPanel v-if="error" @retry="refresh" />
+        <template v-else-if="displayedPosts.length">
           <BlogPostCard v-for="post in displayedPosts" :key="post.path" :post="post" />
         </template>
         <div v-else class="blog-empty">

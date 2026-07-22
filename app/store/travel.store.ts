@@ -283,7 +283,6 @@ export const useTravelStore = defineStore('travel', () => {
   const activeCityPlaces = computed<CityViewPlace[]>(() => {
     if (view.value !== 'country' || !activeCityFocus.value) return [];
     const { country: iso3, city: cityId } = activeCityFocus.value;
-    const hue = countryByIso3(iso3)?.hue ?? 200;
     const result: CityViewPlace[] = [];
     for (const trip of trips.value) {
       const slug = tripSlug(trip);
@@ -295,7 +294,7 @@ export const useTravelStore = defineStore('travel', () => {
           if ((place.city ?? day.city) !== cityId) continue;
           const placePhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
           const photos = placePhotos.filter((p) => !p.date || p.date === day.date);
-          result.push({ place, tripTitle: trip.title, dayDate: day.date, hue, photos });
+          result.push({ place, tripTitle: trip.title, dayDate: day.date, photos });
         }
       }
     }

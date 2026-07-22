@@ -136,7 +136,7 @@ function openLightbox(index: number) {
   }
 
   &__link {
-    color: $accent;
+    color: $accent-text;
     letter-spacing: normal;
     text-transform: none;
     font-size: rem(13);
