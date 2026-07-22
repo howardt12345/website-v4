@@ -18,8 +18,16 @@ const allPosts = computed<BlogPost[]>(() => (posts.value ?? []) as unknown as Bl
 const route = useRoute();
 const router = useRouter();
 
+// Prerendered pages carry no query, so gate the URL reads until after hydration to keep server and client markup identical.
+const mounted = ref(false);
+const searchText = ref('');
+onMounted(() => {
+  mounted.value = true;
+  searchText.value = (route.query.q as string) ?? '';
+});
+
 const filterCat = computed<string>({
-  get: () => (route.query.category as string) ?? 'all',
+  get: () => (mounted.value ? ((route.query.category as string) ?? 'all') : 'all'),
   set: (value) => {
     router.replace({
       query: {
@@ -32,13 +40,14 @@ const filterCat = computed<string>({
   },
 });
 const filterSub = computed<string | null>({
-  get: () => (route.query.sub as string) ?? null,
+  get: () => (mounted.value ? ((route.query.sub as string) ?? null) : null),
   set: (value) => {
     router.replace({ query: { ...route.query, sub: value ?? undefined } });
   },
 });
 const filterTags = computed<string[]>({
   get: () => {
+    if (!mounted.value) return [];
     const raw = route.query.tags;
     return typeof raw === 'string' && raw ? raw.split(',') : [];
   },
@@ -48,7 +57,6 @@ const filterTags = computed<string[]>({
     });
   },
 });
-const searchText = ref((route.query.q as string) ?? '');
 const commitSearch = useDebounceFn((value: string) => {
   router.replace({ query: { ...route.query, q: value || undefined } });
 }, 300);
@@ -66,7 +74,7 @@ watch(
   },
 );
 const filterArchive = computed<string | null>({
-  get: () => (route.query.archive as string) ?? null,
+  get: () => (mounted.value ? ((route.query.archive as string) ?? null) : null),
   set: (value) => {
     router.replace({ query: { ...route.query, archive: value ?? undefined } });
   },
