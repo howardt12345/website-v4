@@ -9,7 +9,7 @@ export const SUPPORTED_LANGUAGES: Record<string, { nativeName: string }> = {
     nativeName: 'English',
   },
   zh: {
-    nativeName: '國語 (臺灣）',
+    nativeName: '國語（臺灣）',
   },
 };
 
