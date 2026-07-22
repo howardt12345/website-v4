@@ -101,6 +101,7 @@ const countryGroups = computed<CountryGroup[]>(() => {
           v-model="filterQuery"
           density="compact"
           variant="outlined"
+          color="on-surface"
           prepend-inner-icon="fas fa-magnifying-glass"
           :placeholder="$t('Filter cities')"
           clearable
@@ -219,11 +220,14 @@ const countryGroups = computed<CountryGroup[]>(() => {
   }
 
   &__search {
-    max-width: rem(240);
+    flex: 1 1 rem(280);
+    min-width: rem(200);
+    max-width: rem(320);
+    font-size: rem(16);
   }
 
   &__sort {
-    max-width: rem(160);
+    width: rem(200);
   }
 
   &__empty {
