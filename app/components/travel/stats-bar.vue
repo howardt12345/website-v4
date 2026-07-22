@@ -132,6 +132,10 @@ const stats = computed((): StatItem[] => {
     letter-spacing: 0.12em;
     color: $text-secondary;
     opacity: 0.7;
+
+    @media (max-width: 600px) {
+      font-size: rem(12);
+    }
   }
 }
 </style>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useNavLinks, type NavLink } from '~/composables/links';
-import { useActiveSection } from '~/composables/useActiveSection';
+import { useNavLinks, useLinkActive } from '~/composables/links';
+import { useReducedMotion } from '~/composables/useReducedMotion';
 
-const HASH_SECTION_PREFIX = '/#';
 const ANIMATE_ENTER_DURATION_MS = 500;
 const LINK_STAGGER_MS = 150;
 
@@ -14,19 +13,8 @@ interface Props {
 const { animate = false, delay = 0, iconOnly = false } = defineProps<Props>();
 
 const links = useNavLinks();
-const route = useRoute();
-
-const isHashSectionLink = (path: string) => path.startsWith(HASH_SECTION_PREFIX);
-const sectionIdFromPath = (path: string) => path.slice(HASH_SECTION_PREFIX.length);
-
-const { activeSection } = useActiveSection(['about', 'experience', 'projects', 'contact']);
-
-const isLinkActive = (link: NavLink): boolean => {
-  if (isHashSectionLink(link.path)) {
-    return route.path === '/' && activeSection.value === sectionIdFromPath(link.path);
-  }
-  return route.path.startsWith(link.path);
-};
+const { isLinkActive } = useLinkActive();
+const prefersReducedMotion = useReducedMotion();
 </script>
 
 <template>
@@ -40,12 +28,12 @@ const isLinkActive = (link: NavLink): boolean => {
         opacity: 1,
         y: 0,
         transition: {
-          duration: animate ? ANIMATE_ENTER_DURATION_MS : 0,
+          duration: animate && !prefersReducedMotion ? ANIMATE_ENTER_DURATION_MS : 0,
           type: 'keyframes',
           ease: 'easeOut',
         },
       }"
-      :delay="index * LINK_STAGGER_MS + delay"
+      :delay="prefersReducedMotion ? 0 : index * LINK_STAGGER_MS + delay"
     >
       <v-btn
         v-if="!iconOnly"
@@ -67,6 +55,7 @@ const isLinkActive = (link: NavLink): boolean => {
         active-class=""
         exact-active-class=""
         :icon="`fas fa-${link.icon}`"
+        :aria-label="$t(link.name)"
         :class="{ 'nav-link-active': isLinkActive(link) }"
       />
     </div>
@@ -104,7 +93,7 @@ const isLinkActive = (link: NavLink): boolean => {
   }
 
   &.nav-link-active {
-    color: $accent;
+    color: $accent-text;
   }
 }
 </style>

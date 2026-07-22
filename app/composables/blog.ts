@@ -8,50 +8,49 @@ export interface BlogCategory {
   subcategories: Array<{ slug: string; name: string }>;
 }
 
-export const BLOG_CATEGORIES: BlogCategory[] = [
-  {
-    slug: 'engineering',
-    name: 'Engineering',
-    subcategories: [
-      { slug: 'frontend', name: 'Frontend' },
-      { slug: 'backend', name: 'Backend' },
-      { slug: 'devops', name: 'DevOps' },
-    ],
-  },
-  {
-    slug: 'hardware',
-    name: 'Hardware',
-    subcategories: [
-      { slug: 'keyboards', name: 'Keyboards' },
-      { slug: 'pcb', name: 'PCB Design' },
-      { slug: 'firmware', name: 'Firmware' },
-    ],
-  },
-  {
-    slug: 'photography',
-    name: 'Photography',
-    subcategories: [
-      { slug: 'technique', name: 'Technique' },
-      { slug: 'gear', name: 'Gear' },
-      { slug: 'travel', name: 'Travel' },
-    ],
-  },
-  {
-    slug: 'notes',
-    name: 'Notes',
-    subcategories: [
-      { slug: 'reading', name: 'Reading' },
-      { slug: 'process', name: 'Process' },
-    ],
-  },
-];
+const DISPLAY_NAMES: Record<string, string> = {
+  engineering: 'Engineering',
+  frontend: 'Frontend',
+  backend: 'Backend',
+  devops: 'DevOps',
+  hardware: 'Hardware',
+  keyboards: 'Keyboards',
+  pcb: 'PCB Design',
+  firmware: 'Firmware',
+  photography: 'Photography',
+  technique: 'Technique',
+  gear: 'Gear',
+  travel: 'Travel',
+  notes: 'Notes',
+  reading: 'Reading',
+  process: 'Process',
+};
 
-export const catName = (slug: string): string =>
-  BLOG_CATEGORIES.find((c) => c.slug === slug)?.name ?? slug;
+const titleCase = (slug: string): string =>
+  slug.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-export const subName = (catSlug: string, subSlug: string): string => {
-  const cat = BLOG_CATEGORIES.find((c) => c.slug === catSlug);
-  return cat?.subcategories.find((s) => s.slug === subSlug)?.name ?? subSlug;
+export const catName = (slug: string): string => DISPLAY_NAMES[slug] ?? titleCase(slug);
+
+export const subName = (_catSlug: string, subSlug: string): string =>
+  DISPLAY_NAMES[subSlug] ?? titleCase(subSlug);
+
+export const blogTaxonomy = (posts: BlogPost[]): BlogCategory[] => {
+  const subsByCat = new Map<string, Set<string>>();
+  for (const post of posts) {
+    if (!post.category) continue;
+    const subs = subsByCat.get(post.category) ?? new Set<string>();
+    if (post.subcategory) subs.add(post.subcategory);
+    subsByCat.set(post.category, subs);
+  }
+  return [...subsByCat.entries()]
+    .map(([slug, subs]) => ({
+      slug,
+      name: catName(slug),
+      subcategories: [...subs]
+        .map((s) => ({ slug: s, name: subName(slug, s) }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 };
 
 export const formatPostDate = (iso: string, locale: string): string =>

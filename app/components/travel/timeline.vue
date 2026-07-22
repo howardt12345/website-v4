@@ -11,6 +11,7 @@ const allLightboxPhotos = computed<LightboxEntry[]>(() =>
   props.entries.flatMap((entry) =>
     entry.photos.map((photo) => ({
       src: photo.url,
+      large: photo.large,
       alt: photo.alt,
       label: photo.label,
       title: photo.title,
@@ -180,7 +181,7 @@ function openLightbox(entryIdx: number, photoIdx: number) {
     transition: $transition-fast;
 
     &:hover .timeline-entry__title {
-      color: $accent;
+      color: $accent-text;
     }
   }
 }

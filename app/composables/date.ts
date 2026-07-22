@@ -18,10 +18,11 @@ export const formatMonth = (date: Date) => {
 };
 
 export const getDateRangeLabel = (startDate: string, endDate?: string): string => {
+  const { t } = usei18n();
   const start = new Date(startDate);
   const startLabel = formatDate(start);
 
-  if (!endDate) return `${startLabel} - Present`;
+  if (!endDate) return `${startLabel} - ${t('Present')}`;
 
   const end = new Date(endDate);
   const isSameMonthYear =

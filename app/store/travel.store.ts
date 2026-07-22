@@ -91,18 +91,12 @@ export const useTravelStore = defineStore('travel', () => {
     allPhotos.value = photos;
   };
 
-  const { data: rawCountries, pending: countriesPending } = useAsyncData(
-    'travel-countries',
-    () => queryCollection('travelCountries').all(),
-  );
-  const { data: rawTrips, pending: tripsPending } = useAsyncData(
-    'travel-trips',
-    () => queryCollection('travelTrips').order('start', 'DESC').all(),
-  );
-  const { data: rawDays, pending: daysPending } = useAsyncData(
-    'travel-days',
-    () => queryCollection('travelDays').order('date', 'ASC').all(),
-  );
+  const countriesAsync = useAsyncData('travel-countries', () => queryCollection('travelCountries').all());
+  const tripsAsync = useAsyncData('travel-trips', () => queryCollection('travelTrips').order('start', 'DESC').all());
+  const daysAsync = useAsyncData('travel-days', () => queryCollection('travelDays').order('date', 'ASC').all());
+  const { data: rawCountries, error: countriesError } = countriesAsync;
+  const { data: rawTrips, error: tripsError } = tripsAsync;
+  const { data: rawDays, error: daysError } = daysAsync;
 
   const countries = computed<TravelCountry[]>(
     () => (rawCountries.value ?? []) as unknown as TravelCountry[],
@@ -114,23 +108,13 @@ export const useTravelStore = defineStore('travel', () => {
     () => (rawDays.value ?? []) as unknown as TravelDay[],
   );
 
-  const hydrate = (): Promise<void> => {
-    if (!countriesPending.value && !tripsPending.value && !daysPending.value) {
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => {
-      const stop = watch(
-        [countriesPending, tripsPending, daysPending],
-        ([cp, tp, dp]) => {
-          if (!cp && !tp && !dp) {
-            stop();
-            resolve();
-          }
-        },
-        { immediate: true },
-      );
-    });
-  };
+  // Await the requests directly. A `watch` on `pending` never fires during SSR
+  // (no watcher flush), which would hang the /travel prerender forever.
+  const hydrate = (): Promise<unknown> => Promise.all([countriesAsync, tripsAsync, daysAsync]);
+
+  const loadError = computed(() => countriesError.value ?? tripsError.value ?? daysError.value ?? null);
+  const reload = (): Promise<unknown> =>
+    Promise.all([countriesAsync.refresh(), tripsAsync.refresh(), daysAsync.refresh()]);
 
   const iso2ToIso3 = computed<Record<string, string>>(() =>
     Object.fromEntries(countries.value.map((c) => [c.iso2, c.iso3])),
@@ -213,7 +197,7 @@ export const useTravelStore = defineStore('travel', () => {
   const navCity = (iso3: string, cityId: string): void => { router.push({ hash: `#country/${iso3}/city/${cityId}` }); };
   const navTripDayCity = (dayDate: string, country: string, cityId: string): void => {
     if (!focusTripId.value) return;
-    router.replace({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
+    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
   };
   const navTrip = (slug: string): void => {
     const countryParam = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
@@ -225,11 +209,7 @@ export const useTravelStore = defineStore('travel', () => {
     const hash = idx !== null && tripDays.value[idx]
       ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}${countryPart}`
       : `#trip/${focusTripId.value}${countryPart}`;
-    if (view.value === 'trip') {
-      router.replace({ hash });
-    } else {
-      router.push({ hash });
-    }
+    router.push({ hash });
   };
   const pickStop = (i: number): void => {
     if (!focusTripId.value || !activeDay.value) return;
@@ -303,7 +283,6 @@ export const useTravelStore = defineStore('travel', () => {
   const activeCityPlaces = computed<CityViewPlace[]>(() => {
     if (view.value !== 'country' || !activeCityFocus.value) return [];
     const { country: iso3, city: cityId } = activeCityFocus.value;
-    const hue = countryByIso3(iso3)?.hue ?? 200;
     const result: CityViewPlace[] = [];
     for (const trip of trips.value) {
       const slug = tripSlug(trip);
@@ -315,7 +294,7 @@ export const useTravelStore = defineStore('travel', () => {
           if ((place.city ?? day.city) !== cityId) continue;
           const placePhotos = place.id ? (photosForTrip[place.id] ?? []) : [];
           const photos = placePhotos.filter((p) => !p.date || p.date === day.date);
-          result.push({ place, tripTitle: trip.title, dayDate: day.date, hue, photos });
+          result.push({ place, tripTitle: trip.title, dayDate: day.date, photos });
         }
       }
     }
@@ -588,5 +567,7 @@ export const useTravelStore = defineStore('travel', () => {
     visitedCitySummaries,
     citiesOverviewProps,
     hydrate,
+    loadError,
+    reload,
   };
 });

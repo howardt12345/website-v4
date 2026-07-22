@@ -20,6 +20,7 @@ const lightboxIndex = ref(0);
 const lightboxPhotos = computed<LightboxEntry[]>(() =>
   props.photos.map((photo) => ({
     src: photo.url,
+    large: photo.largeUrl,
     alt: photo.alt ?? photo.title ?? props.place.name,
     title: photo.title,
     caption: photo.caption,
@@ -135,7 +136,7 @@ function openLightbox(index: number) {
   }
 
   &__link {
-    color: $accent;
+    color: $accent-text;
     letter-spacing: normal;
     text-transform: none;
     font-size: rem(13);

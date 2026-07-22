@@ -10,7 +10,7 @@ defineProps<Props>();
 <template>
   <div class="home-title">
     <div class="title-container">
-      <h2
+      <p
         :class="{
           overline: true,
           'overline--tablet': isTablet,
@@ -18,7 +18,7 @@ defineProps<Props>();
         }"
       >
         {{ $t("Hi, I'm") }}
-      </h2>
+      </p>
       <h1
         :class="{
           title: true,
@@ -31,7 +31,7 @@ defineProps<Props>();
     </div>
     <hr class="line" >
     <div class="subtitle-container">
-      <h2
+      <p
         :class="{
           subtitle: true,
           'subtitle--tablet': isTablet,
@@ -39,8 +39,8 @@ defineProps<Props>();
         }"
       >
         {{ $t('Freelance Photographer') }}
-      </h2>
-      <h2
+      </p>
+      <p
         :class="{
           subtitle: true,
           'subtitle--tablet': isTablet,
@@ -48,7 +48,7 @@ defineProps<Props>();
         }"
       >
         {{ $t('Full-Stack Developer') }}
-      </h2>
+      </p>
     </div>
   </div>
 </template>
@@ -178,5 +178,15 @@ defineProps<Props>();
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-container,
+  .subtitle-container,
+  .line {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 </style>

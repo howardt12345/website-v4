@@ -36,6 +36,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
       dividerBefore: formatDayLabel(item.day.date, currentLanguage.value),
       photos: item.photos.map((e) => ({
         url: e.photo.url,
+        large: e.photo.largeUrl,
         alt: e.photo.alt ?? e.photo.title ?? e.placeName,
         label: e.placeName,
         title: e.photo.title,
@@ -56,7 +57,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
       <div class="trip-overview__eyebrow">{{ $t('The whole trip') }}</div>
       <h2 class="trip-overview__title">{{ $t('All photos') }}</h2>
     </div>
-    <TravelTimeline :entries="timelineEntries" />
+    <TravelTimeline :entries="timelineEntries" :empty-text="$t('No photos for this trip yet.')" />
   </div>
 </template>
 

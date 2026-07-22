@@ -8,6 +8,7 @@ const toggleDrawer = () => (drawerOpen.value = !drawerOpen.value);
 const closeDrawer = () => (drawerOpen.value = false);
 
 const links = useNavLinks();
+const { isLinkActive } = useLinkActive();
 const route = useRoute();
 
 watch(() => route.fullPath, closeDrawer);
@@ -56,15 +57,24 @@ onUnmounted(() => heroObserver?.disconnect());
           nuxt
           :to="link.path"
           :title="$t(link.name)"
+          :active="isLinkActive(link)"
           :ripple="false"
         />
       </v-list>
     </v-navigation-drawer>
 
-    <header class="top-nav" :class="{ 'top-nav--hidden': !headerVisible }">
+    <a href="#main-content" class="skip-link">{{ $t('Skip to content') }}</a>
+
+    <header
+      class="top-nav"
+      :class="{ 'top-nav--hidden': !headerVisible }"
+      :inert="!headerVisible"
+    >
       <v-btn
         v-if="isTablet"
         :icon="drawerOpen ? 'fas fa-xmark' : 'fas fa-bars'"
+        :aria-label="$t('Toggle navigation menu')"
+        :aria-expanded="drawerOpen"
         variant="plain"
         :ripple="false"
         class="top-nav__menu-btn"
@@ -84,12 +94,32 @@ onUnmounted(() => heroObserver?.disconnect());
       <CommonThemeToggle />
     </header>
 
-    <slot />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
     <NavFooter />
   </div>
 </template>
 
 <style scoped lang="scss">
+.skip-link {
+  position: absolute;
+  top: rem(8);
+  left: rem(8);
+  z-index: 200;
+  padding: rem(8) rem(16);
+  background: $background;
+  color: $accent-text;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}
+
 .top-nav {
   position: sticky;
   top: 0;

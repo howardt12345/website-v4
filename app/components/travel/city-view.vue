@@ -11,41 +11,27 @@ const props = defineProps<{
 
 const { currentLanguage } = storeToRefs(usei18n());
 
-interface DateGroup {
-  date: string;
-  label: string;
-  entries: TravelTimelineEntry[];
-}
-
-const dateGroups = computed<DateGroup[]>(() => {
-  const groups: DateGroup[] = [];
-  let current: DateGroup | null = null;
-
-  for (const item of props.places) {
-    if (!current || current.date !== item.dayDate) {
-      current = {
-        date: item.dayDate,
-        label: formatDayLabel(item.dayDate, currentLanguage.value),
-        entries: [],
-      };
-      groups.push(current);
-    }
-    current.entries.push({
+const timelineEntries = computed<TravelTimelineEntry[]>(() => {
+  let lastDate: string | null = null;
+  return props.places.map((item) => {
+    const isNewDate = item.dayDate !== lastDate;
+    lastDate = item.dayDate;
+    return {
       key: `${item.dayDate}-${item.place.id ?? item.place.name}`,
       eyebrow: item.tripTitle,
       title: item.place.name,
+      dividerBefore: isNewDate ? formatDayLabel(item.dayDate, currentLanguage.value) : undefined,
       photos: item.photos.map((p) => ({
         url: p.url,
+        large: p.largeUrl,
         alt: p.alt ?? p.title ?? item.place.name,
         label: item.place.name,
         title: p.title,
         caption: p.caption,
         tags: p.tags,
       })),
-    });
-  }
-
-  return groups;
+    };
+  });
 });
 </script>
 
@@ -58,16 +44,10 @@ const dateGroups = computed<DateGroup[]>(() => {
       </h2>
     </div>
 
-    <template v-if="dateGroups.length">
-      <div v-for="group in dateGroups" :key="group.date" class="city-view__group">
-        <div class="city-view__date-header">
-          <span class="city-view__date-label">{{ group.label }}</span>
-        </div>
-        <TravelTimeline :entries="group.entries" />
-      </div>
-    </template>
-
-    <p v-else class="city-view__empty">{{ $t('No places recorded for this city yet.') }}</p>
+    <TravelTimeline
+      :entries="timelineEntries"
+      :empty-text="$t('No places recorded for this city yet.')"
+    />
   </div>
 </template>
 
@@ -103,43 +83,6 @@ const dateGroups = computed<DateGroup[]>(() => {
     font-weight: 400;
     color: $text-secondary;
     letter-spacing: -0.01em;
-  }
-
-  &__group + &__group {
-    margin-top: rem(32);
-  }
-
-  &__date-header {
-    display: flex;
-    align-items: center;
-    gap: rem(10);
-    margin-bottom: rem(16);
-
-    &::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: $border-color;
-    }
-  }
-
-  &__date-label {
-    font-size: rem(11);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: $text-secondary;
-    opacity: 0.65;
-    white-space: nowrap;
-  }
-
-  &__empty {
-    color: $text-secondary;
-    opacity: 0.6;
-    text-align: center;
-    padding: rem(40) 0;
-    margin: 0;
-    font-size: rem(14);
   }
 }
 </style>

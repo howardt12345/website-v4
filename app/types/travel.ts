@@ -64,12 +64,12 @@ export interface CityViewPlace {
   place: TravelPlace;
   tripTitle: string;
   dayDate: string;
-  hue: number;
   photos: PhotoItem[];
 }
 
 export interface TravelTimelinePhoto {
   url: string;
+  large?: string;
   alt?: string;
   label?: string;
   title?: string;

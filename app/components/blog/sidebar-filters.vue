@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BlogPost } from '~/composables/blog';
-import { BLOG_CATEGORIES } from '~/composables/blog';
+import { blogTaxonomy } from '~/composables/blog';
 
 interface Props {
   posts: BlogPost[];
@@ -12,13 +12,14 @@ interface Props {
 
 interface Emits {
   (e: 'update:cat', value: string): void;
-  (e: 'update:sub', value: string | null): void;
+  (e: 'update:sub' | 'update:archive', value: string | null): void;
   (e: 'update:tags', value: string[]): void;
-  (e: 'update:archive', value: string | null): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const categories = computed(() => blogTaxonomy(props.posts));
 
 const allTags = computed(() => {
   const map = new Map<string, number>();
@@ -43,7 +44,6 @@ const subCount = (catSlug: string, subSlug: string) =>
 
 const setCat = (slug: string) => {
   emit('update:cat', slug);
-  emit('update:sub', null);
 };
 
 const toggleSub = (slug: string) => {
@@ -78,7 +78,7 @@ const toggleArchive = (yr: string) => {
         <span class="blog-sidebar__count">{{ catCount('all') }}</span>
       </v-btn>
 
-      <template v-for="c in BLOG_CATEGORIES" :key="c.slug">
+      <template v-for="c in categories" :key="c.slug">
         <v-btn
           variant="text"
           :color="cat === c.slug ? 'primary' : undefined"

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useReducedMotion } from '~/composables/useReducedMotion';
+
 interface TocLink {
   id: string;
   text: string;
@@ -12,6 +14,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const prefersReducedMotion = useReducedMotion();
 const activeId = ref<string | null>(null);
 
 const flatLinks = computed(() => {
@@ -56,27 +59,25 @@ onMounted(() => {
 onUnmounted(() => observer?.disconnect());
 
 const scrollToHeading = (id: string) => {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (import.meta.client) history.pushState(null, '', `#${id}`);
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: prefersReducedMotion.value ? 'auto' : 'smooth', block: 'start' });
 };
 </script>
 
 <template>
-  <nav v-if="flatLinks.length" class="blog-toc" aria-label="On this page">
+  <nav v-if="flatLinks.length" class="blog-toc" :aria-label="$t('On this page')">
     <div class="blog-toc__label">{{ $t('On this page') }}</div>
-    <a
-      v-for="link in flatLinks"
-      :key="link.id"
-      :href="`#${link.id}`"
-      class="blog-toc__item"
-      :class="{
-        'blog-toc__item--h3': link.depth === 3,
-        'blog-toc__item--active': activeId === link.id,
-      }"
-      @click.prevent="scrollToHeading(link.id)"
-    >
-      {{ link.text }}
-    </a>
+    <BlogTocList :links="flatLinks" :active-id="activeId" @select="scrollToHeading" />
   </nav>
+
+  <details v-if="flatLinks.length" class="blog-toc-mobile">
+    <summary class="blog-toc-mobile__summary">{{ $t('On this page') }}</summary>
+    <div class="blog-toc-mobile__list">
+      <BlogTocList :links="flatLinks" :active-id="activeId" @select="scrollToHeading" />
+    </div>
+  </details>
 </template>
 
 <style scoped lang="scss">
@@ -105,31 +106,33 @@ const scrollToHeading = (id: string) => {
     opacity: 0.7;
   }
 
-  &__item {
+}
+
+.blog-toc-mobile {
+  display: none;
+  margin-bottom: rem(40);
+  border: 1px solid $border-color;
+  border-radius: rem(10);
+
+  @media (max-width: 1200px) {
+    display: block;
+  }
+
+  &__summary {
+    cursor: pointer;
+    padding: rem(12) rem(16);
+    font-size: rem(11);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
     color: $text-secondary;
-    padding: rem(4) rem(10);
-    border-left: 2px solid $border-color;
-    font-size: rem(12.5);
-    line-height: 1.4;
-    text-decoration: none;
-    transition: $transition-fast;
-    opacity: 0.75;
+    font-weight: 600;
+  }
 
-    &:hover {
-      color: $text;
-      opacity: 1;
-    }
-
-    &--h3 {
-      padding-left: rem(20);
-      font-size: rem(12);
-    }
-
-    &--active {
-      color: $accent;
-      border-left-color: $accent;
-      opacity: 1;
-    }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2);
+    padding: rem(4) rem(12) rem(12);
   }
 }
 </style>

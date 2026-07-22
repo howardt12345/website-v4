@@ -30,10 +30,21 @@ const filteredProjects = useArrayFilter(
 const showFilters = ref(false);
 const toggleFilters = () => (showFilters.value = !showFilters.value);
 const clearFilters = () => (selectedTags.value = []);
+
+const toggleTag = (tag: string) => {
+  selectedTags.value = selectedTags.value.includes(tag)
+    ? selectedTags.value.filter((t) => t !== tag)
+    : [...selectedTags.value, tag];
+};
+
+const applyTagFilter = (tag: string) => {
+  showFilters.value = true;
+  toggleTag(tag);
+};
 </script>
 
 <template>
-  <h1 class="section-title">{{ $t('Projects') }}</h1>
+  <h2 class="section-title">{{ $t('Projects') }}</h2>
 
   <div class="filter__buttons">
     <v-btn
@@ -59,7 +70,11 @@ const clearFilters = () => (selectedTags.value = []);
         class="filter__chips"
         :tags="uniqueTags"
       />
-      <ProjectsTable :projects="filteredProjects" :selected-tags="selectedTags" />
+      <ProjectsTable
+        :projects="filteredProjects"
+        :selected-tags="selectedTags"
+        @toggle-tag="toggleTag"
+      />
     </div>
   </Transition>
   <Transition name="a-project-featured" appear>
@@ -67,8 +82,9 @@ const clearFilters = () => (selectedTags.value = []);
       <ProjectsFeatured
         v-if="featuredProjects.length > 0"
         :projects="featuredProjects"
+        @toggle-tag="applyTagFilter"
       />
-      <ProjectsOther :projects="otherProjects" />
+      <ProjectsOther :projects="otherProjects" @toggle-tag="applyTagFilter" />
     </div>
   </Transition>
 </template>

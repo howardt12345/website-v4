@@ -9,7 +9,7 @@ definePageMeta({ layout: 'default' });
 
 const travelStore = useTravelStore();
 
-const { allPhotos } = usePhotoItems();
+const { allPhotos, error: photosError, refresh: refreshPhotos } = usePhotoItems();
 watchEffect(() => travelStore.setPhotos(allPhotos.value));
 
 await travelStore.hydrate();
@@ -27,9 +27,15 @@ const {
   tripOverviewProps,
   cityViewProps,
   citiesOverviewProps,
+  loadError,
 } = storeToRefs(travelStore);
 
-const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3 } = travelStore;
+const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3, reload } = travelStore;
+
+const retryLoad = () => {
+  reload();
+  refreshPhotos();
+};
 
 const handleCityClick = (loc: { country: string; city: string }) => {
   if (view.value === 'trip' && activeDay.value) {
@@ -66,12 +72,18 @@ const pageImage = computed<string | undefined>(() => {
   return undefined;
 });
 
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+
 useSeoMeta({
   title: pageTitle,
   description: pageDescription,
   ogTitle: pageTitle,
   ogDescription: pageDescription,
-  ogImage: () => pageImage.value,
+  ogType: 'website',
+  ogImage: () => {
+    if (!siteUrl) return undefined;
+    return pageImage.value ? `${siteUrl}${pageImage.value}` : `${siteUrl}/images/og-default.jpg`;
+  },
 });
 
 const tripCountryPairs = computed(() =>
@@ -79,6 +91,11 @@ const tripCountryPairs = computed(() =>
 );
 
 const { isMobile, isNarrow } = useMediaQueries();
+
+// Prerendered without a viewport, so defer the mobile swap until after hydration to keep SSR and first client render identical.
+const hydrated = ref(false);
+onMounted(() => { hydrated.value = true; });
+const mobileLayout = computed(() => hydrated.value && isMobile.value);
 
 const railCollapsed = ref(false);
 watch(isNarrow, (narrow) => {
@@ -138,10 +155,17 @@ watch(
       {{ t('The map is interactive with a mouse; all destinations are also reachable from the timeline and city lists below.') }}
     </p>
 
-    <div class="travel-stage" :class="stageClass">
+    <CommonRetryPanel
+      v-if="loadError || photosError"
+      class="travel-page__error"
+      :message="$t('Could not load travel data.')"
+      @retry="retryLoad"
+    />
+
+    <div v-if="!loadError && !photosError" class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
         <ClientOnly>
-          <TravelMap
+          <LazyTravelMap
             v-bind="mapProps"
             @country-click="navCountry"
             @place-click="pickStop"
@@ -154,10 +178,10 @@ watch(
           </template>
         </ClientOnly>
 
-        <div class="travel-stage__overlay">
+        <div v-if="!mobileLayout" class="travel-stage__overlay">
           <TravelStatsBar v-bind="statsBarProps" />
           <v-btn
-            v-if="!isMobile && view === 'trip' && focusTrip?.blogSlug"
+            v-if="view === 'trip' && focusTrip?.blogSlug"
             :to="`/blog/${focusTrip.blogSlug}`"
             variant="text"
             size="small"
@@ -179,8 +203,10 @@ watch(
         </v-btn-toggle>
       </div>
 
+      <TravelStatsBar v-if="mobileLayout" v-bind="statsBarProps" class="travel-stage__stats-mobile" />
+
       <v-btn
-        v-if="isMobile && view === 'trip' && focusTrip?.blogSlug"
+        v-if="mobileLayout && view === 'trip' && focusTrip?.blogSlug"
         :to="`/blog/${focusTrip.blogSlug}`"
         variant="text"
         size="small"
@@ -197,7 +223,7 @@ watch(
       />
     </div>
 
-    <div ref="contentRef" class="travel-page__content" tabindex="-1">
+    <div v-if="!loadError && !photosError" ref="contentRef" class="travel-page__content" tabindex="-1">
       <TravelDayView
         v-if="dayViewProps"
         v-bind="dayViewProps"
@@ -259,7 +285,7 @@ watch(
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: $accent;
+    color: $accent-text;
     margin-top: rem(10);
     margin-bottom: rem(10);
 
@@ -283,6 +309,10 @@ watch(
 
   &__content {
     outline: none;
+  }
+
+  &__error {
+    margin-bottom: rem(32);
   }
 }
 
@@ -346,19 +376,10 @@ watch(
   > * {
     pointer-events: auto;
   }
+}
 
-  @media (max-width: 600px) {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-  }
+.travel-stage__stats-mobile {
+  padding: rem(4) rem(2);
 }
 
 .travel-stage__controls {
@@ -374,7 +395,7 @@ watch(
 }
 
 .travel-stage__blog-link {
-  color: $accent;
+  color: $accent-text;
   letter-spacing: normal;
   text-transform: none;
   font-size: rem(13);

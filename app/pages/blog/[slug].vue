@@ -24,18 +24,38 @@ const allPosts = computed(() => allPostsData.value ?? []);
 
 const relatedPosts = computed(() => getRelatedPosts(post.value, allPosts.value));
 
+const currentIndex = computed(() =>
+  allPosts.value.findIndex((p) => p.path === `/blog/${slug}`),
+);
+const olderPost = computed(() =>
+  currentIndex.value === -1 ? undefined : allPosts.value[currentIndex.value + 1],
+);
+const newerPost = computed(() =>
+  currentIndex.value <= 0 ? undefined : allPosts.value[currentIndex.value - 1],
+);
+
 const tocLinks = computed(() => postData.value?.body.toc?.links ?? []);
+
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+const ogImage = computed(() => {
+  const img = post.value.image;
+  if (img) return img.startsWith('http') ? img : siteUrl ? `${siteUrl}${img}` : undefined;
+  return siteUrl ? `${siteUrl}/images/og-default.jpg` : undefined;
+});
 
 useSeoMeta({
   title: computed(() => `${post.value.title} · Howard Tseng`),
   description: computed(() => post.value.summary),
+  ogTitle: computed(() => post.value.title),
+  ogDescription: computed(() => post.value.summary),
+  ogType: 'article',
+  ogImage,
 });
 </script>
 
 <template>
   <div>
     <BlogReadingProgress />
-    <BlogToc :links="tocLinks" />
 
     <article class="blog-article">
       <v-btn
@@ -72,10 +92,18 @@ useSeoMeta({
         class="blog-article__cover"
       />
 
+      <BlogToc :links="tocLinks" />
+
       <ContentRenderer class="blog-article__body" :value="post" />
 
       <div class="blog-article__tags">
-        <v-chip v-for="tag in post.tags" :key="tag" size="small" variant="tonal">{{ tag }}</v-chip>
+        <v-chip
+          v-for="tag in post.tags"
+          :key="tag"
+          :to="{ path: '/blog', query: { tags: tag } }"
+          size="small"
+          variant="tonal"
+        >{{ tag }}</v-chip>
       </div>
     </article>
 
@@ -85,6 +113,29 @@ useSeoMeta({
         <BlogPostCard v-for="p in relatedPosts" :key="p.path" :post="p" />
       </div>
     </section>
+
+    <nav
+      v-if="olderPost || newerPost"
+      class="blog-pagenav content-container"
+      :aria-label="$t('Post navigation')"
+    >
+      <NuxtLink
+        v-if="olderPost"
+        :to="olderPost.path"
+        class="blog-pagenav__cell blog-pagenav__cell--older"
+      >
+        <span class="blog-pagenav__label">{{ $t('Older') }}</span>
+        <span class="blog-pagenav__title">{{ olderPost.title }}</span>
+      </NuxtLink>
+      <NuxtLink
+        v-if="newerPost"
+        :to="newerPost.path"
+        class="blog-pagenav__cell blog-pagenav__cell--newer"
+      >
+        <span class="blog-pagenav__label">{{ $t('Newer') }}</span>
+        <span class="blog-pagenav__title">{{ newerPost.title }}</span>
+      </NuxtLink>
+    </nav>
   </div>
 </template>
 
@@ -111,7 +162,7 @@ useSeoMeta({
     display: flex;
     align-items: center;
     gap: rem(10);
-    color: $accent;
+    color: $accent-text;
     font-size: rem(11);
     font-weight: 600;
     text-transform: uppercase;
@@ -230,7 +281,7 @@ useSeoMeta({
     }
 
     :deep(a) {
-      color: $accent;
+      color: $accent-text;
       text-decoration: underline;
       text-underline-offset: 3px;
 
@@ -272,6 +323,62 @@ useSeoMeta({
 
     @media (max-width: 960px) {
       grid-template-columns: 1fr;
+    }
+  }
+}
+
+.blog-pagenav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: rem(16);
+  padding-top: rem(40);
+  padding-bottom: rem(100);
+  border-top: 1px solid $border-color;
+
+  &__cell {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8);
+    padding: rem(20) rem(24);
+    border: 1px solid $border-color;
+    border-radius: rem(14);
+    text-decoration: none;
+    transition: $transition-fast;
+
+    &:hover {
+      border-color: $accent;
+    }
+
+    &--newer {
+      grid-column: 2;
+      text-align: right;
+      align-items: flex-end;
+    }
+  }
+
+  &__label {
+    font-size: rem(11);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: $text-secondary;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  &__title {
+    font-size: rem(16);
+    line-height: 1.4;
+    color: $text;
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+
+    &__cell--newer {
+      grid-column: 1;
+      text-align: left;
+      align-items: flex-start;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="section-title">{{ $t('Contact') }}</h1>
+  <h2 class="section-title">{{ $t('Contact') }}</h2>
   <v-btn
     href="mailto:me@howardt12345.com"
     target="_blank"

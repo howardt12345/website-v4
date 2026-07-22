@@ -56,7 +56,7 @@ const { currentLanguage } = storeToRefs(usei18n());
   transition: $transition;
 
   &:hover {
-    border-color: rgb(var(--v-border-opacity));
+    border-color: $accent;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 32px 72px rgba(0, 0, 0, 0.38);
     text-decoration: none;
     color: inherit;
@@ -92,7 +92,7 @@ const { currentLanguage } = storeToRefs(usei18n());
     font-size: rem(11);
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: $accent;
+    color: $accent-text;
     font-weight: 600;
 
     &::before {
@@ -154,7 +154,7 @@ const { currentLanguage } = storeToRefs(usei18n());
   }
 
   &__link {
-    color: $accent;
+    color: $accent-text;
     font-size: rem(14);
     font-weight: 500;
     margin-top: rem(4);

@@ -1,5 +1,6 @@
 const ACCENT = '#2196F3';
 const ACCENT_dark = '#64ffda';
+const ACCENT_text = '#1565C0';
 const DARK_BG = '#EBEBEB';
 const DARK_BG_dark = '#1E1E1E';
 const BG = '#FFFFFF';
@@ -15,6 +16,7 @@ export const theme_light = {
     'surface-bright': '#F8F8F8',
     primary: ACCENT,
     'on-primary': '#FFFFFF',
+    'accent-text': ACCENT_text,
     'text-primary': '#0A0A0A',
     'text-secondary': '#6B7280',
     'text-body': '#1A1A1A',
@@ -42,6 +44,7 @@ export const theme_dark = {
     background_secondary: DARK_BG_dark,
     primary: ACCENT_dark,
     'on-primary': '#003D30',
+    'accent-text': ACCENT_dark,
     'text-primary': '#F0F0F0',
     'text-secondary': '#9CA3AF',
     'text-body': '#E0E0E0',

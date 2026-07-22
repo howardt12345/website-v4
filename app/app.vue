@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { i18nextPromise } from '~/plugins/03.i18n';
 import { usei18n } from '~/store/i18n.store';
 import { useTheme } from '~/store/theme.store';
 
+const siteUrl = useRuntimeConfig().public.siteUrl as string;
+
 useHead({
-  link: [{ rel: 'icon', type: 'image/png', href: 'favicon.ico' }],
+  link: [{ rel: 'icon', href: '/favicon.ico' }],
 });
 
 useSeoMeta({
@@ -14,12 +15,14 @@ useSeoMeta({
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
   ogDescription:
     'Howard Tseng is a freelance photographer specializing in event and portrait photography, as well as a full-stack developer proficient in Vue, React, and Angular based in Ottawa, Ontario, Canada.',
+  ogType: 'website',
+  ogImage: siteUrl ? `${siteUrl}/images/og-default.jpg` : undefined,
   twitterCard: 'summary_large_image',
 });
 
-const { isDark } = useTheme();
-
-await i18nextPromise;
+const themeStore = useTheme();
+const { isDark } = storeToRefs(themeStore);
+onMounted(themeStore.init);
 
 usei18n();
 
@@ -28,6 +31,7 @@ useImageProtection();
 
 <template>
   <v-app>
+    <NuxtLoadingIndicator />
     <Suspense>
       <NuxtLayout>
         <NuxtPage />
@@ -39,7 +43,7 @@ useImageProtection();
             'loading-container--dark': isDark,
           }"
         >
-          <h1>Loading...</h1>
+          <v-progress-circular indeterminate color="primary" size="48" />
         </div>
       </template>
     </Suspense>
@@ -47,11 +51,6 @@ useImageProtection();
 </template>
 
 <style lang="scss">
-@font-face {
-  font-family: 'Poppins';
-  src: url('assets/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
-}
-
 .loading-container {
   display: flex;
   justify-content: center;

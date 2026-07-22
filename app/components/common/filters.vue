@@ -14,28 +14,42 @@ const emits = defineEmits<Emits>();
 
 const selectedTags = useVModel(props, 'selectedTags', emits);
 
-const showTagsFilter = ref<boolean>(false);
-const toggleTagsFilter = () => {
-  showTagsFilter.value = !showTagsFilter.value;
-  if (!showTagsFilter.value) {
-    selectedTags.value = [];
-  }
-};
+const showTagsFilter = ref((props.selectedTags?.length ?? 0) > 0);
+watch(
+  () => props.selectedTags?.length ?? 0,
+  (count, previous) => {
+    if (count > 0 && !previous) showTagsFilter.value = true;
+  },
+);
+
+const toggleTagsFilter = () => (showTagsFilter.value = !showTagsFilter.value);
+const clearTags = () => (selectedTags.value = []);
 </script>
 
 <template>
-  <div>
-    <v-btn
-      class="filters__button"
-      :text="
-        !showTagsFilter
-          ? buttonText ?? $t('Filter by Tags')
-          : $t('Close Filters')
-      "
-      :prepend-icon="!showTagsFilter ? 'fas fa-filter' : 'fas fa-times'"
-      size="small"
-      @click="toggleTagsFilter"
-    />
+  <div class="filters">
+    <div class="filters__actions">
+      <v-btn
+        class="filters__button"
+        :text="
+          showTagsFilter
+            ? $t('Close Filters')
+            : (buttonText ?? $t('Filter by Tags')) +
+              (selectedTags.length ? ` (${selectedTags.length})` : '')
+        "
+        :prepend-icon="showTagsFilter ? 'fas fa-times' : 'fas fa-filter'"
+        size="small"
+        @click="toggleTagsFilter"
+      />
+      <v-btn
+        v-if="selectedTags.length"
+        class="filters__clear"
+        :text="$t('Clear')"
+        prepend-icon="fas fa-xmark"
+        size="small"
+        @click="clearTags"
+      />
+    </div>
     <CommonFilterChips
       v-if="showTagsFilter"
       v-model:selected-tags="selectedTags"
@@ -46,6 +60,12 @@ const toggleTagsFilter = () => {
 
 <style scoped lang="scss">
 .filters {
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(8);
+  }
+
   &__button {
     margin-bottom: rem(4);
   }

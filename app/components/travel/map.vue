@@ -69,6 +69,9 @@ const ANIM_DURATION_MS = 600;
 const ZOOM_ANIM_DURATION_MS = 500;
 const HALO_ANIM_DURATION_MS = 1600;
 const HALO_STAGGER_DELAY_MS = 800;
+const TAP_ACTIVATE_TIMEOUT_MS = 3000;
+const CHART_READY_TIMEOUT_MS = 15000;
+const WHEEL_HINT_MS = 1500;
 const GRATICULE_STEP_DEG = 20;
 const GLOBE_ZOOM_PATH_MIN = 1.5;
 const GLOBE_ZOOM_PATH_MAX = 64;
@@ -111,6 +114,9 @@ function isIdContext(v: unknown): v is { id: string } {
 
 const mapEl = ref<HTMLElement | null>(null);
 const chartReady = ref(false);
+const mapError = ref(false);
+const wheelHint = ref(false);
+const zoomModifierKey = import.meta.client && /Mac|iP(hone|ad|od)/.test(navigator.platform) ? '⌘' : 'Ctrl';
 let root: am5.Root | null = null;
 let chart: am5map.MapChart | null = null;
 let currentWorldFC: FeatureCollection = am5geodata_worldLow as FeatureCollection;
@@ -119,6 +125,8 @@ let loadsInFlight = 0;
 let pendingOverlayRebuild = false;
 let overlaySeriesStart = 0;
 let zoomTimer: ReturnType<typeof setTimeout> | null = null;
+let readyTimer: ReturnType<typeof setTimeout> | null = null;
+let wheelHintTimer: ReturnType<typeof setTimeout> | null = null;
 const pinHaloTimers: ReturnType<typeof setTimeout>[] = [];
 const clickBoundPolygons = new WeakSet<am5map.MapPolygon>();
 
@@ -591,6 +599,9 @@ const loadPolygons = async () => {
     overlaySeriesStart = chart.series.length;
     addOverlays(root, chart);
     applyZoom();
+  } catch (err) {
+    if (import.meta.dev) console.warn('[TravelMap] loadPolygons failed:', err);
+    mapError.value = true;
   } finally {
     loadsInFlight--;
     if (pendingOverlayRebuild) {
@@ -603,33 +614,57 @@ const loadPolygons = async () => {
 const buildChart = () => {
   if (!mapEl.value) return;
 
+  mapError.value = false;
   clearOverlays();
   loadsInFlight = 0;
   loadId++;
 
-  root?.dispose();
-  root = am5.Root.new(mapEl.value);
-  root.setThemes([am5themes_Animated.new(root)]);
+  try {
+    root?.dispose();
+    root = am5.Root.new(mapEl.value);
+    root.setThemes([am5themes_Animated.new(root)]);
+    // Let vertical page-scroll pass through the map on touch until the user taps to interact.
+    root.tapToActivate = true;
+    root.tapToActivateTimeout = TAP_ACTIVATE_TIMEOUT_MS;
 
-  const isGlobe = props.mode === 'globe';
+    const isGlobe = props.mode === 'globe';
 
-  chart = root.container.children.push(
-    am5map.MapChart.new(root, {
-      panX: isGlobe ? 'rotateX' : 'translateX',
-      panY: isGlobe ? 'rotateY' : 'translateY',
-      projection: isGlobe ? am5map.geoOrthographic() : am5map.geoMercator(),
-      wheelY: 'none',
-      maxZoomLevel: MAX_ZOOM_LEVEL,
-    }),
-  );
+    chart = root.container.children.push(
+      am5map.MapChart.new(root, {
+        panX: isGlobe ? 'rotateX' : 'translateX',
+        panY: isGlobe ? 'rotateY' : 'translateY',
+        projection: isGlobe ? am5map.geoOrthographic() : am5map.geoMercator(),
+        wheelY: 'none',
+        maxZoomLevel: MAX_ZOOM_LEVEL,
+      }),
+    );
 
-  root.events.once('frameended', () => { chartReady.value = true; });
+    root.events.once('frameended', () => {
+      chartReady.value = true;
+      if (readyTimer !== null) { clearTimeout(readyTimer); readyTimer = null; }
+    });
 
-  loadPolygons();
+    if (readyTimer !== null) clearTimeout(readyTimer);
+    if (!chartReady.value) {
+      readyTimer = setTimeout(() => { if (!chartReady.value) mapError.value = true; }, CHART_READY_TIMEOUT_MS);
+    }
+
+    loadPolygons();
+  } catch (err) {
+    if (import.meta.dev) console.warn('[TravelMap] buildChart failed:', err);
+    mapError.value = true;
+  }
 };
 
 const onWheelModifierChange = (e: KeyboardEvent | MouseEvent) => {
   chart?.set('wheelY', e.ctrlKey || e.metaKey ? 'zoom' : 'none');
+};
+
+const onMapWheel = (e: WheelEvent) => {
+  if (e.ctrlKey || e.metaKey) return;
+  wheelHint.value = true;
+  if (wheelHintTimer !== null) clearTimeout(wheelHintTimer);
+  wheelHintTimer = setTimeout(() => { wheelHint.value = false; }, WHEEL_HINT_MS);
 };
 const zoomIn = () => chart?.zoomIn();
 const zoomOut = () => chart?.zoomOut();
@@ -655,6 +690,8 @@ onMounted(() => {
 });
 onUnmounted(() => {
   if (zoomTimer !== null) clearTimeout(zoomTimer);
+  if (readyTimer !== null) clearTimeout(readyTimer);
+  if (wheelHintTimer !== null) clearTimeout(wheelHintTimer);
   pinHaloTimers.forEach(clearTimeout);
   if (import.meta.client) {
     window.removeEventListener('keydown', onWheelModifierChange);
@@ -665,10 +702,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="travel-map">
+  <div class="travel-map" @wheel.capture="onMapWheel">
     <div ref="mapEl" class="travel-map__canvas" />
 
-    <div class="travel-map__zoom">
+    <div v-if="!mapError" class="travel-map__zoom">
       <v-btn
         icon
         size="small"
@@ -689,8 +726,21 @@ onUnmounted(() => {
       </v-btn>
     </div>
 
+    <Transition name="hint-fade">
+      <div
+        v-if="wheelHint && !mapError"
+        class="travel-map__hint"
+        aria-hidden="true"
+        v-text="$t('Hold {{key}} and scroll to zoom', { key: zoomModifierKey })"
+      />
+    </Transition>
+
+    <div v-if="mapError" class="travel-map__error">
+      <p>{{ $t('Map unavailable. Use the timeline below.') }}</p>
+    </div>
+
     <Transition name="skeleton-fade">
-      <div v-if="!chartReady" class="travel-map__skeleton" aria-hidden="true">
+      <div v-if="!chartReady && !mapError" class="travel-map__skeleton" aria-hidden="true">
         <v-skeleton-loader type="image" height="100%" />
       </div>
     </Transition>
@@ -723,6 +773,48 @@ onUnmounted(() => {
   .skeleton-fade-enter-from,
   .skeleton-fade-leave-to {
     opacity: 0;
+  }
+
+  &__hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: rem(8) rem(16);
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    border-radius: rem(20);
+    font-size: rem(13);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .hint-fade-enter-active,
+  .hint-fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
+
+  .hint-fade-enter-from,
+  .hint-fade-leave-to {
+    opacity: 0;
+  }
+
+  &__error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: rem(24);
+    text-align: center;
+    background: rgb(var(--v-theme-surface));
+    color: $text-secondary;
+
+    p {
+      margin: 0;
+      font-size: rem(14);
+    }
   }
 
   &__canvas {

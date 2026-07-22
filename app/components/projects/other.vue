@@ -5,6 +5,7 @@ interface Props {
   projects: ProjectItem[];
 }
 defineProps<Props>();
+const emit = defineEmits<{ toggleTag: [tag: string] }>();
 </script>
 
 <template>
@@ -19,7 +20,7 @@ defineProps<Props>();
         md="6"
         lg="4"
       >
-        <ProjectsCard :project="project" />
+        <ProjectsCard :project="project" @toggle-tag="emit('toggleTag', $event)" />
       </v-col>
     </v-row>
   </v-container>

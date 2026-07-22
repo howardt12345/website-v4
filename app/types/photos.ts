@@ -1,6 +1,7 @@
 export interface PhotoItem {
   stem: string;
   url: string;
+  largeUrl: string;
   title?: string;
   caption?: string;
   alt?: string;

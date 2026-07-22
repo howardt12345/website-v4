@@ -5,13 +5,37 @@ import { usei18n } from '~/store/i18n.store';
 
 definePageMeta({ layout: 'default' });
 
+const router = useRouter();
+const route = useRoute();
+
+const category = computed<string>(() => route.params.category?.toString() ?? '');
+
+const { allPhotos, pending, error, refresh } = usePhotoItems();
+const { t } = usei18n();
+
+// Await the content so an unknown category can 404 in setup during SSR
+// (same keys as usePhotoItems, so this dedupes rather than refetches).
+await Promise.all([
+  useAsyncData('photos', () => queryCollection('photos').order('stem', 'ASC').all()),
+  useAsyncData('photo-folders', () => queryCollection('photoFolders').all()),
+]);
+
+if (
+  category.value &&
+  !allPhotos.value.some((photo) => photo.category?.toLowerCase() === category.value.toLowerCase())
+) {
+  throw createError({ statusCode: 404, statusMessage: 'Photo category not found', fatal: true });
+}
+
+const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
 useSeoMeta({
-  title: 'Photography · Howard Tseng',
+  title: () =>
+    category.value
+      ? `${capitalize(category.value)} · Photography · Howard Tseng`
+      : 'Photography · Howard Tseng',
   description: 'A gallery of travel and street photography.',
 });
-
-const { allPhotos, pending } = usePhotoItems();
-const { t } = usei18n();
 
 const categories = computed<PhotoCategory[]>(() => {
   const categoryMap = new Map<string, { items: PhotoItem[]; cover?: string }>();
@@ -31,34 +55,43 @@ const categories = computed<PhotoCategory[]>(() => {
     .sort((a, b) => a.category.localeCompare(b.category));
 });
 
-const router = useRouter();
-const route = useRoute();
-
-const category = computed<string>(() => route.params.category?.toString() ?? '');
-
 const categoryPhotos = computed(() =>
   allPhotos.value.filter(
     (photo) => !category.value || photo.category?.toLowerCase() === category.value.toLowerCase(),
   ),
 );
 
-const selectedTags = ref<string[]>([]);
+const showCategoriesView = ref(false);
+const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesView.value);
 
-onMounted(() => {
-  selectedTags.value = Array.isArray(route.query.tags)
-    ? (route.query.tags as string[])
-    : route.query.tags
-    ? [route.query.tags as string]
-    : [];
+// Prerendered pages carry no query, so gate the URL read until after hydration to keep server and client markup identical.
+const mounted = ref(false);
+onMounted(() => (mounted.value = true));
+
+const selectedTags = computed<string[]>({
+  get: () => {
+    if (!mounted.value) return [];
+    const raw = route.query.tags;
+    if (Array.isArray(raw)) return raw.filter((tag): tag is string => !!tag);
+    return typeof raw === 'string' && raw ? raw.split(',') : [];
+  },
+  set: (value) => {
+    router.replace({
+      query: { ...route.query, tags: value.length ? value.join(',') : undefined },
+    });
+  },
 });
 
 watch(category, () => {
-  selectedTags.value = [];
+  showCategoriesView.value = false;
+  if (route.query.tags) selectedTags.value = [];
 });
 
-watch(selectedTags, () => {
-  router.push({ query: { tags: selectedTags.value } });
-});
+const toggleTag = (tag: string) => {
+  selectedTags.value = selectedTags.value.includes(tag)
+    ? selectedTags.value.filter((t) => t !== tag)
+    : [...selectedTags.value, tag];
+};
 
 const visiblePhotos = computed(() =>
   categoryPhotos.value.filter(
@@ -76,11 +109,8 @@ const availableTags = computed(() => {
 
 const breadcrumbItems = computed(() => [
   { title: t('Photos'), to: '/photography' },
-  { title: category.value, to: `/photography/${category.value}` },
+  { title: category.value, disabled: true },
 ]);
-
-const showCategoriesView = ref(false);
-const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesView.value);
 </script>
 
 <template>
@@ -110,12 +140,30 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
     />
   </div>
   <div class="photos-container">
+    <CommonRetryPanel v-if="error" @retry="refresh" />
+    <div v-else-if="pending" class="photos-skeleton" aria-hidden="true">
+      <v-skeleton-loader v-for="n in 9" :key="n" type="image" />
+    </div>
+    <PhotosCategories v-else-if="!pending && showCategoriesView" :categories="categories" />
     <PhotosGallery
-      v-if="!pending && !showCategoriesView"
+      v-else-if="!pending && visiblePhotos.length"
       :photos="visiblePhotos"
       :selected-tags="selectedTags"
+      @toggle-tag="toggleTag"
     />
-    <PhotosCategories v-else-if="!pending" :categories="categories" />
+    <div v-else-if="!pending" class="photos-empty">
+      <h3>{{ $t('No photos match these filters') }}</h3>
+      <p>{{ $t('Try removing a tag or widening the category.') }}</p>
+      <v-btn
+        v-if="selectedTags.length"
+        variant="outlined"
+        size="small"
+        class="photos-empty__reset"
+        @click="selectedTags = []"
+      >
+        {{ $t('Clear all filters') }}
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -125,6 +173,9 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+.section-title {
+  text-transform: capitalize;
 }
 .categories-button {
   margin-bottom: rem(16);
@@ -139,5 +190,38 @@ const toggleCategoriesView = () => (showCategoriesView.value = !showCategoriesVi
 .photos-container {
   width: 80vw;
   margin: 0 auto;
+}
+
+.photos-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(rem(220), 1fr));
+  gap: rem(12);
+
+  :deep(.v-skeleton-loader__image) {
+    height: rem(220);
+  }
+}
+
+.photos-empty {
+  padding: rem(80) rem(24);
+  text-align: center;
+  border: 1px dashed $border-color;
+  border-radius: rem(14);
+  color: $text-secondary;
+
+  h3 {
+    font-size: rem(20);
+    margin-bottom: rem(8);
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  &__reset {
+    margin-top: rem(14);
+  }
 }
 </style>

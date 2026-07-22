@@ -3,11 +3,21 @@ const ACTIVE_THRESHOLD_PERCENT = 60;
 
 export const useActiveSection = (orderedSectionIds: string[]) => {
   const activeSection = ref<string | null>(null);
+  const route = useRoute();
 
-  onMounted(() => {
-    const observers: IntersectionObserver[] = [];
-    const intersecting = new Set<string>();
+  let observers: IntersectionObserver[] = [];
+  const intersecting = new Set<string>();
 
+  const disconnect = () => {
+    observers.forEach((o) => o.disconnect());
+    observers = [];
+    intersecting.clear();
+    activeSection.value = null;
+  };
+
+  // The header lives in the persistent layout, so its observers outlive each page; re-query on nav.
+  const observeSections = () => {
+    disconnect();
     for (const id of orderedSectionIds) {
       const el = document.getElementById(id);
       if (!el) continue;
@@ -31,9 +41,11 @@ export const useActiveSection = (orderedSectionIds: string[]) => {
       observer.observe(el);
       observers.push(observer);
     }
+  };
 
-    onUnmounted(() => observers.forEach((o) => o.disconnect()));
-  });
+  onMounted(observeSections);
+  watch(() => route.path, () => nextTick(observeSections));
+  onUnmounted(disconnect);
 
   return { activeSection };
 };
