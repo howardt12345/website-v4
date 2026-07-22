@@ -10,7 +10,7 @@ const route = useRoute();
 
 const category = computed<string>(() => route.params.category?.toString() ?? '');
 
-const { allPhotos, pending } = usePhotoItems();
+const { allPhotos, pending, error, refresh } = usePhotoItems();
 const { t } = usei18n();
 
 // Await the content so an unknown category can 404 in setup during SSR
@@ -140,7 +140,8 @@ const breadcrumbItems = computed(() => [
     />
   </div>
   <div class="photos-container">
-    <PhotosCategories v-if="!pending && showCategoriesView" :categories="categories" />
+    <CommonRetryPanel v-if="error" @retry="refresh" />
+    <PhotosCategories v-else-if="!pending && showCategoriesView" :categories="categories" />
     <PhotosGallery
       v-else-if="!pending && visiblePhotos.length"
       :photos="visiblePhotos"

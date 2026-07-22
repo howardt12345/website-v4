@@ -142,6 +142,11 @@
   "Older": "Older",
   "Newer": "Newer",
   "Post navigation": "Post navigation",
+  "Could not load content.": "Could not load content.",
+  "Could not load travel data.": "Could not load travel data.",
+  "Try again": "Try again",
+  "Map unavailable. Use the timeline below.": "Map unavailable. Use the timeline below.",
+  "Hold {{key}} and scroll to zoom": "Hold {{key}} and scroll to zoom",
   "{{n}} of {{m}} posts_one": "{{n}} of {{m}} post",
   "{{n}} of {{m}} posts_other": "{{n}} of {{m}} posts"
 }

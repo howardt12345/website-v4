@@ -94,9 +94,9 @@ export const useTravelStore = defineStore('travel', () => {
   const countriesAsync = useAsyncData('travel-countries', () => queryCollection('travelCountries').all());
   const tripsAsync = useAsyncData('travel-trips', () => queryCollection('travelTrips').order('start', 'DESC').all());
   const daysAsync = useAsyncData('travel-days', () => queryCollection('travelDays').order('date', 'ASC').all());
-  const { data: rawCountries } = countriesAsync;
-  const { data: rawTrips } = tripsAsync;
-  const { data: rawDays } = daysAsync;
+  const { data: rawCountries, error: countriesError } = countriesAsync;
+  const { data: rawTrips, error: tripsError } = tripsAsync;
+  const { data: rawDays, error: daysError } = daysAsync;
 
   const countries = computed<TravelCountry[]>(
     () => (rawCountries.value ?? []) as unknown as TravelCountry[],
@@ -111,6 +111,10 @@ export const useTravelStore = defineStore('travel', () => {
   // Await the requests directly. A `watch` on `pending` never fires during SSR
   // (no watcher flush), which would hang the /travel prerender forever.
   const hydrate = (): Promise<unknown> => Promise.all([countriesAsync, tripsAsync, daysAsync]);
+
+  const loadError = computed(() => countriesError.value ?? tripsError.value ?? daysError.value ?? null);
+  const reload = (): Promise<unknown> =>
+    Promise.all([countriesAsync.refresh(), tripsAsync.refresh(), daysAsync.refresh()]);
 
   const iso2ToIso3 = computed<Record<string, string>>(() =>
     Object.fromEntries(countries.value.map((c) => [c.iso2, c.iso3])),
@@ -193,7 +197,7 @@ export const useTravelStore = defineStore('travel', () => {
   const navCity = (iso3: string, cityId: string): void => { router.push({ hash: `#country/${iso3}/city/${cityId}` }); };
   const navTripDayCity = (dayDate: string, country: string, cityId: string): void => {
     if (!focusTripId.value) return;
-    router.replace({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
+    router.push({ hash: `#trip/${focusTripId.value}/day/${dayDate}/country/${country}/city/${cityId}` });
   };
   const navTrip = (slug: string): void => {
     const countryParam = focusCountryIso3.value ? `/country/${focusCountryIso3.value}` : '';
@@ -205,11 +209,7 @@ export const useTravelStore = defineStore('travel', () => {
     const hash = idx !== null && tripDays.value[idx]
       ? `#trip/${focusTripId.value}/day/${tripDays.value[idx]!.date}${countryPart}`
       : `#trip/${focusTripId.value}${countryPart}`;
-    if (view.value === 'trip') {
-      router.replace({ hash });
-    } else {
-      router.push({ hash });
-    }
+    router.push({ hash });
   };
   const pickStop = (i: number): void => {
     if (!focusTripId.value || !activeDay.value) return;
@@ -568,5 +568,7 @@ export const useTravelStore = defineStore('travel', () => {
     visitedCitySummaries,
     citiesOverviewProps,
     hydrate,
+    loadError,
+    reload,
   };
 });

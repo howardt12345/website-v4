@@ -27,9 +27,10 @@ const {
   tripOverviewProps,
   cityViewProps,
   citiesOverviewProps,
+  loadError,
 } = storeToRefs(travelStore);
 
-const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3 } = travelStore;
+const { navWorld, navCountry, navCity, navTripDayCity, navTrip, pickDay, pickStop, countryByIso3, reload } = travelStore;
 
 const handleCityClick = (loc: { country: string; city: string }) => {
   if (view.value === 'trip' && activeDay.value) {
@@ -85,6 +86,11 @@ const tripCountryPairs = computed(() =>
 );
 
 const { isMobile, isNarrow } = useMediaQueries();
+
+// Prerendered without a viewport, so defer the mobile swap until after hydration to keep SSR and first client render identical.
+const hydrated = ref(false);
+onMounted(() => { hydrated.value = true; });
+const mobileLayout = computed(() => hydrated.value && isMobile.value);
 
 const railCollapsed = ref(false);
 watch(isNarrow, (narrow) => {
@@ -144,7 +150,14 @@ watch(
       {{ t('The map is interactive with a mouse; all destinations are also reachable from the timeline and city lists below.') }}
     </p>
 
-    <div class="travel-stage" :class="stageClass">
+    <CommonRetryPanel
+      v-if="loadError"
+      class="travel-page__error"
+      :message="$t('Could not load travel data.')"
+      @retry="reload"
+    />
+
+    <div v-if="!loadError" class="travel-stage" :class="stageClass">
       <div class="travel-stage__map">
         <ClientOnly>
           <LazyTravelMap
@@ -160,10 +173,10 @@ watch(
           </template>
         </ClientOnly>
 
-        <div class="travel-stage__overlay">
+        <div v-if="!mobileLayout" class="travel-stage__overlay">
           <TravelStatsBar v-bind="statsBarProps" />
           <v-btn
-            v-if="!isMobile && view === 'trip' && focusTrip?.blogSlug"
+            v-if="view === 'trip' && focusTrip?.blogSlug"
             :to="`/blog/${focusTrip.blogSlug}`"
             variant="text"
             size="small"
@@ -185,8 +198,10 @@ watch(
         </v-btn-toggle>
       </div>
 
+      <TravelStatsBar v-if="mobileLayout" v-bind="statsBarProps" class="travel-stage__stats-mobile" />
+
       <v-btn
-        v-if="isMobile && view === 'trip' && focusTrip?.blogSlug"
+        v-if="mobileLayout && view === 'trip' && focusTrip?.blogSlug"
         :to="`/blog/${focusTrip.blogSlug}`"
         variant="text"
         size="small"
@@ -203,7 +218,7 @@ watch(
       />
     </div>
 
-    <div ref="contentRef" class="travel-page__content" tabindex="-1">
+    <div v-if="!loadError" ref="contentRef" class="travel-page__content" tabindex="-1">
       <TravelDayView
         v-if="dayViewProps"
         v-bind="dayViewProps"
@@ -290,6 +305,10 @@ watch(
   &__content {
     outline: none;
   }
+
+  &__error {
+    margin-bottom: rem(32);
+  }
 }
 
 .travel-stage {
@@ -352,19 +371,10 @@ watch(
   > * {
     pointer-events: auto;
   }
+}
 
-  @media (max-width: 600px) {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-  }
+.travel-stage__stats-mobile {
+  padding: rem(4) rem(2);
 }
 
 .travel-stage__controls {

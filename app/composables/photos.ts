@@ -24,16 +24,22 @@ interface RawPhotoFolder {
 }
 
 export function usePhotoItems() {
-  const { data: rawPhotoFolders, pending: foldersPending } = useAsyncData(
-    'photo-folders',
-    () => queryCollection('photoFolders').all(),
-  );
-  const { data: rawPhotos, pending: photosPending } = useAsyncData(
-    'photos',
-    () => queryCollection('photos').order('stem', 'ASC').all(),
-  );
+  const {
+    data: rawPhotoFolders,
+    pending: foldersPending,
+    error: foldersError,
+    refresh: refreshFolders,
+  } = useAsyncData('photo-folders', () => queryCollection('photoFolders').all());
+  const {
+    data: rawPhotos,
+    pending: photosPending,
+    error: photosError,
+    refresh: refreshPhotos,
+  } = useAsyncData('photos', () => queryCollection('photos').order('stem', 'ASC').all());
 
   const pending = computed(() => foldersPending.value || photosPending.value);
+  const error = computed(() => foldersError.value ?? photosError.value ?? null);
+  const refresh = (): Promise<unknown> => Promise.all([refreshFolders(), refreshPhotos()]);
 
   const folderMap = computed(
     () =>
@@ -72,5 +78,5 @@ export function usePhotoItems() {
     }),
   );
 
-  return { allPhotos, pending };
+  return { allPhotos, pending, error, refresh };
 }

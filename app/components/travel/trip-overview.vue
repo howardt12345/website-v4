@@ -57,7 +57,7 @@ const timelineEntries = computed<TravelTimelineEntry[]>(() =>
       <div class="trip-overview__eyebrow">{{ $t('The whole trip') }}</div>
       <h2 class="trip-overview__title">{{ $t('All photos') }}</h2>
     </div>
-    <TravelTimeline :entries="timelineEntries" />
+    <TravelTimeline :entries="timelineEntries" :empty-text="$t('No photos for this trip yet.')" />
   </div>
 </template>
 
